@@ -1,0 +1,42 @@
+[
+  {
+    "version": "Website launch",
+    "date": "2026-06-11",
+    "tag": "new",
+    "items": [
+      "Rebuilt the entire site: live server list, interactive embed builder, real-time status and full command docs.",
+      "Status page now reads shard latency straight from the Discord gateway.",
+      "Embed builder exports ready-to-paste scripts for ,embed builder."
+    ]
+  },
+  {
+    "version": "Anti-nuke & moderation",
+    "date": "2026-05-28",
+    "tag": "improved",
+    "items": [
+      "AntiRaid now reverses mass channel and role deletions automatically where possible.",
+      "Added reversible jail action between strip and ban thresholds.",
+      "Fake permissions let trusted members moderate without real server admin."
+    ]
+  },
+  {
+    "version": "VoiceMaster",
+    "date": "2026-05-10",
+    "tag": "new",
+    "items": [
+      "Simple and Full setup flows via ,vmsetup.",
+      "Per-channel controls: lock, limit, transfer, claim, ban and permit.",
+      "VC leaderboard and session recaps."
+    ]
+  },
+  {
+    "version": "Music & utilities",
+    "date": "2026-04-22",
+    "tag": "improved",
+    "items": [
+      "Music playback rebuilt on Lavalink for reliable streaming.",
+      "Profile lookups across ten platforms (Roblox, TikTok, Steam, Spotify and more).",
+      "Added weather, time, dictionary and Wikipedia lookups."
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "name": "depend-site",
+  "version": "1.0.0",
+  "description": "Website for the depend Discord bot — live servers, embed builder, docs and real-time status.",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "dependencies": {
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
+  }
+}

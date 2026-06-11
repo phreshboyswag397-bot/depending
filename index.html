@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>depend — a Discord bot you can rely on</title>
+<meta name="description" content="Moderation, automation and social tools for Discord. One bot, every feature, configured to fit how your community actually runs.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .hero{padding:84px 0 30px;position:relative}
+  .hero h1{font-family:var(--font-display);font-weight:700;letter-spacing:-.04em;
+    font-size:clamp(48px,9vw,108px);line-height:.92;margin:22px 0 0}
+  .hero h1 .em{color:var(--peri);position:relative}
+  .hero h1 .em::after{content:"";position:absolute;left:0;right:0;bottom:.08em;height:.07em;
+    background:linear-gradient(90deg,var(--peri),transparent);border-radius:2px}
+  .hero .sub{color:var(--txt-dim);font-size:19px;max-width:540px;margin:26px 0 34px;line-height:1.55}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+
+  /* signature: live reliability console */
+  .console{margin-top:54px;border:1px solid var(--line);border-radius:var(--r-lg);
+    background:linear-gradient(180deg,var(--surface),var(--ink-2));overflow:hidden}
+  .console-bar{display:flex;align-items:center;gap:9px;padding:13px 18px;
+    border-bottom:1px solid var(--line-soft);font-family:var(--font-mono);font-size:12.5px;color:var(--txt-faint)}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .dot.live{background:var(--green);box-shadow:0 0 0 0 rgba(92,226,160,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(92,226,160,.55)}70%{box-shadow:0 0 0 7px rgba(92,226,160,0)}100%{box-shadow:0 0 0 0 rgba(92,226,160,0)}}
+  .console-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+  .metric{padding:26px 24px;border-right:1px solid var(--line-soft)}
+  .metric:last-child{border-right:none}
+  .metric .lbl{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--txt-faint)}
+  .metric .val{font-family:var(--font-display);font-size:38px;font-weight:600;
+    letter-spacing:-.02em;margin-top:8px;line-height:1}
+  .metric .val .u{font-size:17px;color:var(--txt-dim);font-weight:500;margin-left:3px}
+  .metric .val.good{color:var(--green)}
+
+  /* feature strip */
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:84px}
+  .feat{padding:28px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
+    transition:.18s}
+  .feat:hover{border-color:var(--peri-deep);transform:translateY(-3px)}
+  .feat .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;
+    background:var(--surface-2);border:1px solid var(--line);color:var(--peri);margin-bottom:16px}
+  .feat h3{font-family:var(--font-display);font-size:19px;font-weight:600;margin-bottom:7px}
+  .feat p{color:var(--txt-dim);font-size:14.5px}
+
+  /* live servers */
+  .servers-head{display:flex;align-items:flex-end;justify-content:space-between;margin:92px 0 26px;gap:20px}
+  .servers-head h2{font-family:var(--font-display);font-size:clamp(30px,4.6vw,46px);
+    font-weight:600;letter-spacing:-.03em;line-height:1}
+  .servers-head .meta{font-family:var(--font-mono);font-size:13px;color:var(--txt-faint);white-space:nowrap}
+  .srv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .srv{display:flex;align-items:center;gap:13px;padding:15px 16px;border:1px solid var(--line);
+    border-radius:var(--r);background:var(--surface);transition:.16s}
+  .srv:hover{border-color:var(--peri-deep);background:var(--surface-2)}
+  .srv .ava{width:44px;height:44px;border-radius:12px;flex:0 0 44px;object-fit:cover;
+    background:var(--surface-2);display:grid;place-items:center;font-family:var(--font-display);
+    font-weight:600;color:var(--peri);font-size:17px;border:1px solid var(--line)}
+  .srv .nm{font-weight:550;font-size:14.5px;line-height:1.25;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap}
+  .srv .mc{font-family:var(--font-mono);font-size:12px;color:var(--txt-faint);margin-top:3px}
+  .srv-grid .skel{height:76px}
+  .empty{color:var(--txt-faint);font-size:14.5px;padding:30px 0}
+  @media(max-width:760px){.console-grid{grid-template-columns:repeat(2,1fr)}
+    .metric:nth-child(2){border-right:none}.features{grid-template-columns:1fr}}
+</style></head><body>
+<script src="/shared.js"></script>
+<main class="wrap">
+  <section class="hero">
+    <span class="eyebrow">Discord infrastructure</span>
+    <h1>your server runs on<br><span class="em">depend</span>.</h1>
+    <p class="sub">Moderation, automation and social tools in one bot — tuned to fit how your community
+      actually runs, not how a template thinks it should.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://discord.gg/depend">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.3 5.3A17 17 0 0 0 15 4l-.2.4a16 16 0 0 1 3.8 1.2 13 13 0 0 0-11.2 0A16 16 0 0 1 11.2 4.4L11 4a17 17 0 0 0-4.3 1.3C3.5 9.5 2.6 13.6 3 17.7a17 17 0 0 0 5.2 2.6l.4-.6c-.7-.2-1.3-.5-1.9-.9l.5-.3a12 12 0 0 0 9.6 0l.5.3c-.6.4-1.2.7-1.9.9l.4.6a17 17 0 0 0 5.2-2.6c.5-4.7-.8-8.8-1.7-12.4ZM9.2 15.3c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.9.9 1.8 2c0 1.1-.8 2-1.8 2Zm5.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.9.9 1.8 2c0 1.1-.8 2-1.8 2Z"/></svg>
+        Add to your server</a>
+      <a class="btn btn-ghost" href="/commands">Explore commands →</a>
+    </div>
+
+    <!-- SIGNATURE: live reliability console -->
+    <div class="console">
+      <div class="console-bar"><span class="dot live"></span>live · refreshed from the discord gateway</div>
+      <div class="console-grid">
+        <div class="metric"><div class="lbl">Status</div><div class="val good" id="m-status">···</div></div>
+        <div class="metric"><div class="lbl">Communities</div><div class="val" id="m-guilds">···</div></div>
+        <div class="metric"><div class="lbl">Members reached</div><div class="val" id="m-users">···</div></div>
+        <div class="metric"><div class="lbl">Gateway latency</div><div class="val" id="m-ping">···</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feat"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 3v6c0 4.5-3 7.5-8 9-5-1.5-8-4.5-8-9V6l8-3z"/></svg></div>
+      <h3>Moderation & anti-nuke</h3><p>Ban, mute, raid protection, fake permissions and reversible anti-nuke that undoes damage automatically.</p></div>
+    <div class="feat"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 12h10M4 19h7"/><circle cx="19" cy="16" r="3"/></svg></div>
+      <h3>Automation</h3><p>Auto-responders, filters, sticky messages, welcome flows and scheduled digests that run themselves.</p></div>
+    <div class="feat"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 11l2 2 4-4"/></svg></div>
+      <h3>Social tools</h3><p>VoiceMaster, leveling, invites, tickets, booster roles and profile lookups across ten platforms.</p></div>
+  </section>
+
+  <section id="servers">
+    <div class="servers-head">
+      <div><span class="eyebrow">Live</span>
+        <h2 style="margin-top:14px">Servers running depend</h2></div>
+      <div class="meta" id="srv-meta">loading…</div>
+    </div>
+    <div class="srv-grid" id="srv-grid">
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+mountChrome('home');
+
+(async()=>{
+  try{
+    const s=await (await fetch('/api/status')).json();
+    const sh=s.shards&&s.shards[0];
+    document.getElementById('m-status').textContent=s.operational?'OK':'DOWN';
+    if(!s.operational)document.getElementById('m-status').classList.remove('good');
+    if(sh){
+      document.getElementById('m-guilds').innerHTML=fmt(sh.servers);
+      document.getElementById('m-users').innerHTML=fmt(sh.users);
+      const pingVal = (s.avgLatency!=null) ? s.avgLatency : sh.latency;
+      document.getElementById('m-ping').innerHTML=fmt(pingVal)+'<span class="u">ms</span>';
+    }
+  }catch{
+    document.getElementById('m-status').textContent='—';
+  }
+})();
+
+(async()=>{
+  const grid=document.getElementById('srv-grid'),meta=document.getElementById('srv-meta');
+  try{
+    const d=await (await fetch('/api/servers')).json();
+    const list=d.servers||[];
+    meta.textContent=`${fmt(d.totalGuilds)} servers · ${fmt(list.length)} above 50 members`;
+    if(!list.length){grid.innerHTML='<div class="empty">No public servers to show yet — the bot needs a token configured, or none are above 50 members.</div>';return;}
+    grid.innerHTML=list.map(s=>`
+      <div class="srv">
+        ${s.icon?`<img class="ava" src="${s.icon}" alt="" loading="lazy">`
+                :`<div class="ava">${(s.name||'?').trim().charAt(0).toUpperCase()}</div>`}
+        <div style="min-width:0"><div class="nm" title="${s.name.replace(/"/g,'&quot;')}">${s.name}</div>
+          <div class="mc">${fmt(s.members)} members</div></div>
+      </div>`).join('');
+  }catch(e){
+    meta.textContent='unavailable';
+    grid.innerHTML='<div class="empty">Couldn’t reach the Discord API. Check the bot token in <code>.env</code>.</div>';
+  }
+})();
+</script>
+</body></html>

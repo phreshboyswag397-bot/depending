@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Embed builder — depend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .eb{display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:start}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .panel-h{display:flex;align-items:center;gap:9px;padding:14px 16px;border-bottom:1px solid var(--line-soft);
+    font-weight:600;font-size:14px;cursor:pointer;user-select:none}
+  .panel-h .ic{color:var(--peri)}
+  .panel-h .chev{margin-left:auto;color:var(--txt-faint);transition:.2s}
+  .panel.closed .panel-b{display:none}.panel.closed .chev{transform:rotate(-90deg)}
+  .panel-b{padding:16px}
+  .fld{margin-bottom:14px}.fld:last-child{margin-bottom:0}
+  .fld label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--txt-dim);margin-bottom:6px}
+  .fld label .c{font-family:var(--font-mono);font-size:11px;color:var(--txt-faint)}
+  .inp,textarea.inp{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;
+    color:var(--txt);font-family:var(--font-body);font-size:14px;padding:11px 13px;outline:none;transition:.14s}
+  .inp:focus,textarea.inp:focus{border-color:var(--peri-deep)}
+  textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
+  .swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .sw{width:30px;height:30px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:.12s}
+  .sw:hover{transform:scale(1.08)}.sw.on{border-color:#fff}
+  .colorrow{display:flex;gap:10px;align-items:center}
+  .colorrow input[type=color]{width:42px;height:42px;border:1px solid var(--line);border-radius:10px;
+    background:var(--ink-2);cursor:pointer;padding:3px}
+  .fieldrow{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--ink-2)}
+  .fieldrow .top{display:flex;gap:8px;margin-bottom:8px}
+  .mini{flex:1;font-size:13px}.del{background:none;border:1px solid var(--line);color:var(--red);
+    border-radius:8px;width:34px;cursor:pointer;font-size:15px}
+  .addf{width:100%;background:var(--surface-2);border:1px dashed var(--line);color:var(--peri);
+    border-radius:10px;padding:10px;cursor:pointer;font-size:13px;font-family:var(--font-mono)}
+  .addf:hover{border-color:var(--peri-deep)}
+  .inline-tog{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--txt-dim);cursor:pointer}
+
+  /* preview */
+  .preview-wrap{position:sticky;top:90px}
+  .pv-bar{display:flex;gap:10px;margin-bottom:14px}
+  .preview{background:#313338;border-radius:12px;padding:16px 18px;font-size:15px;
+    border:1px solid #232428;box-shadow:0 14px 40px -20px rgba(0,0,0,.7)}
+  .pv-author-line{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .pv-bot-ava{width:40px;height:40px;border-radius:50%;background:var(--surface);display:grid;
+    place-items:center;color:var(--peri)}
+  .pv-bot-name{font-weight:500;color:#f2f3f5;font-size:15px}
+  .pv-tag{background:var(--peri-deep);color:#fff;font-size:10px;font-weight:600;padding:1px 5px;
+    border-radius:4px;text-transform:uppercase;letter-spacing:.02em}
+  .pv-time{color:#949ba4;font-size:12px}
+  .pv-content{color:#dbdee1;margin-bottom:8px;white-space:pre-wrap;line-height:1.45}
+  .embed{display:flex;background:#2b2d31;border-radius:5px;overflow:hidden;max-width:516px}
+  .embed .bar{width:4px;flex:0 0 4px;background:var(--peri)}
+  .embed .body{padding:13px 16px 16px;min-width:0;flex:1}
+  .e-author{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px;color:#f2f3f5;font-weight:600}
+  .e-author img{width:24px;height:24px;border-radius:50%}
+  .e-title{color:#00a8fc;font-weight:600;font-size:16px;margin-bottom:8px;line-height:1.3}
+  .e-title.plain{color:#f2f3f5}
+  .e-desc{color:#dbdee1;font-size:14px;line-height:1.5;white-space:pre-wrap;margin-bottom:8px}
+  .e-fields{display:grid;gap:8px;margin-bottom:8px}
+  .e-field .fn{color:#f2f3f5;font-weight:600;font-size:14px;margin-bottom:2px}
+  .e-field .fv{color:#dbdee1;font-size:14px;line-height:1.4;white-space:pre-wrap}
+  .e-fields.has-inline{grid-template-columns:repeat(3,1fr)}
+  .e-field.block{grid-column:1/-1}
+  .e-img{margin-top:4px;border-radius:5px;max-width:100%;max-height:280px;object-fit:cover;display:block}
+  .e-thumb{width:72px;height:72px;border-radius:5px;object-fit:cover;float:right;margin:0 0 8px 12px}
+  .e-footer{display:flex;align-items:center;gap:8px;color:#949ba4;font-size:12px;margin-top:8px}
+  .e-footer img{width:20px;height:20px;border-radius:50%}
+  .note-bar{background:var(--ink-2);border:1px solid var(--line-soft);border-radius:12px;
+    padding:13px 16px;margin-bottom:18px;font-size:13.5px;color:var(--txt-dim)}
+  .note-bar code{font-family:var(--font-mono);color:var(--peri);background:rgba(183,169,242,.1);
+    padding:2px 6px;border-radius:5px;font-size:12.5px}
+  @media(max-width:920px){.eb{grid-template-columns:1fr}.preview-wrap{position:static}}
+</style></head><body>
+<script src="/shared.js"></script>
+<main class="wrap">
+  <div class="page-head" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:18px">
+    <div><span class="eyebrow">Builder</span><h1>Embeds</h1>
+      <p>Design an embed, preview it exactly as Discord renders it, then export the script for <code style="font-family:var(--font-mono);color:var(--peri)">,embed builder</code>.</p></div>
+    <div class="pv-bar">
+      <button class="btn btn-ghost" id="export">{ } Export</button>
+      <button class="btn btn-ghost" id="reset">Reset</button>
+    </div>
+  </div>
+
+  <div class="note-bar">This preview is approximate. For the exact result in Discord, run <code>,embed builder</code> with your exported script in a server channel.</div>
+
+  <div class="eb">
+    <div>
+      <div class="panel" data-p>
+        <div class="panel-h"><span class="ic">▤</span>Content<span class="chev">▾</span></div>
+        <div class="panel-b"><div class="fld"><label>Message content <span class="c" id="cc-content">0/2000</span></label>
+          <textarea class="inp" id="f-content" maxlength="2000" placeholder="Plain text above the embed (optional)"></textarea></div></div>
+      </div>
+      <div class="panel" data-p style="margin-top:14px">
+        <div class="panel-h"><span class="ic">◍</span>Appearance<span class="chev">▾</span></div>
+        <div class="panel-b">
+          <div class="colorrow"><input type="color" id="f-color" value="#b7a9f2">
+            <input class="inp" id="f-colorhex" value="#b7a9f2" style="font-family:var(--font-mono)"></div>
+          <div class="swatches" id="swatches"></div>
+        </div>
+      </div>
+      <div class="panel" data-p style="margin-top:14px">
+        <div class="panel-h"><span class="ic">▦</span>Body<span class="chev">▾</span></div>
+        <div class="panel-b">
+          <div class="fld"><label>Title <span class="c" id="cc-title">0/256</span></label><input class="inp" id="f-title" maxlength="256"></div>
+          <div class="fld"><label>Title URL</label><input class="inp" id="f-url" placeholder="https://…"></div>
+          <div class="fld"><label>Description <span class="c" id="cc-desc">0/4096</span></label><textarea class="inp" id="f-desc" maxlength="4096"></textarea></div>
+        </div>
+      </div>
+      <div class="panel" data-p style="margin-top:14px">
+        <div class="panel-h"><span class="ic">▣</span>Author<span class="chev">▾</span></div>
+        <div class="panel-b">
+          <div class="fld"><label>Author name</label><input class="inp" id="f-aname"></div>
+          <div class="fld"><label>Author icon URL</label><input class="inp" id="f-aicon" placeholder="https://…"></div>
+        </div>
+      </div>
+      <div class="panel closed" data-p style="margin-top:14px">
+        <div class="panel-h"><span class="ic">▥</span>Images<span class="chev">▾</span></div>
+        <div class="panel-b">
+          <div class="fld"><label>Large image URL</label><input class="inp" id="f-image" placeholder="https://…"></div>
+          <div class="fld"><label>Thumbnail URL</label><input class="inp" id="f-thumb" placeholder="https://…"></div>
+        </div>
+      </div>
+      <div class="panel closed" data-p style="margin-top:14px">
+        <div class="panel-h"><span class="ic">▤</span>Fields<span class="chev">▾</span></div>
+        <div class="panel-b"><div id="fields"></div>
+          <button class="addf" id="addfield">+ Add field</button></div>
+      </div>
+      <div class="panel closed" data-p style="margin-top:14px">
+        <div class="panel-h"><span class="ic">▁</span>Footer<span class="chev">▾</span></div>
+        <div class="panel-b">
+          <div class="fld"><label>Footer text</label><input class="inp" id="f-ftext"></div>
+          <div class="fld"><label>Footer icon URL</label><input class="inp" id="f-ficon" placeholder="https://…"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="preview">
+        <div class="pv-author-line">
+          <div class="pv-bot-ava"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="7" width="16" height="13" rx="3"/><circle cx="9" cy="13" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.3" fill="currentColor" stroke="none"/><path d="M9.5 17h5"/></svg></div>
+          <span class="pv-bot-name">depend</span><span class="pv-tag">APP</span><span class="pv-time">Today at 8:25 AM</span>
+        </div>
+        <div class="pv-content" id="pv-content" style="display:none"></div>
+        <div class="embed" id="pv-embed"><div class="bar" id="pv-bar"></div>
+          <div class="body">
+            <div class="e-author" id="pv-author" style="display:none"></div>
+            <img class="e-thumb" id="pv-thumb" style="display:none">
+            <div class="e-title" id="pv-title" style="display:none"></div>
+            <div class="e-desc" id="pv-desc" style="display:none"></div>
+            <div class="e-fields" id="pv-fields"></div>
+            <img class="e-img" id="pv-image" style="display:none">
+            <div class="e-footer" id="pv-footer" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+mountChrome('embeds');
+const SW=['#b7a9f2','#f2a9c4','#f0a07c','#7ce2b0','#a9b4f2','#7c6fd4','#ffffff','#f2c4d8','#5865F2','#e25c7a'];
+document.getElementById('swatches').innerHTML=SW.map(c=>`<div class="sw" style="background:${c}" data-c="${c}"></div>`).join('');
+const $=id=>document.getElementById(id);
+let fields=[];
+
+function panelToggle(){document.querySelectorAll('[data-p] .panel-h').forEach(h=>h.onclick=()=>h.parentElement.classList.toggle('closed'));}
+panelToggle();
+
+function setColor(hex){$('f-color').value=hex;$('f-colorhex').value=hex;
+  document.querySelectorAll('.sw').forEach(s=>s.classList.toggle('on',s.dataset.c.toLowerCase()===hex.toLowerCase()));update();}
+document.querySelectorAll('.sw').forEach(s=>s.onclick=()=>setColor(s.dataset.c));
+$('f-color').oninput=e=>{$('f-colorhex').value=e.target.value;update();};
+$('f-colorhex').oninput=e=>{if(/^#[0-9a-f]{6}$/i.test(e.target.value)){$('f-color').value=e.target.value;update();}};
+
+function renderFields(){
+  $('fields').innerHTML=fields.map((f,i)=>`<div class="fieldrow">
+    <div class="top"><input class="inp mini" placeholder="Field name" value="${(f.name||'').replace(/"/g,'&quot;')}" data-i="${i}" data-k="name">
+      <button class="del" data-d="${i}">×</button></div>
+    <textarea class="inp mini" placeholder="Field value" data-i="${i}" data-k="value" style="min-height:54px">${(f.value||'').replace(/</g,'&lt;')}</textarea>
+    <label class="inline-tog" style="margin-top:8px"><input type="checkbox" data-i="${i}" data-k="inline" ${f.inline?'checked':''}> inline</label>
+  </div>`).join('');
+  $('fields').querySelectorAll('[data-k]').forEach(el=>{
+    const i=+el.dataset.i,k=el.dataset.k;
+    el.oninput=el.onchange=()=>{fields[i][k]=k==='inline'?el.checked:el.value;update();};
+  });
+  $('fields').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{fields.splice(+b.dataset.d,1);renderFields();update();});
+}
+$('addfield').onclick=()=>{fields.push({name:'',value:'',inline:false});renderFields();update();};
+
+function update(){
+  // counters
+  $('cc-content').textContent=$('f-content').value.length+'/2000';
+  $('cc-title').textContent=$('f-title').value.length+'/256';
+  $('cc-desc').textContent=$('f-desc').value.length+'/4096';
+  const v=val();
+  // content
+  const pc=$('pv-content');pc.style.display=v.content?'block':'none';pc.textContent=v.content;
+  $('pv-bar').style.background=v.color;
+  // author
+  const au=$('pv-author');if(v.author.name){au.style.display='flex';
+    au.innerHTML=(v.author.icon?`<img src="${enc(v.author.icon)}" onerror="this.style.display='none'">`:'')+esc(v.author.name);}else au.style.display='none';
+  // title
+  const ti=$('pv-title');if(v.title){ti.style.display='block';ti.classList.toggle('plain',!v.url);
+    ti.innerHTML=v.url?`<a href="${enc(v.url)}" target="_blank" style="color:#00a8fc">${esc(v.title)}</a>`:esc(v.title);}else ti.style.display='none';
+  // desc
+  const de=$('pv-desc');de.style.display=v.description?'block':'none';de.textContent=v.description;
+  // thumb
+  const th=$('pv-thumb');if(v.thumbnail){th.style.display='block';th.src=enc(v.thumbnail);th.onerror=()=>th.style.display='none';}else th.style.display='none';
+  // fields
+  const ff=$('pv-fields');const real=fields.filter(f=>f.name||f.value);
+  ff.classList.toggle('has-inline',real.some(f=>f.inline));
+  ff.innerHTML=real.map(f=>`<div class="e-field ${f.inline?'':'block'}">
+    <div class="fn">${esc(f.name)||'&nbsp;'}</div><div class="fv">${esc(f.value)}</div></div>`).join('');
+  // image
+  const im=$('pv-image');if(v.image){im.style.display='block';im.src=enc(v.image);im.onerror=()=>im.style.display='none';}else im.style.display='none';
+  // footer
+  const fo=$('pv-footer');if(v.footer.text){fo.style.display='flex';
+    fo.innerHTML=(v.footer.icon?`<img src="${enc(v.footer.icon)}" onerror="this.style.display='none'">`:'')+esc(v.footer.text);}else fo.style.display='none';
+  // hide whole embed if totally empty
+  const empty=!v.title&&!v.description&&!v.author.name&&!real.length&&!v.image&&!v.thumbnail&&!v.footer.text;
+  $('pv-embed').style.display=empty?'none':'flex';
+}
+function val(){return{
+  content:$('f-content').value,color:$('f-colorhex').value,
+  title:$('f-title').value,url:$('f-url').value,description:$('f-desc').value,
+  author:{name:$('f-aname').value,icon:$('f-aicon').value},
+  image:$('f-image').value,thumbnail:$('f-thumb').value,
+  footer:{text:$('f-ftext').value,icon:$('f-ficon').value},
+  fields:fields.filter(f=>f.name||f.value)
+};}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function enc(s){return (s||'').replace(/"/g,'%22');}
+
+document.querySelectorAll('.inp').forEach(el=>el.addEventListener('input',update));
+
+// export → depend embed-script syntax
+$('export').onclick=()=>{
+  const v=val();const L=[];
+  if(v.content)L.push('{content: '+v.content+'}');
+  L.push('{color: '+v.color+'}');
+  if(v.author.name)L.push('{author: '+v.author.name+(v.author.icon?' && icon: '+v.author.icon:'')+'}');
+  if(v.title)L.push('{title: '+v.title+'}');
+  if(v.url)L.push('{url: '+v.url+'}');
+  if(v.description)L.push('{description: '+v.description+'}');
+  v.fields.forEach(f=>L.push('{field: '+(f.name||' ')+' && '+(f.value||' ')+' && inline: '+(f.inline?'true':'false')+'}'));
+  if(v.thumbnail)L.push('{thumbnail: '+v.thumbnail+'}');
+  if(v.image)L.push('{image: '+v.image+'}');
+  if(v.footer.text)L.push('{footer: '+v.footer.text+(v.footer.icon?' && icon: '+v.footer.icon:'')+'}');
+  const script=L.join('\n');
+  navigator.clipboard?.writeText(script);
+  const b=$('export');const o=b.textContent;b.textContent='Copied ✓';setTimeout(()=>b.textContent=o,1400);
+};
+$('reset').onclick=()=>{document.querySelectorAll('.inp').forEach(el=>el.value=el.id==='f-colorhex'?'#b7a9f2':'');
+  $('f-color').value='#b7a9f2';fields=[];renderFields();update();};
+
+renderFields();update();
+</script>
+</body></html>
