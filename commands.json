@@ -259,17 +259,6 @@
   ]
  },
  {
-  "title": "Auto-React (owner only)",
-  "cmds": [
-   "The bot auto-reacts to a chosen user with a chosen emoji on every message they send.",
-   "react on — enable",
-   "react off — disable",
-   "react set @user — change which user to react to",
-   "react emoji <emoji> — change the emoji",
-   "react status — show current config"
-  ]
- },
- {
   "title": "Welcome Commands",
   "cmds": [
    "welcome #channel <message> --self_destruct <seconds> — simple message (self-destruct optional)",

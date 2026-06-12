@@ -3,12 +3,12 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Embed builder — depend</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <style>
   .eb{display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:start}
   .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-  .panel-h{display:flex;align-items:center;gap:9px;padding:14px 16px;border-bottom:1px solid var(--line-soft);
+  .panel-h{display:flex;align-items:center;gap:9px;padding:14px 16px;border-bottom:1px solid var(--line);
     font-weight:600;font-size:14px;cursor:pointer;user-select:none}
   .panel-h .ic{color:var(--peri)}
   .panel-h .chev{margin-left:auto;color:var(--txt-faint);transition:.2s}
@@ -17,7 +17,7 @@
   .fld{margin-bottom:14px}.fld:last-child{margin-bottom:0}
   .fld label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--txt-dim);margin-bottom:6px}
   .fld label .c{font-family:var(--font-mono);font-size:11px;color:var(--txt-faint)}
-  .inp,textarea.inp{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;
+  .inp,textarea.inp{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;
     color:var(--txt);font-family:var(--font-body);font-size:14px;padding:11px 13px;outline:none;transition:.14s}
   .inp:focus,textarea.inp:focus{border-color:var(--peri-deep)}
   textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
@@ -26,8 +26,8 @@
   .sw:hover{transform:scale(1.08)}.sw.on{border-color:#fff}
   .colorrow{display:flex;gap:10px;align-items:center}
   .colorrow input[type=color]{width:42px;height:42px;border:1px solid var(--line);border-radius:10px;
-    background:var(--ink-2);cursor:pointer;padding:3px}
-  .fieldrow{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--ink-2)}
+    background:var(--surface);cursor:pointer;padding:3px}
+  .fieldrow{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--surface)}
   .fieldrow .top{display:flex;gap:8px;margin-bottom:8px}
   .mini{flex:1;font-size:13px}.del{background:none;border:1px solid var(--line);color:var(--red);
     border-radius:8px;width:34px;cursor:pointer;font-size:15px}
@@ -66,7 +66,7 @@
   .e-thumb{width:72px;height:72px;border-radius:5px;object-fit:cover;float:right;margin:0 0 8px 12px}
   .e-footer{display:flex;align-items:center;gap:8px;color:#949ba4;font-size:12px;margin-top:8px}
   .e-footer img{width:20px;height:20px;border-radius:50%}
-  .note-bar{background:var(--ink-2);border:1px solid var(--line-soft);border-radius:12px;
+  .note-bar{background:var(--surface);border:1px solid var(--line);border-radius:12px;
     padding:13px 16px;margin-bottom:18px;font-size:13.5px;color:var(--txt-dim)}
   .note-bar code{font-family:var(--font-mono);color:var(--peri);background:rgba(183,169,242,.1);
     padding:2px 6px;border-radius:5px;font-size:12.5px}
@@ -139,7 +139,7 @@
     <div class="preview-wrap">
       <div class="preview">
         <div class="pv-author-line">
-          <div class="pv-bot-ava"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="7" width="16" height="13" rx="3"/><circle cx="9" cy="13" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.3" fill="currentColor" stroke="none"/><path d="M9.5 17h5"/></svg></div>
+          <div class="pv-bot-ava"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><rect x="6.4" y="3.8" width="2.6" height="7.6" rx="1.3"/><rect x="15.0" y="3.8" width="2.6" height="7.6" rx="1.3"/><path fill-rule="evenodd" d="M4.5 11.6a4.8 4.8 0 0 1 4.8-4.8h5.4a4.8 4.8 0 0 1 4.8 4.8v3a4.8 4.8 0 0 1-4.8 4.8h-5.4a4.8 4.8 0 0 1-4.8-4.8zM7.4 12a2.1 2.1 0 0 1 2.1-2.1h5a2.1 2.1 0 0 1 2.1 2.1v2.5a2.1 2.1 0 0 1-2.1 2.1h-5a2.1 2.1 0 0 1-2.1-2.1z"/><path d="M11.15 11.4 11.15 14.6 8 15.2 8 13.7Z"/><path d="M12.85 11.4 12.85 14.6 16 15.2 16 13.7Z"/></svg></div>
           <span class="pv-bot-name">depend</span><span class="pv-tag">APP</span><span class="pv-time">Today at 8:25 AM</span>
         </div>
         <div class="pv-content" id="pv-content" style="display:none"></div>
