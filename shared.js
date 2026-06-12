@@ -6,6 +6,7 @@ const NAV = [['Commands','/commands'],['Embeds','/embeds'],['Status','/status'],
 
 function mountChrome(active){
   mountSparkles();
+  mountLoader();
   const links = NAV.map(([t,h])=>{
     const on = t.toLowerCase()===active;
     return `<a href="${h}"${on?' class="active"':''}>${t}</a>`;
@@ -33,6 +34,56 @@ function mountChrome(active){
 }
 function fmt(n){return (n??0).toLocaleString('en-US');}
 
+// full-screen logo loader — flashes, rises, shrinks away on load,
+// and reappears when navigating to another page on the site.
+function mountLoader(){
+  if(document.getElementById('loader')) return;
+  const css=`
+    #loader{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
+      background:#000;transition:opacity .45s ease;}
+    #loader.hide{opacity:0;pointer-events:none}
+    #loader img{width:64px;height:64px;
+      filter:drop-shadow(0 0 18px rgba(183,169,242,.55));
+      animation:ldr-pulse 1s ease-in-out infinite;}
+    #loader.out img{animation:ldr-out .5s cubic-bezier(.5,0,.3,1) forwards}
+    @keyframes ldr-pulse{0%,100%{opacity:.55;transform:translateY(0) scale(1)}
+      50%{opacity:1;transform:translateY(-6px) scale(1.04)}}
+    @keyframes ldr-out{0%{opacity:1;transform:translateY(0) scale(1)}
+      45%{opacity:1;transform:translateY(-22px) scale(1.06)}
+      100%{opacity:0;transform:translateY(-40px) scale(.12)}}
+    @media(prefers-reduced-motion:reduce){#loader img{animation:none}#loader.out img{animation:none}}`;
+  document.head.insertAdjacentHTML('beforeend',`<style>${css}</style>`);
+  document.body.insertAdjacentHTML('afterbegin',
+    `<div id="loader"><img src="/logo.png" alt="loading"></div>`);
+  const el=document.getElementById('loader');
+
+  function dismiss(){
+    el.classList.add('out');
+    setTimeout(()=>el.classList.add('hide'),460);
+    setTimeout(()=>{ if(el.classList.contains('hide')) el.style.display='none'; },920);
+  }
+  // hide once the page + first paint are ready (small min-show so it's seen)
+  const shownAt=performance.now();
+  function ready(){ const wait=Math.max(0,420-(performance.now()-shownAt)); setTimeout(dismiss,wait); }
+  if(document.readyState==='complete') ready();
+  else window.addEventListener('load',ready);
+
+  // re-show the loader when navigating to another internal page
+  document.addEventListener('click',e=>{
+    const a=e.target.closest && e.target.closest('a');
+    if(!a) return;
+    const href=a.getAttribute('href')||'';
+    if(a.target==='_blank'||a.hasAttribute('download')) return;
+    if(e.metaKey||e.ctrlKey||e.shiftKey||e.button!==0) return;
+    // only same-origin, non-hash, non-external links
+    if(href.startsWith('http')||href.startsWith('//')||href.startsWith('#')||href.startsWith('mailto')) return;
+    if(href==='' ) return;
+    el.style.display='grid';el.classList.remove('out','hide');
+  });
+  // restore if user comes back via bfcache
+  window.addEventListener('pageshow',ev=>{ if(ev.persisted){ el.classList.add('out','hide');el.style.display='none'; }});
+}
+
 // site-wide ambient sparkles — soft white dots that drift and twinkle
 function mountSparkles(){
   if(document.getElementById('sparkles')) return;
@@ -54,17 +105,20 @@ function mountSparkles(){
       tw:Math.random()*Math.PI*2,           // twinkle phase
       tws:Math.random()*.025+.008,          // twinkle speed
       vy:Math.random()*.06+.015,            // slow upward drift
-      vx:(Math.random()-.5)*.04
+      vx:(Math.random()-.5)*.04,
+      // ~30% of stars are periwinkle, the rest white
+      purple:Math.random()<.3
     }));
   }
   function frame(){
     x.clearRect(0,0,innerWidth,innerHeight);
     for(const s of stars){
       s.tw+=s.tws;
-      const a=s.base+Math.sin(s.tw)*.35;
+      const a=Math.max(0,s.base+Math.sin(s.tw)*.35);
       x.beginPath();x.arc(s.x,s.y,s.r,0,7);
-      x.fillStyle='rgba(255,255,255,'+Math.max(0,a)+')';
-      x.shadowColor='rgba(255,255,255,.8)';x.shadowBlur=s.r*2.2;
+      if(s.purple){ x.fillStyle='rgba(183,169,242,'+a+')'; x.shadowColor='rgba(183,169,242,.85)'; }
+      else { x.fillStyle='rgba(255,255,255,'+a+')'; x.shadowColor='rgba(255,255,255,.8)'; }
+      x.shadowBlur=s.r*2.2;
       x.fill();
       s.y-=s.vy;s.x+=s.vx;
       if(s.y<-3){s.y=innerHeight+3;s.x=Math.random()*innerWidth;}
@@ -76,7 +130,7 @@ function mountSparkles(){
   init();
   if(reduce){ // draw once, no animation
     for(const s of stars){x.beginPath();x.arc(s.x,s.y,s.r,0,7);
-      x.fillStyle='rgba(255,255,255,'+s.base+')';x.fill();}
+      x.fillStyle=(s.purple?'rgba(183,169,242,':'rgba(255,255,255,')+s.base+')';x.fill();}
   } else frame();
   let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>{cancelAnimationFrame(raf);init();if(!reduce)frame();},200);});
 }
