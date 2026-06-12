@@ -67,6 +67,8 @@
 
 <script>
 mountChrome('dashboard');
+let CLIENT_ID='1510219788964593756';
+fetch('/api/config').then(r=>r.json()).then(c=>{if(c.clientId)CLIENT_ID=c.clientId;}).catch(()=>{});
 const DISCORD_ICON=`<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4a18 18 0 0 0-4.5-1.4l-.2.5a16 16 0 0 1 3.4 1.1A15 15 0 0 0 5.3 4.2a16 16 0 0 1 3.4-1.1l-.2-.5A18 18 0 0 0 4 4C1.7 7.5 1 11 1.2 14.4A18 18 0 0 0 6.6 17l.6-.9c-.6-.2-1.1-.5-1.6-.8l.4-.3a12 12 0 0 0 10 0l.4.3c-.5.3-1 .6-1.6.8l.6.9a18 18 0 0 0 5.4-2.6C23 10.8 22 7 20 4ZM8.4 13.2c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Zm7.2 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Z"/></svg>`;
 const CHECK=`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.4 2.4 4.6-4.8"/></svg>`;
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
@@ -122,11 +124,14 @@ function signedIn(me){
       <span class="out" onclick="location.href='/auth/logout'">Sign out</span></div>
     ${guilds.length?`<div class="guilds">${guilds.map(g=>{
       const gi=g.icon?`https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png?size=128`:null;
-      return `<div class="guild">
+      const href=g.botIn?`/dashboard/${g.id}`
+        :`https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&scope=bot+applications.commands&permissions=8&guild_id=${g.id}&disable_guild_select=true`;
+      const target=g.botIn?'':' target="_blank" rel="noopener"';
+      return `<a class="guild" href="${href}"${target}>
         ${gi?`<img class="gava" src="${gi}" alt="">`:`<div class="gava">${esc((g.name||'?').charAt(0).toUpperCase())}</div>`}
         <div style="min-width:0"><div class="gn">${esc(g.name)}</div>
           <div class="gr">${g.owner?'Owner':'Manager'}</div></div>
-        <span class="badge ${g.botIn?'':'add'}">${g.botIn?'Configure':'Add'}</span></div>`;
+        <span class="badge ${g.botIn?'':'add'}">${g.botIn?'Configure':'Add'}</span></a>`;
     }).join('')}</div>`:'<p class="muted">No servers found where you can manage depend.</p>'}`;
 }
 

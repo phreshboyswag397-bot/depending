@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Server · depend</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .top{display:flex;align-items:center;gap:16px;padding-top:46px}
+  .back{color:var(--txt-dim);font-size:14px;display:inline-flex;align-items:center;gap:6px;
+    border:1px solid var(--line);padding:8px 14px;border-radius:999px;transition:.14s}
+  .back:hover{color:#fff;border-color:var(--line-2)}
+  .ghead{display:flex;align-items:center;gap:16px;margin:24px 0 8px}
+  .ghead .gava{width:64px;height:64px;border-radius:18px;flex:0 0 64px;object-fit:cover;background:var(--surface-3);
+    display:grid;place-items:center;font-family:var(--font-display);font-weight:600;font-size:26px;color:var(--peri);border:1px solid var(--line)}
+  .ghead h1{font-family:var(--font-display);font-size:clamp(28px,4vw,42px);font-weight:700;letter-spacing:-.03em;line-height:1.05}
+  .ghead .gid{font-family:var(--font-mono);font-size:12.5px;color:var(--txt-faint);margin-top:4px}
+  .live-dot{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:12px;
+    color:var(--green);margin-left:auto;flex:0 0 auto}
+  .live-dot .d{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(67,224,138,.6);animation:lp 2s infinite}
+  .live-dot.off{color:var(--amber)}.live-dot.off .d{background:var(--amber);animation:none}
+  @keyframes lp{0%{box-shadow:0 0 0 0 rgba(67,224,138,.5)}70%{box-shadow:0 0 0 7px rgba(67,224,138,0)}100%{box-shadow:0 0 0 0 rgba(67,224,138,0)}}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:28px 0}
+  .stat{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:18px 20px}
+  .stat .l{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-faint)}
+  .stat .v{font-family:var(--font-display);font-size:30px;font-weight:600;margin-top:8px;line-height:1}
+  .stat .v.live{color:var(--peri)}
+
+  .feed-wrap{margin-top:14px}
+  .feed-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .feed-h h2{font-family:var(--font-display);font-size:20px;font-weight:600}
+  .feed-h .hint{font-size:12.5px;color:var(--txt-faint)}
+  .filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+  .fchip{font-family:var(--font-mono);font-size:12px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+    background:var(--surface);color:var(--txt-dim);cursor:pointer;transition:.13s}
+  .fchip:hover{border-color:var(--line-2);color:#fff}
+  .fchip.on{background:var(--peri);color:#000;border-color:var(--peri)}
+  .feed{display:flex;flex-direction:column;gap:8px;min-height:200px}
+  .ev{display:flex;align-items:center;gap:13px;padding:13px 16px;border:1px solid var(--line);
+    border-radius:var(--r);background:var(--surface);animation:slidein .35s ease}
+  @keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .ev .ic{width:34px;height:34px;border-radius:10px;flex:0 0 34px;display:grid;place-items:center;font-size:16px;
+    background:var(--surface-3);border:1px solid var(--line)}
+  .ev .tx{flex:1;font-size:14px;color:var(--txt)}
+  .ev .tx b{font-weight:600;color:#fff}
+  .ev .ty{font-family:var(--font-mono);font-size:10.5px;color:var(--txt-faint);text-transform:uppercase;letter-spacing:.05em}
+  .ev .tm{font-family:var(--font-mono);font-size:11.5px;color:var(--txt-faint);flex:0 0 auto}
+  .ev.ban .ic,.ev.msg_delete .ic,.ev.channel_del .ic,.ev.role_del .ic,.ev.leave .ic{border-color:rgba(226,92,122,.35)}
+  .ev.join .ic,.ev.unban .ic,.ev.voice_join .ic{border-color:rgba(67,224,138,.35)}
+  .empty{color:var(--txt-faint);text-align:center;padding:50px 0;font-size:14.5px}
+  .skel{height:60px;border-radius:var(--r)}
+  .errcard{border:1px solid rgba(226,92,122,.3);background:rgba(226,92,122,.07);border-radius:var(--r);
+    padding:18px 20px;color:#f3c2cd;font-size:14.5px;line-height:1.55}
+  .errcard code{font-family:var(--font-mono);background:rgba(255,255,255,.07);padding:2px 6px;border-radius:5px;color:#fff;font-size:12.5px}
+</style></head><body>
+<div class="ambient"></div>
+<script src="/shared.js"></script>
+<main class="wrap" id="main">
+  <div class="top"><a class="back" href="/dashboard">← All servers</a></div>
+  <div id="body"><div class="stats">
+    <div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div>
+</main>
+
+<script>
+mountChrome('dashboard');
+const GID=location.pathname.split('/').filter(Boolean)[1];
+const TYPES=[['all','All'],['ban','Bans'],['join','Joins'],['leave','Leaves'],['mute','Timeouts'],
+  ['voice_join','Voice'],['msg_delete','Deletes'],['role_add','Roles'],['channel_add','Channels']];
+const VOICE=new Set(['voice_join','voice_leave','voice_move']);
+let filter='all', es=null, events=[];
+
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function md(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');}
+function ago(t){const s=Math.round((Date.now()-t)/1000);
+  if(s<5)return 'now';if(s<60)return s+'s';if(s<3600)return Math.floor(s/60)+'m';
+  if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';}
+function bucket(ty){ if(ty==='all')return null;
+  if(ty==='voice_join')return VOICE; if(ty==='role_add')return new Set(['role_add','role_del']);
+  if(ty==='channel_add')return new Set(['channel_add','channel_del']);
+  if(ty==='mute')return new Set(['mute','unmute']); if(ty==='ban')return new Set(['ban','unban']);
+  return new Set([ty]); }
+
+function renderFeed(){
+  const set=bucket(filter);
+  const list=events.filter(e=>!set||set.has(e.type));
+  const feed=document.getElementById('feed');if(!feed)return;
+  feed.innerHTML=list.length?list.map(e=>`
+    <div class="ev ${esc(e.type)}">
+      <div class="ic">${e.icon||'•'}</div>
+      <div class="tx">${md(e.text)}<div class="ty">${esc(e.type)}</div></div>
+      <div class="tm">${ago(e.t)}</div></div>`).join('')
+    : '<div class="empty">No matching activity yet. Live events will appear here as they happen.</div>';
+}
+
+function shell(g, live){
+  return `
+    <div class="ghead">
+      ${g.icon?`<img class="gava" src="${g.icon}" alt="">`:`<div class="gava">${esc((g.name||'?').charAt(0).toUpperCase())}</div>`}
+      <div><h1>${esc(g.name)}</h1><div class="gid">ID ${esc(g.id)}</div></div>
+      <span class="live-dot ${live?'':'off'}" id="livedot"><span class="d"></span>${live?'live':'offline'}</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="l">Members</div><div class="v">${fmt(g.members)}</div></div>
+      <div class="stat"><div class="l">In voice</div><div class="v live" id="s-voice">${fmt(g.voiceActive)}</div></div>
+      <div class="stat"><div class="l">Channels</div><div class="v">${fmt(g.channels)}</div></div>
+      <div class="stat"><div class="l">Roles</div><div class="v">${fmt(g.roles)}</div></div>
+      <div class="stat"><div class="l">Boosts</div><div class="v">${fmt(g.boosts)}</div></div>
+    </div>
+    <div class="feed-wrap">
+      <div class="feed-h"><h2>Live activity</h2><span class="hint">streaming in real time</span></div>
+      <div class="filters">${TYPES.map(([v,l])=>`<span class="fchip ${v==='all'?'on':''}" data-f="${v}">${l}</span>`).join('')}</div>
+      <div class="feed" id="feed"><div class="empty">Waiting for activity…</div></div>
+    </div>`;
+}
+
+function startStream(){
+  if(es) es.close();
+  es=new EventSource('/api/guild/'+GID+'/events');
+  es.onmessage=ev=>{
+    try{const e=JSON.parse(ev.data);
+      events.unshift(e); if(events.length>120) events.pop();
+      if(e.type&&e.type.startsWith('voice')){ /* nudge voice counter */
+        const vc=document.getElementById('s-voice');
+        if(vc){let n=parseInt(vc.textContent.replace(/,/g,''))||0;
+          if(e.type==='voice_join')n++; if(e.type==='voice_leave')n=Math.max(0,n-1);
+          vc.textContent=fmt(n);}}
+      renderFeed();
+    }catch{}
+  };
+  es.onerror=()=>{const d=document.getElementById('livedot');
+    if(d){d.classList.add('off');d.innerHTML='<span class="d"></span>reconnecting';}};
+  es.onopen=()=>{const d=document.getElementById('livedot');
+    if(d){d.classList.remove('off');d.innerHTML='<span class="d"></span>live';}};
+}
+
+(async()=>{
+  if(!GID){location.href='/dashboard';return;}
+  try{
+    const r=await fetch('/api/guild/'+GID);
+    if(r.status===403){document.getElementById('body').innerHTML=
+      '<div class="errcard">You don’t manage this server, or you’re not signed in. <a href="/dashboard" style="color:var(--peri)">Back to dashboard</a></div>';return;}
+    if(!r.ok){const j=await r.json().catch(()=>({}));
+      document.getElementById('body').innerHTML=
+        `<div class="errcard">${esc(j.error||'Couldn’t load this server.')} The bot bridge may be offline — make sure the bot is running with the stats endpoint.</div>`;return;}
+    const d=await r.json();
+    events=(d.recent||[]);
+    document.getElementById('body').innerHTML=shell(d.guild, true);
+    renderFeed();
+    document.querySelectorAll('.fchip').forEach(c=>c.onclick=()=>{
+      document.querySelectorAll('.fchip').forEach(x=>x.classList.remove('on'));
+      c.classList.add('on');filter=c.dataset.f;renderFeed();});
+    startStream();
+    setInterval(renderFeed,15000); // refresh relative timestamps
+  }catch(e){
+    document.getElementById('body').innerHTML='<div class="errcard">Couldn’t reach the server. Try again.</div>';
+  }
+})();
+</script>
+</body></html>

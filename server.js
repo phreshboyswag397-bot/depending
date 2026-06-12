@@ -227,6 +227,49 @@ app.get('/api/config', (req, res) => {
   });
 });
 
+// --- Per-server live view (only for guilds the user manages) ---------
+function userManages(req, guildId) {
+  const sess = getSession(req);
+  if (!sess || !sess.user) return false;
+  return (sess.guilds || []).some(g => g.id === guildId);
+}
+const STATS_BASE = BOT_STATS_URL.replace(/\/stats$/, '');
+function botHeaders() { return STATS_SECRET ? { 'x-stats-secret': STATS_SECRET } : {}; }
+
+// snapshot + recent events for one guild
+app.get('/api/guild/:id', async (req, res) => {
+  const id = req.params.id;
+  if (!userManages(req, id)) return res.status(403).json({ error: 'forbidden' });
+  try {
+    const r = await fetch(STATS_BASE + '/guild/' + id, { headers: botHeaders() });
+    if (!r.ok) return res.status(r.status).json({ error: 'bot offline or not in server' });
+    res.json(await r.json());
+  } catch (e) { res.status(502).json({ error: 'bot bridge unreachable' }); }
+});
+
+// live event stream (SSE) — proxied through so the bot stays internal
+app.get('/api/guild/:id/events', async (req, res) => {
+  const id = req.params.id;
+  if (!userManages(req, id)) return res.status(403).end();
+  let upstream;
+  try {
+    upstream = await fetch(STATS_BASE + '/events/' + id, { headers: botHeaders() });
+  } catch { return res.status(502).end(); }
+  if (!upstream.ok || !upstream.body) return res.status(upstream.status || 502).end();
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive', 'X-Accel-Buffering': 'no'
+  });
+  const reader = upstream.body.getReader();
+  const pump = () => reader.read().then(({ done, value }) => {
+    if (done) return res.end();
+    res.write(Buffer.from(value));
+    pump();
+  }).catch(() => res.end());
+  pump();
+  req.on('close', () => { try { reader.cancel(); } catch {} });
+});
+
 // ── simple pages for footer links ──────────────────────────
 function legal(title, body) {
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
@@ -248,6 +291,8 @@ app.get('/terms', (_req, res) => res.type('html').send(legal('Terms',
 for (const p of ['commands', 'embeds', 'status', 'docs', 'changelogs', 'dashboard']) {
   app.get('/' + p, (_req, res) => res.sendFile(path.join(HERE, p + '.html')));
 }
+// per-server live view: /dashboard/<guildId>
+app.get('/dashboard/:id', (_req, res) => res.sendFile(path.join(HERE, 'server.html')));
 app.get('/invite', (_req, res) => res.redirect('https://discord.gg/depend'));
 app.get('/', (_req, res) => res.sendFile(path.join(HERE, 'index.html')));
 

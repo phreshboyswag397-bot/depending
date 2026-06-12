@@ -36,7 +36,7 @@
   .marquee.loading{height:44px}
   @media(max-width:600px){.hero{padding:34px 0 0}.marquee-track{animation-duration:28s}}
 </style></head><body>
-<div class="ambient"></div><canvas class="specks" id="specks"></canvas>
+<div class="ambient"></div>
 <script src="/shared.js"></script>
 <main>
   <section class="hero wrap">
@@ -59,21 +59,6 @@
 <script>
 mountChrome('home');
 
-// ambient specks (subtle, periwinkle)
-(()=>{
-  const c=document.getElementById('specks');if(!c)return;const x=c.getContext('2d');
-  let w,h,dots;
-  function init(){w=c.width=innerWidth;h=c.height=innerHeight;
-    dots=Array.from({length:Math.min(70,Math.round(w*h/26000))},()=>({
-      x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+.3,
-      a:Math.random()*.5+.1,vy:Math.random()*.12+.02}));}
-  function draw(){x.clearRect(0,0,w,h);
-    for(const d of dots){x.beginPath();x.arc(d.x,d.y,d.r,0,7);
-      x.fillStyle='rgba(183,169,242,'+d.a+')';x.fill();
-      d.y-=d.vy;if(d.y<-4){d.y=h+4;d.x=Math.random()*w;}}
-    requestAnimationFrame(draw);}
-  init();draw();addEventListener('resize',init);
-})();
 
 (async()=>{
   try{ const s=await (await fetch('/api/status')).json();const sh=s.shards&&s.shards[0];
