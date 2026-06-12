@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard — depend</title>
+<title>Dashboard · depend</title>
+<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
@@ -48,7 +49,17 @@
     padding:8px 16px;border-radius:999px;cursor:pointer}
   .userbar .out:hover{color:#fff;border-color:var(--line-2)}
   .muted{color:var(--txt-faint);font-size:14px;margin-top:18px}
+  .errbox{max-width:560px;margin:0 auto;border:1px solid rgba(226,92,122,.3);
+    background:rgba(226,92,122,.07);border-radius:14px;padding:18px 20px}
+  .errbox .et{color:#f3c2cd;font-size:14.5px;line-height:1.55}
+  .errbox code{font-family:var(--font-mono);font-size:12.5px;background:rgba(255,255,255,.07);
+    padding:2px 6px;border-radius:5px;color:#fff}
+  .errbox .fix{margin-top:14px;color:var(--txt-dim);font-size:13.5px}
+  .errbox .ru{font-family:var(--font-mono);font-size:13px;color:var(--peri);background:#0a0a0e;
+    border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-top:8px;word-break:break-all}
+  .errbox .hint{margin-top:9px;font-size:12.5px;color:var(--txt-faint)}
 </style></head><body>
+<div class="ambient"></div>
 <script src="/shared.js"></script>
 <main class="wrap" id="main">
   <div style="color:var(--txt-faint);padding:80px 0">Loading…</div>
@@ -60,13 +71,31 @@ const DISCORD_ICON=`<svg width="26" height="26" viewBox="0 0 24 24" fill="curren
 const CHECK=`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.4 2.4 4.6-4.8"/></svg>`;
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 
-function signedOut(){
+async function errorBanner(){
+  const err=new URLSearchParams(location.search).get('error');
+  if(!err) return '';
+  let cfg={};try{cfg=await (await fetch('/api/config')).json();}catch{}
+  const msgs={
+    config:'Login isn’t configured on the server yet — <code>CLIENT_SECRET</code> is missing from the environment.',
+    oauth:'Discord rejected the login. This almost always means the redirect URL below isn’t registered, or the client secret is wrong.',
+    state:'The login session expired or didn’t match. Try again.'
+  };
+  const tip = (err==='oauth'||err==='config') && cfg.redirectUri
+    ? `<div class="fix">Add this exact URL under <b>OAuth2 → Redirects</b> in the Discord Developer Portal:
+        <div class="ru">${esc(cfg.redirectUri)}</div>
+        ${cfg.baseUrlSet?'':'<div class="hint">Tip: also set <code>BASE_URL</code> in your <code>.env</code> to your real domain.</div>'}</div>` : '';
+  return `<div class="errbox"><div class="et">${msgs[err]||'Something went wrong.'}</div>${tip}</div>`;
+}
+
+async function signedOut(){
+  const banner=await errorBanner();
   document.getElementById('main').innerHTML=`
-    <div class="dash-head"><span class="eyebrow">Dashboard</span>
+    <div class="dash-head"><span class="eyebrow">// dashboard</span>
       <h1>Sign in to manage your servers</h1>
       <p>Connect your Discord account to configure depend across every server you manage.</p></div>
+    ${banner}
     <div class="signin">
-      <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg></div>
+      <div class="ic"><img src="/logo.png" alt="depend" width="34" height="34" style="filter:invert(1)"></div>
       <h2>Continue with Discord</h2>
       <p class="scopes">We only request the <code>identify</code> and <code>guilds</code> scopes.</p>
       <button class="go" onclick="location.href='/auth/discord'">${DISCORD_ICON} Sign in with Discord</button>
@@ -84,7 +113,7 @@ function signedIn(me){
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
   const guilds=(me.guilds||[]).sort((a,b)=>(b.botIn-a.botIn)||a.name.localeCompare(b.name));
   document.getElementById('main').innerHTML=`
-    <div class="dash-head"><span class="eyebrow">Dashboard</span>
+    <div class="dash-head"><span class="eyebrow">// dashboard</span>
       <h1>Your servers</h1>
       <p>Servers where you have Manage Server permission. Pick one to configure depend.</p></div>
     <div class="userbar">
@@ -104,10 +133,10 @@ function signedIn(me){
 (async()=>{
   try{
     const r=await fetch('/api/me');
-    if(r.status===401){ signedOut(); return; }
+    if(r.status===401){ await signedOut(); return; }
     const me=await r.json();
-    if(me&&me.user) signedIn(me); else signedOut();
-  }catch{ signedOut(); }
+    if(me&&me.user) signedIn(me); else await signedOut();
+  }catch{ await signedOut(); }
 })();
 </script>
 </body></html>

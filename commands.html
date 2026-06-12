@@ -1,55 +1,74 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Commands — depend</title>
+<title>Commands · depend</title>
+<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <style>
-  .toolbar{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0 30px}
-  .search{flex:1;min-width:240px;display:flex;align-items:center;gap:11px;
+  .toolbar{display:flex;gap:12px;margin:6px 0 34px;align-items:stretch;position:relative;z-index:20}
+  .search{flex:1;min-width:0;display:flex;align-items:center;gap:11px;
     background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:0 16px}
   .search svg{color:var(--txt-faint);flex:0 0 18px}
   .search input{flex:1;background:none;border:none;outline:none;color:var(--txt);
-    font-size:15px;font-family:var(--font-body);padding:14px 0}
+    font-size:15px;font-family:var(--font-body);padding:15px 0}
   .search input::placeholder{color:var(--txt-faint)}
-  .cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:34px}
-  .chip{font-family:var(--font-mono);font-size:12.5px;padding:8px 14px;border-radius:9px;
-    border:1px solid var(--line);background:var(--surface);color:var(--txt-dim);cursor:pointer;
-    transition:.14s;display:flex;align-items:center;gap:7px}
-  .chip:hover{border-color:var(--peri-deep);color:var(--txt)}
-  .chip.active{background:var(--peri);color:var(--bg);border-color:var(--peri);font-weight:500}
-  .chip .n{opacity:.6;font-size:11px}
-  .chip.active .n{opacity:.75}
 
-  .group{margin-bottom:44px;scroll-margin-top:90px}
+  /* category dropdown box */
+  .catbox{position:relative;flex:0 0 auto;width:260px}
+  .catbox-btn{width:100%;height:100%;display:flex;align-items:center;gap:10px;
+    background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:0 16px;
+    cursor:pointer;color:var(--txt);font-size:15px;transition:.14s}
+  .catbox-btn:hover{border-color:var(--line-2)}
+  .catbox-btn .ic{color:var(--peri);flex:0 0 18px;display:grid;place-items:center}
+  .catbox-btn .lbl{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .catbox-btn .cnt{margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--txt-faint)}
+  .catbox-btn .chev{flex:0 0 14px;color:var(--txt-faint);transition:.2s}
+  .catbox.open .catbox-btn .chev{transform:rotate(180deg)}
+  .catbox-menu{position:absolute;top:calc(100% + 8px);right:0;width:300px;max-height:340px;
+    overflow-y:auto;background:#0c0c11;border:1px solid var(--line-2);border-radius:14px;
+    padding:6px;box-shadow:0 18px 50px -18px rgba(0,0,0,.85);display:none}
+  .catbox.open .catbox-menu{display:block}
+  .catbox-menu::-webkit-scrollbar{width:8px}
+  .catbox-menu::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+  .cat-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:10px;
+    cursor:pointer;color:var(--txt-dim);font-size:14.5px;transition:.12s}
+  .cat-item:hover{background:rgba(255,255,255,.04);color:#fff}
+  .cat-item.on{background:rgba(183,169,242,.12);color:var(--peri)}
+  .cat-item .ci{flex:0 0 16px;opacity:.8}
+  .cat-item .cn{font-weight:500}
+  .cat-item .cc{margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--txt-faint)}
+  .cat-item.on .cc{color:var(--peri)}
+
+  .group{margin-bottom:42px;scroll-margin-top:100px}
   .group-h{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;
     padding-bottom:13px;border-bottom:1px solid var(--line)}
   .group-h h2{font-family:var(--font-display);font-size:23px;font-weight:600;letter-spacing:-.02em}
   .group-h .ct{font-family:var(--font-mono);font-size:12px;color:var(--txt-faint)}
   .cmd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-  .cmd{padding:16px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
-    transition:.14s}
-  .cmd:hover{border-color:var(--peri-deep)}
+  .cmd{padding:16px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);transition:.14s}
+  .cmd:hover{border-color:var(--line-2)}
   .cmd.note{background:var(--surface);border-style:dashed;border-color:var(--line)}
   .cmd-name{font-family:var(--font-mono);font-size:14.5px;color:var(--peri-bright);font-weight:500;
     display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .cmd-name .args{color:var(--txt-faint);font-weight:400}
-  .cmd-name .opt{color:var(--green);opacity:.8}
+  .cmd-name .opt{color:var(--green);opacity:.85}
   .cmd-desc{color:var(--txt-dim);font-size:13.5px;margin-top:7px;line-height:1.5}
   .cmd-alias{display:inline-block;font-family:var(--font-mono);font-size:11px;color:var(--peri);
-    background:rgba(183,169,242,.1);border:1px solid rgba(183,169,242,.22);
-    padding:2px 8px;border-radius:7px;margin-top:9px}
-  .subhead{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    background:rgba(183,169,242,.1);border:1px solid rgba(183,169,242,.22);padding:2px 8px;border-radius:7px;margin-top:9px}
+  .subhead{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;
     color:var(--txt-faint);grid-column:1/-1;margin:8px 0 -2px;padding-top:6px}
   .none{color:var(--txt-faint);padding:50px 0;text-align:center;font-size:15px}
+  @media(max-width:680px){.toolbar{flex-direction:column}.catbox{width:100%}.catbox-menu{width:100%}}
 </style></head><body>
+<div class="ambient"></div>
 <script src="/shared.js"></script>
 <main class="wrap">
   <div class="page-head">
-    <span class="eyebrow">Reference</span>
+    <span class="eyebrow">// reference</span>
     <h1>Commands</h1>
-    <p>Every command depend ships, pulled straight from the bot. Search by name, or jump to a category.</p>
+    <p>Every command depend ships, pulled straight from the bot. Search by name, or pick a category.</p>
   </div>
 
   <div class="toolbar">
@@ -57,8 +76,16 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <input id="q" placeholder="Search commands… (e.g. ban, vc, embed)" autocomplete="off">
     </div>
+    <div class="catbox" id="catbox">
+      <button class="catbox-btn" id="catbtn" aria-haspopup="listbox">
+        <span class="ic">▦</span><span class="lbl" id="catlbl">All categories</span>
+        <span class="cnt" id="catcnt"></span>
+        <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="catbox-menu" id="catmenu" role="listbox"></div>
+    </div>
   </div>
-  <div class="cats" id="cats"></div>
+
   <div id="out"><div class="none">Loading commands…</div></div>
 </main>
 
@@ -66,35 +93,25 @@
 mountChrome('commands');
 let DATA=[], active='all';
 
-// parse one raw help line into structured pieces
+function realCount(cat){return cat.cmds.filter(l=>/^[a-z]/.test(l)&&!l.startsWith('-#')&&!l.startsWith('—')).length;}
 function parse(line){
   if(line==='') return {kind:'spacer'};
-  // section markers like "— Embed Builder —"
   const sec=line.match(/^—\s*(.+?)\s*—$/);
   if(sec) return {kind:'subhead',text:sec[1]};
-  // discord-style "-#" small notes  or plain sentences (no command shape)
-  const isNote=line.startsWith('-#')||(/^[A-Z]/.test(line)&&!/^[A-Za-z0-9_]+(\s|$)/.test(line.split(' ')[0]))||
-               (line.split(' ').length>3 && !/^[a-z]/.test(line) && line.includes(' '));
-  // detect alias
-  let alias=null;const am=line.match(/\((alias(?:es)?:\s*[^)]+)\)/i);
-  if(am)alias=am[1];
-  // split "cmd args — description"
+  let alias=null;const am=line.match(/\((alias(?:es)?:\s*[^)]+)\)/i);if(am)alias=am[1];
   let work=line.replace(/\s*\((alias(?:es)?:[^)]+)\)/i,'').trim();
   let desc='';const dm=work.split(/\s+[—–]\s+/);
   if(dm.length>1){work=dm[0].trim();desc=dm.slice(1).join(' — ').trim();}
   const parts=work.split(/\s+/);
-  // a "command" starts with a lowercase token of word-chars (+ optional /)
   const looksCmd=/^[a-z][a-z0-9_]*(\/[a-z0-9_]+)?$/i.test(parts[0]) && !line.startsWith('-#') && !/^[A-Z]/.test(line.charAt(0));
-  if(!looksCmd && !alias) return {kind:'note',text:line.replace(/^-#\s*/,'')};
-  const name=parts[0]; const args=parts.slice(1).join(' ');
-  return {kind:'cmd',name,args,desc,alias};
+  if(!looksCmd && !alias) return {kind:'note',text:line};
+  return {kind:'cmd',name:parts[0],args:parts.slice(1).join(' '),desc,alias};
 }
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
-function argHTML(a){
-  return esc(a).replace(/(\[[^\]]+\])/g,'<span class="opt">$1</span>')
-               .replace(/(&lt;[^>]+&gt;)/g,'<span class="args">$1</span>')
-               .replace(/(@\w+|#\w+)/g,'<span class="args">$1</span>');
-}
+function argHTML(a){return esc(a).replace(/(\[[^\]]+\])/g,'<span class="opt">$1</span>')
+  .replace(/(&lt;[^>]+&gt;)/g,'<span class="args">$1</span>').replace(/(@\w+|#\w+)/g,'<span class="args">$1</span>');}
+function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
+function shortTitle(t){return t.replace(/ Commands$/,'');}
 
 function render(){
   const q=document.getElementById('q').value.trim().toLowerCase();
@@ -102,12 +119,8 @@ function render(){
   let html='', shown=0;
   for(const cat of DATA){
     if(active!=='all' && cat.title!==active) continue;
-    const rows=cat.cmds.map(parse);
-    // filter by query against the raw text
-    const matched=cat.cmds.filter(c=>!q||c.toLowerCase().includes(q));
-    if(q && !matched.length) continue;
     let body='', cnt=0;
-    rows.forEach((r,i)=>{
+    cat.cmds.map(parse).forEach((r,i)=>{
       const raw=cat.cmds[i];
       if(q && !raw.toLowerCase().includes(q) && r.kind!=='subhead') return;
       if(r.kind==='spacer') return;
@@ -121,31 +134,43 @@ function render(){
     if(!cnt) continue;
     shown++;
     html+=`<section class="group" id="cat-${slug(cat.title)}">
-      <div class="group-h"><h2>${esc(cat.title.replace(/ Commands$/,''))}</h2>
+      <div class="group-h"><h2>${esc(shortTitle(cat.title))}</h2>
         <span class="ct">${cnt} ${cnt===1?'command':'commands'}</span></div>
       <div class="cmd-grid">${body}</div></section>`;
   }
   out.innerHTML=shown?html:'<div class="none">No commands match “'+esc(q)+'”.</div>';
 }
-function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
+
+function setActive(val,label,count){
+  active=val;
+  document.getElementById('catlbl').textContent=label;
+  document.getElementById('catcnt').textContent=count;
+  document.querySelectorAll('.cat-item').forEach(x=>x.classList.toggle('on',x.dataset.c===val));
+  document.getElementById('catbox').classList.remove('open');
+  render(); window.scrollTo({top:0,behavior:'smooth'});
+}
 
 (async()=>{
   try{
     DATA=await (await fetch('/api/commands')).json();
-    const total=DATA.reduce((n,c)=>n+c.cmds.filter(l=>/^[a-z]/.test(l)&&!l.startsWith('-#')).length,0);
-    const chips=[`<div class="chip active" data-c="all">All <span class="n">${total}+</span></div>`]
-      .concat(DATA.map(c=>{
-        const n=c.cmds.filter(l=>/^[a-z]/.test(l)&&!l.startsWith('-#')&&!l.startsWith('—')).length;
-        return `<div class="chip" data-c="${esc(c.title)}">${esc(c.title.replace(/ Commands$/,''))} <span class="n">${n}</span></div>`;
-      }));
-    document.getElementById('cats').innerHTML=chips.join('');
-    document.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{
-      document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
-      ch.classList.add('active');active=ch.dataset.c;render();window.scrollTo({top:0,behavior:'smooth'});
-    });
+    const total=DATA.reduce((n,c)=>n+realCount(c),0);
+    document.getElementById('catcnt').textContent=total+'+';
+    const items=[`<div class="cat-item on" data-c="all" data-label="All categories" data-count="${total}+">
+        <span class="ci">▦</span><span class="cn">All categories</span><span class="cc">${total}+</span></div>`]
+      .concat(DATA.map(c=>{const n=realCount(c);
+        return `<div class="cat-item" data-c="${esc(c.title)}" data-label="${esc(shortTitle(c.title))}" data-count="${n}">
+          <span class="ci">▸</span><span class="cn">${esc(shortTitle(c.title))}</span><span class="cc">${n}</span></div>`;}));
+    document.getElementById('catmenu').innerHTML=items.join('');
+    document.querySelectorAll('.cat-item').forEach(it=>it.onclick=()=>
+      setActive(it.dataset.c,it.dataset.label,it.dataset.count));
     render();
   }catch(e){document.getElementById('out').innerHTML='<div class="none">Couldn’t load commands.</div>';}
 })();
+
+// dropdown open/close
+const box=document.getElementById('catbox');
+document.getElementById('catbtn').onclick=e=>{e.stopPropagation();box.classList.toggle('open');};
+document.addEventListener('click',e=>{if(!box.contains(e.target))box.classList.remove('open');});
 document.getElementById('q').addEventListener('input',render);
 </script>
 </body></html>

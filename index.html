@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>depend — a Discord bot you can rely on</title>
+<title>depend</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="description" content="A Discord bot for moderation, automation, and social tools.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <style>
-  .hero{text-align:center;padding:90px 0 60px;display:flex;flex-direction:column;align-items:center}
-  .hero h1{font-family:var(--font-display);font-weight:700;letter-spacing:-.035em;
-    font-size:clamp(44px,7.5vw,86px);line-height:1.04;max-width:13ch}
+  .hero{text-align:center;padding:54px 0 0;display:flex;flex-direction:column;align-items:center}
+  .hero .eyebrow{margin-bottom:18px}
+  .hero h1{font-family:var(--font-display);font-weight:800;letter-spacing:-.035em;
+    font-size:clamp(38px,5.6vw,68px);line-height:1.05;max-width:18ch}
   .hero h1 .em{background:linear-gradient(180deg,#cdc2f8,#9f8fee);-webkit-background-clip:text;
     background-clip:text;color:transparent}
-  .hero .sub{color:var(--txt-dim);font-size:18px;max-width:560px;margin:26px auto 0;line-height:1.6}
-  .hero .powering{color:var(--txt-dim);font-size:16px;margin:34px 0 30px}
+  .hero .sub{color:var(--txt-dim);font-size:16.5px;max-width:540px;margin:20px auto 0;line-height:1.6}
+  .hero .powering{color:var(--txt-dim);font-size:15px;margin:22px 0 22px}
   .hero .powering b{color:#fff;font-weight:600}
-  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 
-  /* server marquee */
-  .marquee{margin-top:64px;width:100vw;position:relative;left:50%;transform:translateX(-50%);
-    overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  .marquee{margin-top:40px;width:100vw;position:relative;left:50%;transform:translateX(-50%);
+    overflow:hidden;padding:8px 0;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
     mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-  .marquee-track{display:flex;gap:46px;width:max-content;animation:scroll 42s linear infinite}
+  .marquee-track{display:flex;gap:42px;width:max-content;animation:scroll 40s linear infinite}
   .marquee:hover .marquee-track{animation-play-state:paused}
   @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  .srv{display:flex;align-items:center;gap:13px;flex:0 0 auto}
-  .srv .ava{width:46px;height:46px;border-radius:50%;flex:0 0 46px;object-fit:cover;
+  .srv{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+  .srv .ava{width:44px;height:44px;border-radius:50%;flex:0 0 44px;object-fit:cover;
     background:var(--surface-3);display:grid;place-items:center;font-family:var(--font-display);
-    font-weight:600;color:var(--peri);font-size:18px;border:1px solid var(--line)}
-  .srv .nm{font-weight:600;font-size:15px;color:#fff;white-space:nowrap}
-  .srv .mc{font-size:13px;color:var(--txt-faint);margin-top:1px;white-space:nowrap}
-  .marquee.loading{height:48px}
-  @media(max-width:600px){.hero{padding:60px 0 40px}.marquee-track{animation-duration:30s}}
+    font-weight:600;color:var(--peri);font-size:17px;border:1px solid var(--line)}
+  .srv .nm{font-weight:600;font-size:14.5px;color:#fff;white-space:nowrap}
+  .srv .mc{font-size:12.5px;color:var(--txt-faint);margin-top:1px;white-space:nowrap}
+  .marquee.loading{height:44px}
+  @media(max-width:600px){.hero{padding:34px 0 0}.marquee-track{animation-duration:28s}}
 </style></head><body>
+<div class="ambient"></div><canvas class="specks" id="specks"></canvas>
 <script src="/shared.js"></script>
 <main>
   <section class="hero wrap">
-    <h1>your server can always<br>depend on <span class="em">depend</span></h1>
-    <p class="sub">A Discord bot for moderation, automation, and social tools. Keep your server secure,
-      automate the routine work, and customize every feature to fit how your community actually runs.</p>
-    <p class="powering">Powering <b id="p-users">4,245</b> users across <b id="p-guilds">90</b> communities</p>
+    <span class="eyebrow">// moderation · automation · social</span>
+    <h1>your server can always depend on <span class="em">depend</span></h1>
+    <p class="sub">One Discord bot to keep your server secure, automate the routine work, and customize
+      every feature to fit how your community actually runs.</p>
+    <p class="powering">Powering <b id="p-users">4,243</b> users across <b id="p-guilds">90</b> communities</p>
     <div class="hero-cta">
-      <a class="btn btn-dark" href="https://discord.gg/depend">
-        <svg class="di" width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4a18 18 0 0 0-4.5-1.4l-.2.5a16 16 0 0 1 3.4 1.1A15 15 0 0 0 5.3 4.2a16 16 0 0 1 3.4-1.1l-.2-.5A18 18 0 0 0 4 4C1.7 7.5 1 11 1.2 14.4A18 18 0 0 0 6.6 17l.6-.9c-.6-.2-1.1-.5-1.6-.8l.4-.3a12 12 0 0 0 10 0l.4.3c-.5.3-1 .6-1.6.8l.6.9a18 18 0 0 0 5.4-2.6C23 10.8 22 7 20 4ZM8.4 13.2c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Zm7.2 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Z"/></svg>
+      <a class="btn btn-primary" href="https://discord.gg/depend">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4a18 18 0 0 0-4.5-1.4l-.2.5a16 16 0 0 1 3.4 1.1A15 15 0 0 0 5.3 4.2a16 16 0 0 1 3.4-1.1l-.2-.5A18 18 0 0 0 4 4C1.7 7.5 1 11 1.2 14.4A18 18 0 0 0 6.6 17l.6-.9c-.6-.2-1.1-.5-1.6-.8l.4-.3a12 12 0 0 0 10 0l.4.3c-.5.3-1 .6-1.6.8l.6.9a18 18 0 0 0 5.4-2.6C23 10.8 22 7 20 4ZM8.4 13.2c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Zm7.2 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Z"/></svg>
         Add depend to your server</a>
       <a class="btn btn-dark" href="/commands">Explore features</a>
     </div>
@@ -54,13 +59,26 @@
 <script>
 mountChrome('home');
 
+// ambient specks (subtle, periwinkle)
+(()=>{
+  const c=document.getElementById('specks');if(!c)return;const x=c.getContext('2d');
+  let w,h,dots;
+  function init(){w=c.width=innerWidth;h=c.height=innerHeight;
+    dots=Array.from({length:Math.min(70,Math.round(w*h/26000))},()=>({
+      x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+.3,
+      a:Math.random()*.5+.1,vy:Math.random()*.12+.02}));}
+  function draw(){x.clearRect(0,0,w,h);
+    for(const d of dots){x.beginPath();x.arc(d.x,d.y,d.r,0,7);
+      x.fillStyle='rgba(183,169,242,'+d.a+')';x.fill();
+      d.y-=d.vy;if(d.y<-4){d.y=h+4;d.x=Math.random()*w;}}
+    requestAnimationFrame(draw);}
+  init();draw();addEventListener('resize',init);
+})();
+
 (async()=>{
-  try{
-    const s=await (await fetch('/api/status')).json();
-    const sh=s.shards&&s.shards[0];
-    if(sh){ document.getElementById('p-users').textContent=fmt(sh.users);
-      document.getElementById('p-guilds').textContent=fmt(sh.servers); }
-  }catch{}
+  try{ const s=await (await fetch('/api/status')).json();const sh=s.shards&&s.shards[0];
+    if(sh){document.getElementById('p-users').textContent=fmt(sh.users);
+      document.getElementById('p-guilds').textContent=fmt(sh.servers);}}catch{}
 })();
 
 (async()=>{
@@ -68,19 +86,17 @@ mountChrome('home');
   try{
     const d=await (await fetch('/api/servers')).json();
     const list=d.servers||[];
-    if(d.totalUsers) document.getElementById('p-users').textContent=fmt(d.totalUsers);
-    if(d.totalGuilds) document.getElementById('p-guilds').textContent=fmt(d.totalGuilds);
+    if(d.totalUsers)document.getElementById('p-users').textContent=fmt(d.totalUsers);
+    if(d.totalGuilds)document.getElementById('p-guilds').textContent=fmt(d.totalGuilds);
     if(!list.length){m.remove();return;}
     const card=s=>`<div class="srv">
       ${s.icon?`<img class="ava" src="${s.icon}" alt="" loading="lazy">`
               :`<div class="ava">${(s.name||'?').trim().charAt(0).toUpperCase()}</div>`}
       <div><div class="nm">${s.name}</div><div class="mc">${fmt(s.members)} members</div></div></div>`;
-    // duplicate the list so the loop is seamless (track scrolls exactly -50%)
     const row=list.map(card).join('');
     m.classList.remove('loading');
     m.innerHTML=`<div class="marquee-track">${row}${row}</div>`;
-    // tune speed to content width: ~ one item per 2.6s, min 25s
-    const dur=Math.max(25,Math.round(list.length*2.6));
+    const dur=Math.max(22,Math.round(list.length*2.4));
     m.querySelector('.marquee-track').style.animationDuration=dur+'s';
   }catch(e){ m.remove(); }
 })();

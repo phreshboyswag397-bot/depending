@@ -137,12 +137,23 @@ app.get('/api/commands', (_req, res) => res.sendFile(path.join(HERE, 'commands.j
 app.get('/api/changelogs', (_req, res) => res.sendFile(path.join(HERE, 'changelogs.json')));
 
 // ── OAuth2 dashboard login ─────────────────────────────────
+// Resolve the redirect URI the SAME way for both legs of the flow.
+// Prefer an explicit BASE_URL; otherwise derive it from the incoming
+// request (works behind nginx / Cloudflare via x-forwarded-* headers).
+function redirectUri(req) {
+  if (process.env.BASE_URL) return process.env.BASE_URL.replace(/\/$/, '') + '/auth/callback';
+  const proto = (req.headers['x-forwarded-proto'] || (req.socket && req.socket.encrypted ? 'https' : 'http')).split(',')[0].trim();
+  const host = (req.headers['x-forwarded-host'] || req.headers.host || ('localhost:' + PORT)).split(',')[0].trim();
+  return proto + '://' + host + '/auth/callback';
+}
+
 app.get('/auth/discord', (req, res) => {
-  if (!CLIENT_SECRET) return res.status(503).send('Dashboard login not configured (missing CLIENT_SECRET).');
+  if (!CLIENT_SECRET) return res.redirect('/dashboard?error=config');
   const state = crypto.randomBytes(16).toString('hex');
-  setSession(res, { state, exp: Date.now() + 600000 }); // 10-min state cookie
+  const ru = redirectUri(req);
+  setSession(res, { state, ru, exp: Date.now() + 600000 }); // remember the exact URI used
   const url = 'https://discord.com/oauth2/authorize?' + new URLSearchParams({
-    client_id: CLIENT_ID, response_type: 'code', redirect_uri: REDIRECT_URI,
+    client_id: CLIENT_ID, response_type: 'code', redirect_uri: ru,
     scope: 'identify guilds', state, prompt: 'consent'
   });
   res.redirect(url);
@@ -152,16 +163,20 @@ app.get('/auth/callback', async (req, res) => {
   try {
     const { code, state } = req.query;
     const sess = getSession(req);
-    if (!code || !state || !sess || sess.state !== state) return res.redirect('/dashboard');
+    if (!code || !state || !sess || sess.state !== state) return res.redirect('/dashboard?error=state');
+    const ru = sess.ru || redirectUri(req);
 
     const tokenRes = await fetch(API + '/oauth2/token', {
       method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         client_id: CLIENT_ID, client_secret: CLIENT_SECRET, grant_type: 'authorization_code',
-        code, redirect_uri: REDIRECT_URI
+        code, redirect_uri: ru
       })
     });
-    if (!tokenRes.ok) throw new Error('token exchange failed');
+    if (!tokenRes.ok) {
+      console.error('[oauth] token exchange failed:', tokenRes.status, await tokenRes.text());
+      throw new Error('token exchange failed');
+    }
     const tok = await tokenRes.json();
 
     const [meRes, gRes] = await Promise.all([
@@ -183,7 +198,7 @@ app.get('/auth/callback', async (req, res) => {
     res.redirect('/dashboard');
   } catch (e) {
     console.error('[oauth]', e.message);
-    res.redirect('/dashboard');
+    res.redirect('/dashboard?error=oauth');
   }
 });
 
@@ -200,6 +215,16 @@ app.get('/api/me', async (req, res) => {
   try { if (Date.now() - cache.at > 60000) ids = (await refreshServers()).ids; } catch {}
   const guilds = (sess.guilds || []).map(g => ({ ...g, botIn: ids.has(g.id) }));
   res.json({ user: sess.user, guilds });
+});
+
+// Diagnostic: what redirect URI must be registered in the Developer Portal.
+app.get('/api/config', (req, res) => {
+  res.json({
+    clientId: CLIENT_ID,
+    hasSecret: !!CLIENT_SECRET,
+    redirectUri: redirectUri(req),
+    baseUrlSet: !!process.env.BASE_URL
+  });
 });
 
 // ── simple pages for footer links ──────────────────────────
