@@ -57,11 +57,13 @@
   "title": "Fun Commands",
   "cmds": [
    "giveaway [#ch] <time> <winners> <prize>",
-   "greroll [messageId]",
+   "greroll [messageId] (aliases: reroll, gwreroll, gw reroll)",
    "poll Q | Opt1 | Opt2",
    "quickpoll <question>",
    "blacktea — start a blacktea game (alias: bt)",
    "blacktea end — stop the running game in this channel",
+   "guessthebrainrot — guess the Italian brainrot characters (alias: gtb)",
+   "guesstheflag — guess the country from its flag (alias: gtf)",
    "trivia",
    "wordle",
    "tictactoe @user",
@@ -125,7 +127,7 @@
   ]
  },
  {
-  "title": "Economy & Leveling",
+  "title": "Economy & Activity",
   "cmds": [
    "— Economy —",
    "balance [@user]",
@@ -139,13 +141,9 @@
    "givecoin @user <amount>",
    "slots [bet]",
    "blackjack [bet]",
-   "— XP & Leveling —",
-   "rank [@user]",
-   "leaderboard",
-   "activitylb",
-   "topcommands",
-   "levelrole add <level> <@role> — auto-grant a role at a level (alias: lr)",
-   "levelrole remove <level> / levelrole list"
+   "— Activity —",
+   "activitylb — top posters by total messages (aliases: alb, msglb)",
+   "topcommands"
   ]
  },
  {

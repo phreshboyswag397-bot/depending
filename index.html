@@ -21,20 +21,21 @@
   .hero .powering b{color:#fff;font-weight:600}
   .hero-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 
-  .marquee{margin-top:40px;width:100vw;position:relative;left:50%;transform:translateX(-50%);
-    overflow:hidden;padding:8px 0;
-    -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
-    mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-  .marquee-track{display:flex;gap:42px;width:max-content;animation:scroll 40s linear infinite}
+  .marquee{margin-top:36px;max-width:980px;margin-left:auto;margin-right:auto;
+    overflow:hidden;padding:6px 0;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+  .marquee-track{display:flex;gap:34px;width:max-content;animation:scroll 38s linear infinite}
   @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  .srv{display:flex;align-items:center;gap:12px;flex:0 0 auto}
-  .srv .ava{width:44px;height:44px;border-radius:50%;flex:0 0 44px;object-fit:cover;
+  .srv{display:flex;align-items:center;gap:10px;flex:0 0 auto;opacity:.85;transition:opacity .2s}
+  .srv:hover{opacity:1}
+  .srv .ava{width:34px;height:34px;border-radius:50%;flex:0 0 34px;object-fit:cover;
     background:var(--surface-3);display:grid;place-items:center;font-family:var(--font-display);
-    font-weight:600;color:var(--peri);font-size:17px;border:1px solid var(--line)}
-  .srv .nm{font-weight:600;font-size:14.5px;color:#fff;white-space:nowrap}
-  .srv .mc{font-size:12.5px;color:var(--txt-faint);margin-top:1px;white-space:nowrap}
-  .marquee.loading{height:44px}
-  @media(max-width:600px){.hero{padding:34px 0 0}.marquee-track{animation-duration:28s}}
+    font-weight:600;color:var(--peri);font-size:14px;border:1px solid var(--line)}
+  .srv .nm{font-weight:600;font-size:13.5px;color:#fff;white-space:nowrap;line-height:1.1}
+  .srv .mc{font-size:11.5px;color:var(--txt-faint);margin-top:1px;white-space:nowrap}
+  .marquee.loading{height:36px}
+  @media(max-width:600px){.hero{padding:34px 0 0}.marquee-track{animation-duration:26s}}
 </style></head><body>
 <div class="ambient"></div>
 <script src="/shared.js"></script>

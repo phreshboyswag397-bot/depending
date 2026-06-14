@@ -40,47 +40,55 @@ function mountLoader(){
   if(document.getElementById('loader')) return;
   const css=`
     #loader{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
-      background:#000;transition:opacity .45s ease;}
+      background:radial-gradient(circle at 50% 45%,#0b0a14 0%,#000 70%);
+      transition:opacity .5s ease;}
     #loader.hide{opacity:0;pointer-events:none}
-    #loader img{width:64px;height:64px;
-      filter:drop-shadow(0 0 18px rgba(183,169,242,.55));
-      animation:ldr-pulse 1s ease-in-out infinite;}
-    #loader.out img{animation:ldr-out .5s cubic-bezier(.5,0,.3,1) forwards}
-    @keyframes ldr-pulse{0%,100%{opacity:.55;transform:translateY(0) scale(1)}
-      50%{opacity:1;transform:translateY(-6px) scale(1.04)}}
+    #loader .ldr-wrap{position:relative;display:grid;place-items:center}
+    #loader .halo{position:absolute;width:240px;height:240px;border-radius:50%;
+      background:radial-gradient(circle,rgba(183,169,242,.35),rgba(183,169,242,0) 65%);
+      filter:blur(6px);animation:ldr-halo 1.8s ease-in-out infinite}
+    #loader .ring{position:absolute;width:140px;height:140px;border-radius:50%;
+      border:2px solid transparent;border-top-color:rgba(183,169,242,.8);
+      border-right-color:rgba(183,169,242,.25);animation:ldr-spin 1.1s linear infinite}
+    #loader img{width:104px;height:104px;position:relative;
+      filter:drop-shadow(0 0 14px rgba(183,169,242,.65)) drop-shadow(0 0 34px rgba(143,127,224,.45));
+      animation:ldr-pulse 1.4s ease-in-out infinite}
+    #loader.out .ldr-wrap{animation:ldr-out .62s cubic-bezier(.55,0,.25,1) forwards}
+    @keyframes ldr-pulse{0%,100%{opacity:.82;transform:scale(1)}
+      50%{opacity:1;transform:scale(1.07);filter:drop-shadow(0 0 22px rgba(183,169,242,.85)) drop-shadow(0 0 48px rgba(143,127,224,.6))}}
+    @keyframes ldr-halo{0%,100%{opacity:.5;transform:scale(.92)}50%{opacity:1;transform:scale(1.08)}}
+    @keyframes ldr-spin{to{transform:rotate(360deg)}}
     @keyframes ldr-out{0%{opacity:1;transform:translateY(0) scale(1)}
-      45%{opacity:1;transform:translateY(-22px) scale(1.06)}
-      100%{opacity:0;transform:translateY(-40px) scale(.12)}}
-    @media(prefers-reduced-motion:reduce){#loader img{animation:none}#loader.out img{animation:none}}`;
+      40%{opacity:1;transform:translateY(-18px) scale(1.1)}
+      100%{opacity:0;transform:translateY(-46px) scale(.08)}}
+    @media(prefers-reduced-motion:reduce){
+      #loader img,#loader .halo,#loader .ring{animation:none}
+      #loader.out .ldr-wrap{animation:none}}`;
   document.head.insertAdjacentHTML('beforeend',`<style>${css}</style>`);
   document.body.insertAdjacentHTML('afterbegin',
-    `<div id="loader"><img src="/logo.png" alt="loading"></div>`);
+    `<div id="loader"><div class="ldr-wrap"><div class="halo"></div><div class="ring"></div><img src="/logo-lg.png" alt=""></div></div>`);
   const el=document.getElementById('loader');
 
   function dismiss(){
     el.classList.add('out');
-    setTimeout(()=>el.classList.add('hide'),460);
-    setTimeout(()=>{ if(el.classList.contains('hide')) el.style.display='none'; },920);
+    setTimeout(()=>el.classList.add('hide'),600);
+    setTimeout(()=>{ if(el.classList.contains('hide')) el.style.display='none'; },1120);
   }
-  // hide once the page + first paint are ready (small min-show so it's seen)
   const shownAt=performance.now();
-  function ready(){ const wait=Math.max(0,420-(performance.now()-shownAt)); setTimeout(dismiss,wait); }
+  function ready(){ const wait=Math.max(0,520-(performance.now()-shownAt)); setTimeout(dismiss,wait); }
   if(document.readyState==='complete') ready();
   else window.addEventListener('load',ready);
 
-  // re-show the loader when navigating to another internal page
   document.addEventListener('click',e=>{
     const a=e.target.closest && e.target.closest('a');
     if(!a) return;
     const href=a.getAttribute('href')||'';
     if(a.target==='_blank'||a.hasAttribute('download')) return;
     if(e.metaKey||e.ctrlKey||e.shiftKey||e.button!==0) return;
-    // only same-origin, non-hash, non-external links
     if(href.startsWith('http')||href.startsWith('//')||href.startsWith('#')||href.startsWith('mailto')) return;
-    if(href==='' ) return;
+    if(href==='') return;
     el.style.display='grid';el.classList.remove('out','hide');
   });
-  // restore if user comes back via bfcache
   window.addEventListener('pageshow',ev=>{ if(ev.persisted){ el.classList.add('out','hide');el.style.display='none'; }});
 }
 

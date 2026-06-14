@@ -7,62 +7,66 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <style>
-  .toolbar{display:flex;gap:12px;margin:6px 0 34px;align-items:stretch;position:relative;z-index:20}
+  .toolbar{display:flex;gap:12px;margin:6px 0 30px;align-items:stretch;position:relative;z-index:20}
   .search{flex:1;min-width:0;display:flex;align-items:center;gap:11px;
     background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:0 16px}
-  .search svg{color:var(--txt-faint);flex:0 0 18px}
+  .search svg{color:var(--peri);flex:0 0 18px}
   .search input{flex:1;background:none;border:none;outline:none;color:var(--txt);
     font-size:15px;font-family:var(--font-body);padding:15px 0}
   .search input::placeholder{color:var(--txt-faint)}
-
-  /* category dropdown box */
-  .catbox{position:relative;flex:0 0 auto;width:260px}
+  .catbox{position:relative;flex:0 0 auto;width:230px}
   .catbox-btn{width:100%;height:100%;display:flex;align-items:center;gap:10px;
     background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:0 16px;
     cursor:pointer;color:var(--txt);font-size:15px;transition:.14s}
   .catbox-btn:hover{border-color:var(--line-2)}
-  .catbox-btn .ic{color:var(--peri);flex:0 0 18px;display:grid;place-items:center}
+  .catbox-btn .ic{color:var(--peri);flex:0 0 16px;display:grid;place-items:center}
   .catbox-btn .lbl{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .catbox-btn .cnt{margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--txt-faint)}
   .catbox-btn .chev{flex:0 0 14px;color:var(--txt-faint);transition:.2s}
   .catbox.open .catbox-btn .chev{transform:rotate(180deg)}
-  .catbox-menu{position:absolute;top:calc(100% + 8px);right:0;width:300px;max-height:340px;
+  .catbox-menu{position:absolute;top:calc(100% + 8px);right:0;width:290px;max-height:360px;
     overflow-y:auto;background:#0c0c11;border:1px solid var(--line-2);border-radius:14px;
     padding:6px;box-shadow:0 18px 50px -18px rgba(0,0,0,.85);display:none}
   .catbox.open .catbox-menu{display:block}
-  .catbox-menu::-webkit-scrollbar{width:8px}
-  .catbox-menu::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+  .catbox-menu::-webkit-scrollbar{width:8px}.catbox-menu::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
   .cat-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:10px;
     cursor:pointer;color:var(--txt-dim);font-size:14.5px;transition:.12s}
   .cat-item:hover{background:rgba(255,255,255,.04);color:#fff}
   .cat-item.on{background:rgba(183,169,242,.12);color:var(--peri)}
-  .cat-item .ci{flex:0 0 16px;opacity:.8}
   .cat-item .cn{font-weight:500}
   .cat-item .cc{margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--txt-faint)}
   .cat-item.on .cc{color:var(--peri)}
 
-  .group{margin-bottom:46px;scroll-margin-top:100px}
-  .group-h{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-  .group-h h2{font-family:var(--font-display);font-size:21px;font-weight:600;letter-spacing:-.02em}
-  .group-h .ct{font-family:var(--font-mono);font-size:11.5px;color:var(--txt-faint);
+  .group{margin-bottom:30px;scroll-margin-top:100px}
+  .group-h{display:flex;align-items:center;gap:11px;margin:34px 0 16px}
+  .group-h h2{font-family:var(--font-display);font-size:20px;font-weight:600;letter-spacing:-.02em}
+  .group-h .ct{font-family:var(--font-mono);font-size:11px;color:var(--txt-faint);
     background:var(--surface);border:1px solid var(--line);padding:3px 9px;border-radius:999px}
   .group-h .rule{flex:1;height:1px;background:var(--line)}
-  .cmd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:10px}
-  .cmd{padding:15px 17px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
-    transition:.14s;display:flex;flex-direction:column}
-  .cmd:hover{border-color:var(--line-2);background:var(--surface-2)}
-  .cmd.note{background:transparent;border-style:dashed;border-color:var(--line);justify-content:center}
-  .cmd-name{font-family:var(--font-mono);font-size:14px;font-weight:500;
-    display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;line-height:1.5}
-  .cmd-name .pfx{color:var(--txt-faint);font-weight:400}
-  .cmd-name .nm{color:#fff}
-  .cmd-name .args{color:var(--txt-faint);font-weight:400;font-size:13px}
-  .cmd-name .opt{color:var(--peri-deep)}
-  .cmd-desc{color:var(--txt-dim);font-size:13px;margin-top:8px;line-height:1.5}
-  .cmd-alias{align-self:flex-start;font-family:var(--font-mono);font-size:10.5px;color:var(--txt-dim);
-    background:rgba(255,255,255,.04);border:1px solid var(--line);padding:2px 8px;border-radius:6px;margin-top:10px}
-  .subhead{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--txt-faint);grid-column:1/-1;margin:8px 0 -2px;padding-top:6px}
+
+  .cmd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+  .card-cmd{position:relative;border:1px solid var(--line);border-radius:16px;background:var(--surface);
+    padding:22px 22px 24px;transition:.16s;display:flex;flex-direction:column}
+  .card-cmd:hover{border-color:var(--line-2);background:var(--surface-2);transform:translateY(-2px)}
+  .card-cmd .catlabel{font-size:12px;color:var(--txt-faint);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .card-cmd .catlabel .dot{width:5px;height:5px;border-radius:50%;background:var(--peri);opacity:.7}
+  .card-cmd .cname{font-family:var(--font-display);font-size:21px;font-weight:600;color:#fff;letter-spacing:-.01em;line-height:1.15}
+  .card-cmd .cdesc{color:var(--txt-dim);font-size:14px;line-height:1.5;margin-top:8px}
+  .card-cmd .sec{margin-top:20px}
+  .card-cmd .sec-l{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--txt-faint);margin-bottom:9px}
+  .pills{display:flex;flex-wrap:wrap;gap:7px}
+  .pill-tag{font-size:12.5px;padding:5px 12px;border-radius:999px;background:#000;
+    border:1px solid var(--line-2);color:var(--txt-dim)}
+  .pill-tag.opt{color:var(--peri);border-color:rgba(183,169,242,.3)}
+  .pill-tag.perm{color:#cfcae6;background:rgba(183,169,242,.06);border-color:rgba(183,169,242,.18)}
+  .pill-tag.none{color:var(--txt-faint);font-style:italic;background:transparent}
+  .copy{position:absolute;top:18px;right:18px;background:none;border:1px solid var(--line);
+    width:32px;height:32px;border-radius:9px;color:var(--txt-faint);cursor:pointer;transition:.14s;
+    display:grid;place-items:center}
+  .copy:hover{border-color:var(--peri-deep);color:var(--peri)}
+  .card-cmd.note-card{justify-content:center;border-style:dashed}
+  .card-cmd.note-card .cdesc{margin:0}
   .none{color:var(--txt-faint);padding:50px 0;text-align:center;font-size:15px}
   @media(max-width:680px){.toolbar{flex-direction:column}.catbox{width:100%}.catbox-menu{width:100%}}
 </style></head><body>
@@ -82,7 +86,8 @@
     </div>
     <div class="catbox" id="catbox">
       <button class="catbox-btn" id="catbtn" aria-haspopup="listbox">
-        <span class="ic">▦</span><span class="lbl" id="catlbl">All categories</span>
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+        <span class="lbl" id="catlbl">All categories</span>
         <span class="cnt" id="catcnt"></span>
         <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
       </button>
@@ -97,25 +102,73 @@
 mountChrome('commands');
 let DATA=[], active='all';
 
+// inferred permission per category (the bot strings don't carry perms)
+const PERMS={
+  'Moderation':['moderate_members'],'Anti-Nuke':['administrator'],'Fake Permissions':['administrator'],
+  'Role':['manage_roles'],'Welcome':['manage_guild'],'Booster Role':['manage_guild'],
+  'Filter & Automod':['manage_guild'],'Settings':['manage_guild'],'Suggestions':['manage_guild'],
+  'Responders &':['manage_guild'],'VoiceMaster':['manage_channels'],'Invites':['manage_guild'],
+  'Tickets':['manage_guild'],'Server Stats':['manage_guild'],'Sticky Messages':['manage_messages'],
+  'Embeds & Messages':['manage_messages'],'Logging':['manage_guild']
+};
+function permsFor(title){const k=shortTitle(title);return PERMS[k]||[];}
+
 function realCount(cat){return cat.cmds.filter(l=>/^[a-z]/.test(l)&&!l.startsWith('-#')&&!l.startsWith('—')).length;}
+function shortTitle(t){return t.replace(/ Commands$/,'');}
+function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+// parse one line into {name, args:[...], opts:[...], desc, alias, note}
 function parse(line){
   if(line==='') return {kind:'spacer'};
-  const sec=line.match(/^—\s*(.+?)\s*—$/);
-  if(sec) return {kind:'subhead',text:sec[1]};
-  let alias=null;const am=line.match(/\((alias(?:es)?:\s*[^)]+)\)/i);if(am)alias=am[1];
+  const sec=line.match(/^—\s*(.+?)\s*—$/); if(sec) return {kind:'subhead',text:sec[1]};
+  let alias=null;const am=line.match(/\((alias(?:es)?:\s*[^)]+)\)/i);
+  if(am)alias=am[1].replace(/^alias(?:es)?:\s*/i,'');
   let work=line.replace(/\s*\((alias(?:es)?:[^)]+)\)/i,'').trim();
   let desc='';const dm=work.split(/\s+[—–]\s+/);
   if(dm.length>1){work=dm[0].trim();desc=dm.slice(1).join(' — ').trim();}
-  const parts=work.split(/\s+/);
-  const looksCmd=/^[a-z][a-z0-9_]*(\/[a-z0-9_]+)?$/i.test(parts[0]) && !line.startsWith('-#') && !/^[A-Z]/.test(line.charAt(0));
-  if(!looksCmd && !alias) return {kind:'note',text:line};
-  return {kind:'cmd',name:parts[0],args:parts.slice(1).join(' '),desc,alias};
+  const tokens=work.split(/\s+/);
+  const first=tokens[0];
+  const looksCmd=/^[a-z][a-z0-9_]*(\/[a-z0-9_]+)?$/i.test(first)&&/^[a-z]/.test(line)&&!line.startsWith('-#');
+  if(!looksCmd) return {kind:'note',text:line.replace(/^-#\s*/,'')};
+  // command name = leading lowercase words until we hit an arg token (<...>, [...], @, #)
+  let i=1, nameParts=[first];
+  while(i<tokens.length && /^[a-z][a-z0-9_]*$/i.test(tokens[i]) && !/^[<\[@#]/.test(tokens[i])){
+    nameParts.push(tokens[i]); i++;
+  }
+  const rest=tokens.slice(i);
+  const args=[]; // {label, optional}
+  // group args: split on whitespace but keep <...> [...] chunks
+  const joined=rest.join(' ');
+  const re=/(\[[^\]]*\]|<[^>]*>|@\w+|#\w+|\S+)/g; let mm;
+  while((mm=re.exec(joined))){
+    let t=mm[1];
+    const optional=t.startsWith('[');
+    let label=t.replace(/^[\[<]|[\]>]$/g,'').trim();
+    if(label) args.push({label,optional});
+  }
+  return {kind:'cmd',name:nameParts.join(' '),args,desc,alias};
 }
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
-function argHTML(a){return esc(a).replace(/(\[[^\]]+\])/g,'<span class="opt">$1</span>')
-  .replace(/(&lt;[^>]+&gt;)/g,'<span class="args">$1</span>').replace(/(@\w+|#\w+)/g,'<span class="args">$1</span>');}
-function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
-function shortTitle(t){return t.replace(/ Commands$/,'');}
+
+function renderCard(r,catTitle){
+  const perms=permsFor(catTitle);
+  const argHtml = r.args.length
+    ? r.args.map(a=>`<span class="pill-tag ${a.optional?'opt':''}">${esc(a.label)}</span>`).join('')
+    : `<span class="pill-tag none">none</span>`;
+  const permHtml = perms.length
+    ? perms.map(p=>`<span class="pill-tag perm">${esc(p)}</span>`).join('')
+    : `<span class="pill-tag none">everyone</span>`;
+  const full=',' + r.name + (r.args.length?' '+r.args.map(a=>a.optional?'['+a.label+']':'<'+a.label+'>').join(' '):'');
+  return `<div class="card-cmd">
+    <button class="copy" data-cp="${esc(full).replace(/"/g,'&quot;')}" title="Copy"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
+    <div class="catlabel"><span class="dot"></span>${esc(shortTitle(catTitle).toLowerCase())}</div>
+    <div class="cname">${esc(r.name)}</div>
+    ${r.desc?`<div class="cdesc">${esc(r.desc)}</div>`:''}
+    <div class="sec"><div class="sec-l">Arguments</div><div class="pills">${argHtml}</div></div>
+    <div class="sec"><div class="sec-l">Permissions</div><div class="pills">${permHtml}</div></div>
+    ${r.alias?`<div class="sec"><div class="sec-l">Aliases</div><div class="pills"><span class="pill-tag">${esc(r.alias)}</span></div></div>`:''}
+  </div>`;
+}
 
 function render(){
   const q=document.getElementById('q').value.trim().toLowerCase();
@@ -123,26 +176,28 @@ function render(){
   let html='', shown=0;
   for(const cat of DATA){
     if(active!=='all' && cat.title!==active) continue;
-    let body='', cnt=0;
+    let cards='', cnt=0;
     cat.cmds.map(parse).forEach((r,i)=>{
       const raw=cat.cmds[i];
-      if(q && !raw.toLowerCase().includes(q) && r.kind!=='subhead') return;
-      if(r.kind==='spacer') return;
-      if(r.kind==='subhead'){body+=`<div class="subhead">${esc(r.text)}</div>`;return;}
-      if(r.kind==='note'){body+=`<div class="cmd note"><div class="cmd-desc" style="margin:0">${esc(r.text)}</div></div>`;cnt++;return;}
-      cnt++;
-      body+=`<div class="cmd"><div class="cmd-name"><span class="pfx">,</span><span class="nm">${esc(r.name)}</span>${r.args?` <span class="args">${argHTML(r.args)}</span>`:''}</div>
-        ${r.desc?`<div class="cmd-desc">${esc(r.desc)}</div>`:''}
-        ${r.alias?`<span class="cmd-alias">${esc(r.alias)}</span>`:''}</div>`;
+      if(q && !raw.toLowerCase().includes(q)) return;
+      if(r.kind==='spacer'||r.kind==='subhead') return;
+      if(r.kind==='note'){
+        cards+=`<div class="card-cmd note-card"><div class="cdesc">${esc(r.text)}</div></div>`;cnt++;return;
+      }
+      cnt++; cards+=renderCard(r,cat.title);
     });
     if(!cnt) continue;
     shown++;
     html+=`<section class="group" id="cat-${slug(cat.title)}">
-      <div class="group-h"><h2>${esc(shortTitle(cat.title))}</h2>
-        <span class="ct">${cnt}</span><span class="rule"></span></div>
-      <div class="cmd-grid">${body}</div></section>`;
+      <div class="group-h"><h2>${esc(shortTitle(cat.title))}</h2><span class="ct">${cnt}</span><span class="rule"></span></div>
+      <div class="cmd-grid">${cards}</div></section>`;
   }
   out.innerHTML=shown?html:'<div class="none">No commands match “'+esc(q)+'”.</div>';
+  out.querySelectorAll('.copy').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();navigator.clipboard?.writeText(b.dataset.cp);
+    const o=b.innerHTML;b.innerHTML='✓';b.style.color='var(--green)';
+    setTimeout(()=>{b.innerHTML=o;b.style.color='';},1100);
+  });
 }
 
 function setActive(val,label,count){
@@ -160,18 +215,16 @@ function setActive(val,label,count){
     const total=DATA.reduce((n,c)=>n+realCount(c),0);
     document.getElementById('catcnt').textContent=total+'+';
     const items=[`<div class="cat-item on" data-c="all" data-label="All categories" data-count="${total}+">
-        <span class="ci">▦</span><span class="cn">All categories</span><span class="cc">${total}+</span></div>`]
+        <span class="cn">All categories</span><span class="cc">${total}+</span></div>`]
       .concat(DATA.map(c=>{const n=realCount(c);
         return `<div class="cat-item" data-c="${esc(c.title)}" data-label="${esc(shortTitle(c.title))}" data-count="${n}">
-          <span class="ci">▸</span><span class="cn">${esc(shortTitle(c.title))}</span><span class="cc">${n}</span></div>`;}));
+          <span class="cn">${esc(shortTitle(c.title))}</span><span class="cc">${n}</span></div>`;}));
     document.getElementById('catmenu').innerHTML=items.join('');
-    document.querySelectorAll('.cat-item').forEach(it=>it.onclick=()=>
-      setActive(it.dataset.c,it.dataset.label,it.dataset.count));
+    document.querySelectorAll('.cat-item').forEach(it=>it.onclick=()=>setActive(it.dataset.c,it.dataset.label,it.dataset.count));
     render();
   }catch(e){document.getElementById('out').innerHTML='<div class="none">Couldn’t load commands.</div>';}
 })();
 
-// dropdown open/close
 const box=document.getElementById('catbox');
 document.getElementById('catbtn').onclick=e=>{e.stopPropagation();box.classList.toggle('open');};
 document.addEventListener('click',e=>{if(!box.contains(e.target))box.classList.remove('open');});
