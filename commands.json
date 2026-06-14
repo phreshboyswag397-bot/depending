@@ -50,7 +50,43 @@
    "massmove #voicechannel",
    "drag @user(s) #vc",
    "dump @role",
-   "hardbanlist"
+   "hardbanlist",
+   "talk <@user | @role | id | name> — let someone speak in a locked channel (untalk to reverse)",
+   "untalk <@user | @role | id | name> — remove a talk override",
+   "purge <amount> [@user] — bulk-delete messages (aliases: c, clear)",
+   "purgebots <amount> — delete recent messages from bots",
+   "purgecontains <word> <amount> — delete messages containing a word",
+   "purgeimages <amount> — delete recent messages with images",
+   "purgelinks <amount> — delete recent messages with links",
+   "unhide [#channel] — reveal a hidden channel",
+   "unlock [#channel] — unlock a locked channel",
+   "unlockdown — lift a server-wide lockdown",
+   "stripstaff @user — remove all of a member's dangerous roles",
+   "forcenick @user <nickname> — lock a member's nickname",
+   "nickname @user [new name] — change or reset a member's nickname (alias: nick)",
+   "warnings @user — view a member's warnings",
+   "modhistory @user — view moderation history for a member",
+   "banlist — list every banned user",
+   "timeout @user <time> [reason] — time a member out (alias: untimeout to reverse)"
+  ]
+ },
+ {
+  "title": "Server",
+  "cmds": [
+   "setup — run the guided server setup wizard",
+   "seticon <url> — set the server icon",
+   "setbanner <url> — set the server banner",
+   "vanity <code> — set or view the server vanity settings",
+   "setuplogs [#channel] — set up the logging channel",
+   "prefix set <symbol> — change the command prefix",
+   "counter members — create a live member-count channel",
+   "channelperms [#channel] — view a channel's permission overwrites (alias: chperms)",
+   "disablecmd <command> — disable a command in this server (alias: disable)",
+   "enablecmd <command> — re-enable a disabled command (alias: enable)",
+   "disabledcmds — list disabled commands",
+   "botblacklist @user — block a user from using the bot",
+   "serverwhitelist — manage the server whitelist (alias: swl)",
+   "restore — restore the server from a backup"
   ]
  },
  {
@@ -123,7 +159,34 @@
    "dare",
    "fortune",
    "pickup",
-   "riddle"
+   "riddle",
+   "kiss @user — kiss someone",
+   "cuddle @user — cuddle someone",
+   "pat @user — pat someone",
+   "bonk @user — bonk someone",
+   "bite @user — bite someone",
+   "lick @user — lick someone",
+   "highfive @user — high-five someone",
+   "wave @user — wave at someone",
+   "kill @user — dramatically eliminate someone",
+   "cry — cry",
+   "dance — dance",
+   "pout — pout",
+   "smug — be smug",
+   "chuck — a random Chuck Norris fact",
+   "cookie [@user] — give a cookie",
+   "pickupline — a random pickup line",
+   "uselessfact — a useless fact",
+   "gay [@user] — rate the gay (alias: gend)",
+   "cuterate [@user] — rate the cuteness",
+   "simprate [@user] — rate the simp",
+   "pprate [@user] — rate ppsize (alias: ppsize)",
+   "neverhaveiever — play never have I ever",
+   "wouldyourather — play would you rather (alias: wyr)",
+   "guessflag — guess the flag",
+   "guessbrainrot — guess the brainrot",
+   "ttt @user — play tic-tac-toe",
+   "multiflip <count> — flip multiple coins"
   ]
  },
  {
@@ -187,7 +250,21 @@
    "reactionrole <msgId> <emoji> <@role>",
    "rh <msgId> <emoji>",
    "rh list",
-   "inrole <@role / role name / role id>"
+   "inrole <@role / role name / role id>",
+   "serveravatar — show the server's icon (alias: sav)",
+   "serverbanner — show the server's banner (alias: sbanner)",
+   "members — show the member count",
+   "firstmessage — jump to the first message in a channel",
+   "messageid <id> — fetch a message by ID",
+   "react <message id> <emoji> — react to a message",
+   "esnipe — show a recently edited message (alias: editsnipe)",
+   "rsnipe — show a recently removed reaction",
+   "timezone <location> — look up a timezone (alias: tz)",
+   "google <query> — search Google (alias: search)",
+   "image <query> — search for an image",
+   "wikipedia <query> — search Wikipedia (alias: wiki)",
+   "dictionary <word> — define a word",
+   "owoify <text> — owoify some text"
   ]
  },
  {
@@ -372,7 +449,13 @@
    "forcenickname @user [nick]",
    "forcenicknamelist",
    "rename @user [nick]",
-   "dehoist"
+   "dehoist",
+   "role @user <role> — add or remove a role (alias: r)",
+   "rolehumans <role> — give a role to all humans",
+   "rolebots <role> — give a role to all bots",
+   "rolerestore @user — restore a member's previous roles (alias: restore)",
+   "buttonroles — set up button-based role menus",
+   "removereactionrole <message id> <emoji> — remove a reaction role"
   ]
  },
  {
@@ -498,7 +581,9 @@
    "lyrics [song] — fetch lyrics (uses current song if no arg)",
    "seek <seconds> — jump to position in the song",
    "remove <position> — remove a track from the queue",
-   "previous / prev / back — go back to the previous track"
+   "previous / prev / back — go back to the previous track",
+   "unpause — resume playback (alias: resume)",
+   "disconnect — disconnect from voice"
   ]
  },
  {
@@ -544,7 +629,16 @@
    "urban <term> — Urban Dictionary lookup",
    "wiki <query> — Wikipedia summary (alias: wikipedia)",
    "8ball <question> — magic 8-ball (alias: eightball)",
-   "coinflips <n> — flip up to 100 coins at once (alias: multiflip)"
+   "coinflips <n> — flip up to 100 coins at once (alias: multiflip)",
+   "afk [reason] — set yourself AFK (alias: a)",
+   "snipe — show a recently deleted message (alias: s)",
+   "botstatus — show the bot's status (alias: bstatus)",
+   "about — about the bot",
+   "instagram <user> — look up an Instagram profile (alias: ig)",
+   "tiktok <user> — look up a TikTok profile (alias: tt)",
+   "twitter <user> — look up a Twitter profile (alias: tw)",
+   "youtube <query> — search YouTube (alias: yt)",
+   "roblox <user> — look up a Roblox profile (alias: rbx)"
   ]
  }
 ]
