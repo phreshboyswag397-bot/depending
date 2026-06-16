@@ -48,9 +48,22 @@ async function discord(route) {
 }
 async function botStats() {
   const headers = STATS_SECRET ? { 'x-stats-secret': STATS_SECRET } : {};
-  const signal = AbortSignal.timeout ? AbortSignal.timeout(2500) : undefined;
-  const res = await fetch(BOT_STATS_URL, { headers, signal });
-  if (!res.ok) throw new Error('bot stats ' + res.status);
+  const signal = AbortSignal.timeout ? AbortSignal.timeout(6000) : undefined;
+  let res;
+  try {
+    res = await fetch(BOT_STATS_URL, { headers, signal });
+  } catch (e) {
+    // network-level failure (DNS, refused, timeout, blocked egress…)
+    const err = new Error('fetch failed: ' + (e.cause?.code || e.cause?.message || e.message));
+    err.diag = { url: BOT_STATS_URL, stage: 'fetch', detail: String(e.cause || e) };
+    throw err;
+  }
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    const err = new Error('bot stats HTTP ' + res.status);
+    err.diag = { url: BOT_STATS_URL, stage: 'response', status: res.status, body: body.slice(0, 200) };
+    throw err;
+  }
   return res.json();
 }
 
@@ -122,19 +135,22 @@ app.get('/api/status', async (_req, res) => {
     const s = await botStats();
     return res.json({ operational: s.operational, shards: s.shards, avgLatency: s.avgLatency,
       uptime: s.uptime, source: 'gateway', checkedAt: s.checkedAt || Date.now() });
-  } catch (_) { /* fall back to REST */ }
+  } catch (e) {
+    var bridgeError = { message: e.message, ...(e.diag || {}) };
+  }
   try {
     const c = await refreshServers();
     let latency = c.latency;
     try { latency = (await discord('/users/@me')).latency; } catch {}
     return res.json({ operational: true,
       shards: [{ id: 0, status: 'operational', latency, servers: c.totalGuilds, users: c.totalUsers }],
-      uptime: Date.now() - BOOT, source: 'rest', checkedAt: Date.now() });
-  } catch (e) { return res.status(502).json({ operational: false, error: e.message, shards: [] }); }
+      uptime: Date.now() - BOOT, source: 'rest', checkedAt: Date.now(), bridgeError });
+  } catch (e) { return res.status(502).json({ operational: false, error: e.message, shards: [], bridgeError }); }
 });
 
 app.get('/api/commands', (_req, res) => res.sendFile(path.join(HERE, 'commands.json')));
 app.get('/api/changelogs', (_req, res) => res.sendFile(path.join(HERE, 'changelogs.json')));
+app.get('/api/docs-config', (_req, res) => res.sendFile(path.join(HERE, 'docs-config.json')));
 
 // ── OAuth2 dashboard login ─────────────────────────────────
 // Resolve the redirect URI the SAME way for both legs of the flow.

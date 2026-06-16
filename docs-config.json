@@ -1,0 +1,107 @@
+{
+  "sections": [
+    {
+      "group": "Overview",
+      "pages": [
+        { "id": "introduction", "title": "Introduction", "icon": "book", "landing": true,
+          "lead": "Start here to understand depend and find the right setup guide.",
+          "intro": "depend is a multi-purpose Discord bot for moderation, automation, configuration, and everyday server management.",
+          "callout": { "title": "Default prefix", "body": "The default server prefix is <code>,</code>. Use <code>,prefix set &lt;symbol&gt;</code> to change it for your server, or mention depend to view the active prefix." } },
+        { "id": "changelogs", "title": "Changelogs", "icon": "rocket", "link": "/changelogs",
+          "lead": "Read the public release notes for depend and keep up with shipped updates." }
+      ]
+    },
+    {
+      "group": "Server Security",
+      "pages": [
+        { "id": "moderation", "title": "Moderation", "icon": "shield", "category": "Moderation Commands",
+          "lead": "Remove, restrict, and reverse actions against members.",
+          "intro": "Core moderation tools — bans, kicks, mutes, jails, purges and channel locks. Most require the <b>Moderate Members</b> permission.",
+          "callout": { "title": "Permissions", "body": "Most moderation commands need <code>Moderate Members</code>; destructive ones like <code>nuke</code> need <code>Manage Channels</code>." } },
+        { "id": "antinuke", "title": "Anti-Nuke", "icon": "lock", "category": "Anti-Nuke Commands",
+          "lead": "Reversible protection against nuke attempts and mass destruction.",
+          "intro": "Anti-Nuke watches for mass channel/role deletions, mass bans and webhook spam. Anything past a configured threshold gets the offender stripped, jailed or banned, and the action reversed where possible.",
+          "callout": { "title": "Owner only", "body": "Only the server owner and antinuke admins can change Anti-Nuke configuration. Start with <code>,an config</code>." } },
+        { "id": "fakeperms", "title": "Fake Permissions", "icon": "key", "category": "Fake Permissions Commands",
+          "lead": "Grant permissions inside depend without touching real server roles.",
+          "intro": "Fake Permissions let a role use depend commands as if it had a Discord permission, without granting that permission on the role itself — useful for letting trusted members moderate without real admin." }
+      ]
+    },
+    {
+      "group": "Server Configuration",
+      "pages": [
+        { "id": "server", "title": "Server Setup", "icon": "gear", "category": "Server",
+          "lead": "Set up roles, system messages, automation, counters, and other server features.",
+          "intro": "The setup commands configure depend for your server. Run <code>,setup</code> for the guided wizard, or configure pieces individually below. All require <b>Manage Server</b>.",
+          "callout": { "title": "Quick start", "body": "New here? Run <code>,setup</code> for an interactive wizard that walks through prefix, logging, welcome messages and more." } },
+        { "id": "roles", "title": "Roles", "icon": "users", "category": "Role Commands",
+          "lead": "Create, assign, colour and manage roles, including reaction and button roles.",
+          "intro": "Manage roles in bulk or individually — create, delete, colour, icon, and mass-assign to humans or bots. Requires <b>Manage Roles</b>." },
+        { "id": "welcome", "title": "Welcome Messages", "icon": "wave", "category": "Welcome Commands",
+          "lead": "Greet new members and farewell leavers with rich embeds.",
+          "intro": "Build join, leave and boost messages with placeholders like <code>{user.mention}</code> and <code>{count}</code>. Set a channel, then customise the message." },
+        { "id": "boost", "title": "Booster Roles", "icon": "heart", "category": "Booster Role Commands",
+          "lead": "Reward server boosters with custom perks and roles.",
+          "intro": "Give boosters their own customisable role with a colour and name they control." },
+        { "id": "invites", "title": "Invite Tracking", "icon": "mail", "category": "Invites Commands",
+          "lead": "Track who invited who across your server.",
+          "intro": "See invite counts, who invited a member, and invite leaderboards." },
+        { "id": "responders", "title": "Auto Responders", "icon": "chat", "category": "Responders & Commands",
+          "lead": "Automatic replies to messages matching a trigger.",
+          "intro": "Set up triggers that make depend reply automatically. Triggers match inside message content, not exact full-message matches." },
+        { "id": "voicemaster", "title": "VoiceMaster", "icon": "mic", "category": "VoiceMaster Commands",
+          "lead": "Temporary voice channels that members manage themselves.",
+          "intro": "VoiceMaster creates a temporary voice channel when someone joins the saved Join to Create channel. The owner manages that room with VoiceMaster commands and the pinned interface.",
+          "callout": { "title": "Owner controls", "body": "Most VoiceMaster commands only work for the current channel owner. If the owner leaves, another member can take over with <code>,voicemaster claim</code>." },
+          "setup": { "title": "First-time setup", "steps": [
+            { "text": "VoiceMaster setup is interactive and asks which layout you want.", "code": "voicemaster setup" },
+            { "text": "Pick Simple for one Join to Create channel, or Full for public/private channels and categories." }
+          ] } },
+        { "id": "reactions", "title": "Reaction Triggers", "icon": "react", "category": "Filter & Automod",
+          "lead": "Add emoji reactions automatically when messages contain trigger words.",
+          "intro": "Reaction Triggers let depend react automatically when a message contains a saved trigger word. Triggers are matched inside the message content, so a saved trigger reacts anywhere that word appears." },
+        { "id": "logging", "title": "Logging", "icon": "list", "category": "Settings Commands",
+          "lead": "Track message, member, role, channel and invite activity.",
+          "intro": "Configure depend's logging so server activity is recorded to a channel. Run <code>,setuplogs</code> to begin." },
+        { "id": "tickets", "title": "Ticketing", "icon": "ticket", "category": "Tickets",
+          "lead": "A support-ticket system with a button panel and transcripts.",
+          "intro": "Set up a ticket panel members click to open private support threads with transcripts. Start with <code>,ticket setup</code>." },
+        { "id": "leveling", "title": "Leveling", "icon": "trophy", "category": "Economy & Activity",
+          "lead": "XP, levels and a server economy.",
+          "intro": "Members rank up by chatting and being active. Configure rewards and leaderboards." },
+        { "id": "stickers", "title": "Sticky Messages", "icon": "pin", "category": "Sticky Messages",
+          "lead": "Keep a message pinned to the bottom of a channel.",
+          "intro": "Sticky messages re-post themselves so they stay at the bottom of a channel as people chat." },
+        { "id": "suggestions", "title": "Suggestions", "icon": "bulb", "category": "Suggestions Commands",
+          "lead": "Let members submit and vote on suggestions.",
+          "intro": "Set up a suggestions channel where members post ideas and vote with reactions." },
+        { "id": "stats", "title": "Server Stats", "icon": "chart", "category": "Server Stats",
+          "lead": "Live counter channels for members, bots and boosts.",
+          "intro": "Create voice-channel counters that auto-update with your member, bot and boost counts." }
+      ]
+    },
+    {
+      "group": "Resources",
+      "pages": [
+        { "id": "embeds", "title": "Embeds & Messages", "icon": "code", "category": "Embeds & Messages",
+          "lead": "Build named embeds and reuse them across the bot.",
+          "intro": "Create embeds with the builder, then reuse them in welcome, boost and vanity systems. All text fields support placeholders. Try the <a href='/embeds' style='color:var(--peri)'>visual embed builder</a>." },
+        { "id": "filters", "title": "Filter & Automod", "icon": "filter", "category": "Filter & Automod",
+          "lead": "Word filters, spam controls and native AutoMod.",
+          "intro": "Configure word filters, spam/caps/link controls and Discord AutoMod integration." },
+        { "id": "utility", "title": "Utility", "icon": "wrench", "category": "Utility Commands",
+          "lead": "Everyday utility commands.",
+          "intro": "Lookups, avatars, translation, search and other handy tools." },
+        { "id": "lookups", "title": "Profile Lookups", "icon": "search", "category": "Profile Lookups",
+          "lead": "Look up profiles across platforms.",
+          "intro": "Fetch profiles from Roblox, TikTok, Steam, Spotify and more." },
+        { "id": "music", "title": "Music", "icon": "music", "category": "Music Commands",
+          "lead": "Music playback built for everyone.",
+          "intro": "Play, queue and control music in voice channels." },
+        { "id": "misc", "title": "Misc Utility", "icon": "sparkle", "category": "Misc Utility",
+          "lead": "Everything else.",
+          "intro": "Assorted extra commands that don't fit elsewhere." }
+      ]
+    }
+  ]
+}
