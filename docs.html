@@ -2,149 +2,294 @@
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Docs · depend</title>
-<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/png" href="/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <style>
-  .docs{display:grid;grid-template-columns:248px 1fr;gap:40px;align-items:start;padding-top:30px}
-  .side{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow-y:auto;padding-right:6px}
-  .side::-webkit-scrollbar{width:6px}.side::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+  .docs{display:grid;grid-template-columns:250px minmax(0,1fr) 200px;gap:0;align-items:start;
+    max-width:1340px;margin:0 auto}
+  /* left sidebar */
+  .side{position:sticky;top:90px;align-self:start;max-height:calc(100vh - 110px);overflow-y:auto;
+    padding:8px 22px 40px 4px;border-right:1px solid var(--line)}
+  .side::-webkit-scrollbar{width:6px}.side::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:3px}
   .side-search{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--line);
-    border-radius:11px;padding:0 13px;margin-bottom:16px}
+    border-radius:11px;padding:0 12px;margin-bottom:22px}
   .side-search input{flex:1;background:none;border:none;outline:none;color:var(--txt);
-    font-size:13.5px;padding:11px 0;font-family:var(--font-body)}
-  .side-search svg{color:var(--txt-faint);flex:0 0 16px}
-  .side a{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:9px;
-    color:var(--txt-dim);font-size:14px;transition:.13s;cursor:pointer}
+    font-size:13.5px;padding:10px 0;font-family:var(--font-body)}
+  .side-search svg{color:var(--txt-faint);flex:0 0 15px}
+  .side-search .kbd{font-family:var(--font-mono);font-size:10px;color:var(--txt-faint);
+    border:1px solid var(--line);border-radius:5px;padding:2px 5px}
+  .side-group{margin-bottom:20px}
+  .side-group .gh{font-size:12px;font-weight:600;color:var(--txt-faint);letter-spacing:.02em;
+    margin:0 0 8px 10px;text-transform:none}
+  .side a{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:9px;
+    color:var(--txt-dim);font-size:14px;transition:.12s;cursor:pointer;margin-bottom:1px}
   .side a:hover{background:var(--surface);color:var(--txt)}
-  .side a.on{background:var(--surface-2);color:var(--peri);font-weight:500}
-  .side a .badge{font-family:var(--font-mono);font-size:11px;color:var(--txt-faint)}
-  .content{min-width:0}
-  .content h1{font-family:var(--font-display);font-size:40px;font-weight:600;letter-spacing:-.03em;margin-bottom:6px}
-  .content .lead{color:var(--txt-dim);font-size:16px;margin-bottom:30px;max-width:640px}
-  .doc-cmd{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
-    margin-bottom:12px;overflow:hidden;transition:.14s}
-  .doc-cmd:hover{border-color:var(--peri-deep)}
-  .dc-head{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none}
-  .dc-syntax{font-family:var(--font-mono);font-size:14.5px;color:var(--peri-bright);font-weight:500}
-  .dc-syntax .a{color:var(--txt-faint);font-weight:400}
-  .dc-desc-inline{color:var(--txt-dim);font-size:13.5px;margin-left:auto;text-align:right;
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46%}
-  .dc-copy{flex:0 0 auto;background:none;border:1px solid var(--line);color:var(--txt-faint);
-    width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:13px;transition:.14s}
-  .dc-copy:hover{border-color:var(--peri-deep);color:var(--peri)}
-  .doc-sub{font-family:var(--font-mono);font-size:13px;color:var(--peri);margin:26px 0 12px;
-    letter-spacing:.04em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--line)}
-  .doc-note{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--peri-deep);
-    border-radius:10px;padding:13px 16px;color:var(--txt-dim);font-size:14px;margin-bottom:12px;line-height:1.5}
-  .callout{display:flex;gap:12px;background:var(--surface);border:1px solid var(--line);
-    border-radius:var(--r);padding:16px 18px;margin-bottom:26px}
-  .callout .ic{color:var(--peri);flex:0 0 20px}
-  .callout b{color:var(--txt)}
-  .callout p{color:var(--txt-dim);font-size:14px;margin-top:3px}
-  .mobile-nav{display:none}
-  @media(max-width:880px){.docs{grid-template-columns:1fr;gap:18px}
-    .side{position:static;max-height:none}
-    .mobile-nav{display:block}.side.desktop{display:none}}
+  .side a.on{background:rgba(183,169,242,.1);color:var(--peri)}
+  .side a .di{flex:0 0 16px;display:grid;place-items:center;color:currentColor;opacity:.85}
+  /* content */
+  .content{min-width:0;padding:46px 52px 80px}
+  .content h1{font-family:var(--font-display);font-size:34px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px}
+  .content .lead{color:var(--txt-dim);font-size:17px;margin-bottom:26px}
+  .content .intro{color:var(--txt);font-size:15.5px;line-height:1.7;margin-bottom:22px}
+  .content .intro code,.callout code,.doc-step code,.guide-desc code{font-family:var(--font-mono);font-size:13px;
+    background:var(--surface-3);border:1px solid var(--line);padding:1.5px 6px;border-radius:5px;color:var(--peri-bright)}
+  .content h2{font-family:var(--font-display);font-size:24px;font-weight:600;letter-spacing:-.02em;
+    margin:38px 0 16px;scroll-margin-top:90px}
+  .callout{display:flex;gap:13px;background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--peri-deep);border-radius:12px;padding:16px 18px;margin:0 0 28px}
+  .callout .ci{flex:0 0 18px;color:var(--peri)}
+  .callout .ct{font-weight:600;font-size:14.5px;margin-bottom:4px}
+  .callout .cb{color:var(--txt-dim);font-size:14px;line-height:1.55}
+  /* guide cards (intro landing) */
+  .guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+  .guide-card{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:20px;
+    cursor:pointer;transition:.15s}
+  .guide-card:hover{border-color:var(--line-2);background:var(--surface-2);transform:translateY(-2px)}
+  .guide-card .gi{width:36px;height:36px;border-radius:10px;background:var(--surface-3);border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--peri);margin-bottom:14px}
+  .guide-card h3{font-family:var(--font-display);font-size:17px;font-weight:600;margin-bottom:6px}
+  .guide-card p{color:var(--txt-dim);font-size:13.5px;line-height:1.5}
+  /* command guides */
+  .guide{margin-bottom:26px;scroll-margin-top:90px}
+  .guide-title{font-family:var(--font-display);font-size:18px;font-weight:600;margin-bottom:6px}
+  .guide-desc{color:var(--txt-dim);font-size:14px;line-height:1.55;margin-bottom:12px}
+  .code-block{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+  .code-tabs{display:flex;gap:2px;padding:7px 7px 0;border-bottom:1px solid var(--line);background:var(--surface-2)}
+  .code-tab{font-size:12.5px;color:var(--txt-faint);padding:7px 13px;border-radius:8px 8px 0 0;cursor:pointer;transition:.12s}
+  .code-tab.on{color:var(--peri);background:var(--surface);border-bottom:2px solid var(--peri)}
+  .code-body{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;
+    font-family:var(--font-mono);font-size:13.5px;color:var(--txt)}
+  .code-body .code-text{white-space:pre-wrap;word-break:break-word}
+  .code-body .arg{color:var(--peri)}
+  .code-copy{flex:0 0 auto;background:none;border:1px solid var(--line);width:30px;height:30px;border-radius:8px;
+    color:var(--txt-faint);cursor:pointer;display:grid;place-items:center;transition:.14s;margin-left:12px}
+  .code-copy:hover{border-color:var(--peri-deep);color:var(--peri)}
+  .doc-step{display:flex;gap:14px;margin-bottom:18px}
+  .doc-step .num{flex:0 0 26px;height:26px;border-radius:50%;background:var(--surface-3);border:1px solid var(--line);
+    display:grid;place-items:center;font-size:12px;color:var(--peri);font-weight:600}
+  .doc-step .stxt{flex:1;color:var(--txt);font-size:14.5px;line-height:1.6}
+  .doc-step .code-block{margin-top:10px}
+  /* right outline */
+  .outline{position:sticky;top:90px;align-self:start;max-height:calc(100vh - 110px);overflow-y:auto;padding:46px 20px 40px 0}
+  .outline .oh{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--txt-faint);margin-bottom:14px}
+  .outline a{display:block;color:var(--txt-faint);font-size:13px;padding:5px 0 5px 12px;
+    border-left:2px solid var(--line);transition:.12s}
+  .outline a:hover{color:var(--txt-dim)}
+  .outline a.on{color:var(--peri);border-left-color:var(--peri)}
+  .menu-btn{display:none}
+  @media(max-width:1100px){.docs{grid-template-columns:230px minmax(0,1fr)}.outline{display:none}.content{padding:40px 28px 70px}}
+  @media(max-width:780px){
+    .docs{grid-template-columns:1fr}
+    .side{position:fixed;top:0;left:0;bottom:0;width:280px;z-index:200;background:#070709;
+      border-right:1px solid var(--line);transform:translateX(-100%);transition:.22s;padding-top:80px;max-height:none}
+    .side.open{transform:none}
+    .menu-btn{display:inline-flex;align-items:center;gap:8px;margin:16px 0 0 4px;background:var(--surface);
+      border:1px solid var(--line);color:var(--txt);padding:9px 14px;border-radius:10px;cursor:pointer;font-size:14px}
+    .guide-grid{grid-template-columns:1fr}
+    .content{padding:20px 20px 60px}
+  }
 </style></head><body>
 <div class="ambient"></div>
 <script src="/shared.js"></script>
-<main class="wrap docs">
-  <aside class="side desktop">
-    <div class="side-search">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input id="dsearch" placeholder="Search docs…" autocomplete="off">
-    </div>
-    <nav id="sidenav"></nav>
-  </aside>
-  <article class="content" id="content"><div style="color:var(--txt-faint);padding:60px 0">Loading docs…</div></article>
+<main class="wrap" style="max-width:none;padding:0">
+  <button class="menu-btn" id="menubtn">☰ Menu</button>
+  <div class="docs">
+    <aside class="side" id="side">
+      <div class="side-search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="dsearch" placeholder="Search" autocomplete="off"><span class="kbd">Ctrl K</span>
+      </div>
+      <nav id="sidenav"></nav>
+    </aside>
+    <article class="content" id="content"><div style="color:var(--txt-faint);padding:40px 0">Loading docs…</div></article>
+    <aside class="outline" id="outline"></aside>
+  </div>
 </main>
 
 <script>
 mountChrome('docs');
-let DOCS=[],current=null;
+let CONFIG=null, CMDS=null, PAGES=[], current=null;
 
-// describe a category in human terms (setup intros)
-const INTROS={
-  'moderation':'Core moderation: removing, restricting and reversing actions against members. Most require the <b>Moderate Members</b> permission.',
-  'anti-nuke':'Reversible protection against mass-join raids and nuke attempts. AntiRaid strips, jails or bans offenders past a configured threshold and undoes the damage where possible. Owner & antinuke admins only — start with <code>,an config</code>.',
-  'fake-permissions':'Grant Discord permissions to a role <i>only inside depend</i>, without touching its real server permissions. Useful for letting trusted members moderate without real admin.',
-  'voicemaster':'Join-to-create voice channels. Run <code>,vmsetup</code> and pick Simple or Full; members get their own channel they fully control from a panel.',
-  'welcome':'Greet new members and farewell leavers. Set a channel, then customise the message with placeholders like <code>{user.mention}</code> and <code>{count}</code>.',
-  'tickets':'A support-ticket system with a button panel, transcripts and per-ticket member management. Start with <code>,ticket setup &lt;category&gt;</code>.',
-  'role':'Create, assign, colour and manage roles — including temporary roles, sticky roles and bulk grants to humans or bots.',
-  'embeds-messages':'Build named embeds with <code>,embedbuilder</code>, then reuse them across welcome, boost, badge and vanity-gate systems. All text fields support placeholders.',
-  'filter-automod':'Word filters, spam/caps/link controls and native Discord AutoMod integration. Disable or scope individual commands per channel or role.',
-  'leveling':'',
-  'economy-leveling':'XP, levels and a server economy. Members rank up by chatting; configure rewards and leaderboards.',
+const ICONS={
+  book:'<path d="M4 4h7v16H6a2 2 0 0 1-2-2zM20 4h-7v16h5a2 2 0 0 0 2-2z"/>',
+  rocket:'<path d="M5 14c-2 1-3 5-3 5s4-1 5-3M14 4s5 0 7 2 2 7 2 7l-7 7-4-1-4-4-1-4z"/><circle cx="14.5" cy="9.5" r="1.5"/>',
+  shield:'<path d="M12 3l8 3v6c0 4.5-3 7.5-8 9-5-1.5-8-4.5-8-9V6z"/>',
+  lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  key:'<circle cx="8" cy="8" r="4"/><path d="M11 11l9 9M17 17l2-2M14 14l2-2"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 4 15H3a2 2 0 0 1 0-4a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 9 4.6V4a2 2 0 0 1 4 0a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.6 1.6 0 0 0 20 11h1a2 2 0 0 1 0 4z"/>',
+  users:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 5a3 3 0 0 1 0 6M21 20a5 5 0 0 0-3-4.6"/>',
+  wave:'<path d="M5 12h14M5 8h14M5 16h10"/>',
+  heart:'<path d="M12 20s-7-4.5-9-9a4.5 4.5 0 0 1 9-2 4.5 4.5 0 0 1 9 2c-2 4.5-9 9-9 9z"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  chat:'<path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+  react:'<circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  ticket:'<path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2 2 2 0 0 0 0-4z"/>',
+  trophy:'<path d="M6 4h12v4a6 6 0 0 1-12 0zM4 6H2a2 2 0 0 0 4 0M20 6h2a2 2 0 0 1-4 0M9 18h6M10 14v4M14 14v4M8 21h8"/>',
+  pin:'<path d="M12 17v5M9 3h6l-1 7 3 3H7l3-3z"/>',
+  bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.8 1 1.5 1 2.5h6c0-1 .3-1.7 1-2.5A6 6 0 0 0 12 3z"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  code:'<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13 5l-2 14"/>',
+  filter:'<path d="M3 5h18l-7 8v6l-4-2v-4z"/>',
+  wrench:'<path d="M14 7a4 4 0 0 1-5 5L4 17l3 3 5-5a4 4 0 0 0 5-5z"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  music:'<circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path d="M9 18V5l12-2v13"/>',
+  sparkle:'<path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>'
 };
-
+function svgIc(name){return `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8">${ICONS[name]||ICONS.code}</svg>`;}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
-function argHTML(a){return esc(a).replace(/(\[[^\]]+\]|&lt;[^>]+&gt;|@\w+|#\w+)/g,'<span class="a">$1</span>');}
 
-function parse(line){
-  if(line==='')return{kind:'spacer'};
-  const sec=line.match(/^—\s*(.+?)\s*—$/);if(sec)return{kind:'sub',text:sec[1]};
-  if(line.startsWith('-#'))return{kind:'note',text:line.replace(/^-#\s*/,'')};
-  const first=line.split(' ')[0];
-  const looksCmd=/^[a-z][a-z0-9_]*(\/[a-z0-9_]+)?$/i.test(first)&&/^[a-z]/.test(line);
-  if(!looksCmd)return{kind:'note',text:line};
-  let alias=null;const am=line.match(/\((alias(?:es)?:\s*[^)]+)\)/i);if(am)alias=am[1];
+// parse a command line into name/args/desc/example
+function parseCmd(line){
+  let alias=null;const am=line.match(/\((alias(?:es)?:\s*[^)]+)\)/i);
+  if(am)alias=am[1].replace(/^alias(?:es)?:\s*/i,'');
   let work=line.replace(/\s*\((alias(?:es)?:[^)]+)\)/i,'').trim();
   let desc='';const dm=work.split(/\s+[—–]\s+/);
   if(dm.length>1){work=dm[0].trim();desc=dm.slice(1).join(' — ').trim();}
-  const p=work.split(/\s+/);
-  return{kind:'cmd',name:p[0],args:p.slice(1).join(' '),desc,alias};
+  return {syntax:work,desc,alias};
+}
+function syntaxHTML(s){return esc(s).replace(/(\[[^\]]*\]|&lt;[^>]*&gt;|@\w+|#\w+)/g,'<span class="arg">$1</span>');}
+
+function buildPages(){
+  PAGES=[];
+  for(const sec of CONFIG.sections) for(const p of sec.pages) PAGES.push({...p,group:sec.group});
 }
 
 function renderSidebar(filter){
   const nav=document.getElementById('sidenav');
-  nav.innerHTML=DOCS.filter(d=>!filter||d.title.toLowerCase().includes(filter)||
-    d.cmds.some(c=>c.toLowerCase().includes(filter))).map(d=>{
-    const n=d.cmds.filter(l=>/^[a-z]/.test(l)&&!l.startsWith('-#')&&!l.startsWith('—')).length;
-    return `<a data-id="${d.id}" class="${current===d.id?'on':''}">${esc(d.title)}<span class="badge">${n}</span></a>`;
-  }).join('');
-  nav.querySelectorAll('a').forEach(a=>a.onclick=()=>show(a.dataset.id));
+  let html='';
+  for(const sec of CONFIG.sections){
+    const pages=sec.pages.filter(p=>!filter||p.title.toLowerCase().includes(filter)
+      ||(p.category&&(CMDS.find(c=>c.title===p.category)||{cmds:[]}).cmds.some(l=>typeof l==='string'&&l.toLowerCase().includes(filter))));
+    if(!pages.length) continue;
+    html+=`<div class="side-group"><div class="gh">${esc(sec.group)}</div>`;
+    for(const p of pages){
+      html+=`<a data-id="${p.id}" class="${current===p.id?'on':''}"><span class="di">${svgIc(p.icon)}</span>${esc(p.title)}</a>`;
+    }
+    html+='</div>';
+  }
+  nav.innerHTML=html;
+  nav.querySelectorAll('a').forEach(a=>a.onclick=()=>{ show(a.dataset.id); document.getElementById('side').classList.remove('open'); });
+}
+
+function codeBlock(syntax){
+  const ex = ',' + syntax.replace(/<([^>]+)>/g,(m,g)=>g.split('|')[0].trim()).replace(/\[([^\]]+)\]/g,'').replace(/@user/g,'@SomeUser').replace(/#channel/g,'#general').replace(/\s+/g,' ').trim();
+  return `<div class="code-block">
+    <div class="code-tabs"><span class="code-tab on" data-t="s">Syntax</span><span class="code-tab" data-t="e">Example</span></div>
+    <div class="code-body"><span class="code-text" data-syntax=",${esc(syntax)}" data-example="${esc(ex)}">,${syntaxHTML(syntax)}</span>
+      <button class="code-copy" title="Copy"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
+    </div></div>`;
 }
 
 function show(id){
-  current=id;const d=DOCS.find(x=>x.id===id);if(!d)return;
+  const p=PAGES.find(x=>x.id===id); if(!p) return;
+  if(p.link){ location.href=p.link; return; }
+  current=id;
   renderSidebar(document.getElementById('dsearch').value.trim().toLowerCase());
-  const intro=INTROS[id]||`Reference for every <b>${esc(d.title)}</b> command.`;
-  let body='';
-  d.cmds.map(parse).forEach(r=>{
-    if(r.kind==='spacer')return;
-    if(r.kind==='sub'){body+=`<div class="doc-sub">${esc(r.text)}</div>`;return;}
-    if(r.kind==='note'){body+=`<div class="doc-note">${esc(r.text)}</div>`;return;}
-    const full=',' + r.name + (r.args?' '+r.args:'');
-    body+=`<div class="doc-cmd"><div class="dc-head">
-      <span class="dc-syntax">,${esc(r.name)}${r.args?` <span class="a">${argHTML(r.args)}</span>`:''}</span>
-      ${r.desc?`<span class="dc-desc-inline">${esc(r.desc)}</span>`:''}
-      <button class="dc-copy" data-cp="${esc(full).replace(/"/g,'&quot;')}">⧉</button></div></div>`;
-  });
-  document.getElementById('content').innerHTML=`
-    <h1>${esc(d.title)}</h1>
-    <div class="callout"><span class="ic">ℹ</span><div><b>${esc(d.title)}</b><p>${intro}</p></div></div>
-    ${body}`;
-  document.querySelectorAll('.dc-copy').forEach(b=>b.onclick=e=>{
-    e.stopPropagation();navigator.clipboard?.writeText(b.dataset.cp);
-    const o=b.textContent;b.textContent='✓';b.style.color='var(--green)';
-    setTimeout(()=>{b.textContent=o;b.style.color='';},1100);
-  });
+  const outline=[];
+  let html=`<h1>${esc(p.title)}</h1>`;
+  if(p.lead) html+=`<div class="lead">${p.lead}</div>`;
+  if(p.intro) html+=`<div class="intro">${p.intro}</div>`;
+  if(p.callout) html+=`<div class="callout"><span class="ci"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></span><div><div class="ct">${esc(p.callout.title)}</div><div class="cb">${p.callout.body}</div></div></div>`;
+
+  // landing page: guide cards
+  if(p.landing){
+    html+=`<h2 id="guides">Guides</h2><div class="guide-grid">`;
+    const cards=PAGES.filter(x=>x.id!=='introduction').slice(0,8);
+    for(const c of cards) html+=`<div class="guide-card" data-go="${c.id}"><div class="gi">${svgIc(c.icon)}</div><h3>${esc(c.title)}</h3><p>${esc(c.lead||'')}</p></div>`;
+    html+='</div>';
+    outline.push(['guides','Guides']);
+  }
+
+  // interactive setup steps
+  if(p.setup){
+    const sid=slug(p.setup.title);outline.push([sid,p.setup.title]);
+    html+=`<h2 id="${sid}">${esc(p.setup.title)}</h2>`;
+    p.setup.steps.forEach((s,i)=>{
+      html+=`<div class="doc-step"><div class="num">${i+1}</div><div class="stxt">${s.text}${s.code?codeBlock(s.code):''}</div></div>`;
+    });
+  }
+
+  // command guides from the mapped category
+  if(p.category){
+    const cat=CMDS.find(c=>c.title===p.category);
+    if(cat){
+      const cmds=cat.cmds.filter(l=>typeof l==='string'&&/^[a-z0-9]/.test(l)&&!l.startsWith('—'));
+      for(const line of cmds){
+        const c=parseCmd(line);
+        const title=c.desc || c.syntax.split(' ')[0];
+        const oid=slug(c.syntax.split(' ').slice(0,3).join('-'));
+        outline.push([oid, c.desc ? cap(c.desc) : c.syntax.split(' ')[0]]);
+        html+=`<div class="guide" id="${oid}">
+          <div class="guide-title">${esc(cap(c.desc)||c.syntax.split(' ')[0])}</div>
+          ${c.alias?`<div class="guide-desc">Alias: <code>,${esc(c.alias)}</code></div>`:''}
+          ${codeBlock(c.syntax)}</div>`;
+      }
+    }
+  }
+
+  document.getElementById('content').innerHTML=html;
+  renderOutline(outline);
+  wireCode();
+  document.querySelectorAll('.guide-card').forEach(c=>c.onclick=()=>show(c.dataset.go));
   history.replaceState(null,'','#'+id);
-  document.getElementById('content').scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelector('.content').scrollTop=0;
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):s;}
+
+function renderOutline(items){
+  const o=document.getElementById('outline');
+  if(!items.length){o.innerHTML='';return;}
+  o.innerHTML=`<div class="oh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg> On this page</div>`
+    + items.map(([id,label])=>`<a href="#${id}" data-o="${id}">${esc(label)}</a>`).join('');
+  o.querySelectorAll('a').forEach(a=>a.onclick=e=>{e.preventDefault();
+    const t=document.getElementById(a.dataset.o); if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});
+  // scrollspy
+  const ids=items.map(i=>i[0]);
+  window.onscroll=()=>{
+    let cur=ids[0];
+    for(const id of ids){const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<140)cur=id;}
+    o.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.dataset.o===cur));
+  };
+  window.onscroll();
+}
+
+function wireCode(){
+  document.querySelectorAll('.code-block').forEach(block=>{
+    const text=block.querySelector('.code-text');
+    const syntax=text.dataset.syntax, example=text.dataset.example;
+    block.querySelectorAll('.code-tab').forEach(tab=>tab.onclick=()=>{
+      block.querySelectorAll('.code-tab').forEach(t=>t.classList.remove('on'));tab.classList.add('on');
+      if(tab.dataset.t==='s'){text.innerHTML=','+syntaxHTML(syntax.slice(1));}
+      else{text.textContent=example;}
+    });
+    block.querySelector('.code-copy').onclick=()=>{
+      const on=block.querySelector('.code-tab.on').dataset.t;
+      navigator.clipboard?.writeText(on==='s'?syntax:example);
+      const b=block.querySelector('.code-copy');const o=b.innerHTML;b.innerHTML='✓';b.style.color='var(--green)';
+      setTimeout(()=>{b.innerHTML=o;b.style.color='';},1100);
+    };
+  });
 }
 
 document.getElementById('dsearch').addEventListener('input',e=>renderSidebar(e.target.value.trim().toLowerCase()));
+document.getElementById('menubtn').onclick=()=>document.getElementById('side').classList.toggle('open');
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();document.getElementById('dsearch').focus();}});
 
 (async()=>{
-  DOCS=await (await fetch('/api/commands')).json().then(c=>c.map(x=>({
-    id:slug(x.title.replace(/ Commands$/,'')),title:x.title.replace(/ Commands$/,''),cmds:x.cmds})));
+  [CONFIG,CMDS]=await Promise.all([
+    fetch('/api/docs-config').then(r=>r.json()),
+    fetch('/api/commands').then(r=>r.json())
+  ]);
+  buildPages();
   renderSidebar('');
   const hash=location.hash.slice(1);
-  show(DOCS.find(d=>d.id===hash)?hash:DOCS[0].id);
+  show(PAGES.find(p=>p.id===hash)?hash:PAGES[0].id);
 })();
 </script>
 </body></html>

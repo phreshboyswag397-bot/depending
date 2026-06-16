@@ -1,6 +1,6 @@
 // shared chrome: nav + footer injected so every page stays in sync
-const LOGO = `<img src="/logo.png" alt="depend" width="30" height="30">`;
-const LOGO_SM = `<img src="/logo.png" alt="depend" width="24" height="24">`;
+const LOGO = `<img src="/logo.png?v=2" alt="depend" width="30" height="30">`;
+const LOGO_SM = `<img src="/logo.png?v=2" alt="depend" width="24" height="24">`;
 const INVITE = 'https://discord.gg/depend';
 const NAV = [['Commands','/commands'],['Embeds','/embeds'],['Status','/status'],['Docs','/docs'],['Changelogs','/changelogs'],['Dashboard','/dashboard']];
 
@@ -66,7 +66,7 @@ function mountLoader(){
       #loader.out .ldr-wrap{animation:none}}`;
   document.head.insertAdjacentHTML('beforeend',`<style>${css}</style>`);
   document.body.insertAdjacentHTML('afterbegin',
-    `<div id="loader"><div class="ldr-wrap"><div class="halo"></div><div class="ring"></div><img src="/logo-lg.png" alt=""></div></div>`);
+    `<div id="loader"><div class="ldr-wrap"><div class="halo"></div><div class="ring"></div><img src="/logo-lg.png?v=2" alt=""></div></div>`);
   const el=document.getElementById('loader');
 
   function dismiss(){
