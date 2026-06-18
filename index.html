@@ -45,7 +45,7 @@
     text-transform:uppercase;padding:14px 16px 6px;border-top:1px solid var(--line);margin-top:6px}
 
   /* marquee (kept) */
-  .marquee{margin:10px auto 70px;max-width:1000px;overflow:hidden;padding:6px 0;
+  .marquee{margin:10px auto 30px;max-width:1000px;overflow:hidden;padding:6px 0;
     -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
     mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
   .marquee-track{display:flex;gap:34px;width:max-content;animation:scroll 38s linear infinite}
@@ -58,6 +58,175 @@
   .srv .nm{font-family:var(--font-mono);font-weight:600;font-size:13px;color:#fff;white-space:nowrap;line-height:1.1}
   .srv .mc{font-size:11px;color:var(--txt-faint);margin-top:1px;white-space:nowrap}
   .marquee.loading{height:34px}
+
+  /* ════════════════════════════════════════════════════════
+     LIVE SHOWCASE — "depend in live action"
+     ════════════════════════════════════════════════════════ */
+  .showcase{padding:46px 0 30px}
+  .show-head{max-width:680px;margin:0 auto 44px;text-align:center}
+  .show-head .eyebrow{justify-content:center}
+  .show-head h2{font-family:var(--font-mono);font-size:clamp(28px,3.8vw,44px);font-weight:700;
+    letter-spacing:-.02em;line-height:1.06;margin:16px 0 14px}
+  .show-head h2 .live{position:relative;color:var(--peri)}
+  .show-head h2 .live::after{content:'';position:absolute;left:0;right:0;bottom:6px;height:9px;
+    background:linear-gradient(90deg,rgba(183,169,242,.28),transparent);z-index:-1;border-radius:4px}
+  .show-head p{font-family:var(--font-mono);color:var(--txt-faint);font-size:14px;line-height:1.7;max-width:520px;margin:0 auto}
+
+  /* a "demo block": copy on one side, live window on the other */
+  .demo-block{display:grid;grid-template-columns:.78fr 1.22fr;gap:40px;align-items:center;
+    padding:34px 0}
+  .demo-block.flip{grid-template-columns:1.22fr .78fr}
+  .demo-block.flip .demo-copy{order:2}
+  .demo-copy .tag{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--peri);display:flex;align-items:center;gap:9px;margin-bottom:16px}
+  .demo-copy .tag::before{content:'';width:18px;height:1px;background:var(--peri-deep)}
+  .demo-copy h3{font-family:var(--font-mono);font-size:clamp(23px,2.7vw,30px);font-weight:700;
+    letter-spacing:-.01em;line-height:1.12;margin-bottom:14px}
+  .demo-copy h3 .m{color:#6f6f7d;font-weight:500}
+  .demo-copy p{color:var(--txt-dim);font-size:14.5px;line-height:1.7;margin-bottom:22px;max-width:380px}
+  .demo-copy .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .demo-copy .chip{font-family:var(--font-mono);font-size:12px;color:var(--txt-dim);
+    background:var(--surface-2);border:1px solid var(--line);padding:7px 12px;border-radius:999px;transition:.18s}
+  .demo-copy .chip:hover{border-color:var(--peri-deep);color:#fff}
+
+  /* the faux app window */
+  .win{background:linear-gradient(180deg,rgba(16,16,21,.92),rgba(9,9,12,.92));
+    border:1px solid var(--line-2);border-radius:18px;overflow:hidden;
+    box-shadow:0 50px 120px -50px rgba(0,0,0,.95),0 0 0 1px rgba(183,169,242,.04);
+    position:relative}
+  .win::before{content:'';position:absolute;inset:0;border-radius:18px;padding:1px;pointer-events:none;
+    background:linear-gradient(180deg,rgba(183,169,242,.18),transparent 40%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;opacity:.7}
+  .win-bar{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--line);
+    background:rgba(255,255,255,.015)}
+  .win-bar .dots{display:flex;gap:6px}
+  .win-bar .dots i{width:11px;height:11px;border-radius:50%;background:#26262e;display:block}
+  .win-bar .ttl{font-family:var(--font-mono);font-size:12px;color:var(--txt-faint);letter-spacing:.04em;
+    margin:0 auto;display:flex;align-items:center;gap:8px}
+  .win-bar .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);
+    box-shadow:0 0 0 0 rgba(67,224,138,.6);animation:pulseDot 1.8s infinite}
+  @keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(67,224,138,.5)}70%{box-shadow:0 0 0 7px rgba(67,224,138,0)}100%{box-shadow:0 0 0 0 rgba(67,224,138,0)}}
+
+  /* ── VoiceMaster demo ── */
+  .vm{display:grid;grid-template-columns:1.05fr .95fr;min-height:300px}
+  .vm-tree{padding:18px 16px;border-right:1px solid var(--line)}
+  .vm-lbl{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--txt-faint);display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .vm-lbl .plus{color:var(--txt-faint)}
+  .vm-row{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;
+    font-family:var(--font-mono);font-size:13px;color:var(--txt-dim);transition:.25s}
+  .vm-row svg{flex:0 0 auto;color:var(--txt-faint)}
+  .vm-row.hash{color:#fff;font-weight:600}
+  .vm-jtc{color:var(--txt-faint);position:relative}
+  .vm-jtc.hot{color:var(--peri);background:rgba(183,169,242,.08)}
+  .vm-created{margin-top:4px;border-radius:10px;overflow:hidden;
+    max-height:0;opacity:0;transition:max-height .5s cubic-bezier(.2,.7,.2,1),opacity .4s}
+  .vm-created.on{max-height:200px;opacity:1}
+  .vm-created .ch{display:flex;align-items:center;gap:9px;padding:9px;border-radius:8px;
+    background:rgba(183,169,242,.07);border:1px solid rgba(183,169,242,.15);transition:.3s}
+  .vm-created .ch.dim{opacity:.42;filter:saturate(.4)}
+  .vm-created .ch .nm{font-family:var(--font-mono);font-size:13px;color:#fff;font-weight:600;white-space:nowrap}
+  .vm-created .ch .badges{margin-left:auto;display:flex;gap:5px;align-items:center}
+  .vm-created .ch .pill{font-family:var(--font-mono);font-size:10px;padding:2px 7px;border-radius:999px;
+    background:var(--surface-3);border:1px solid var(--line);color:var(--txt-dim);
+    opacity:0;transform:scale(.8);transition:.25s}
+  .vm-created .ch .pill.on{opacity:1;transform:none}
+  .vm-created .ch .pill.lock{color:var(--amber);border-color:rgba(226,184,92,.3)}
+  .vm-created .ch .pill.lim{color:var(--peri);border-color:rgba(183,169,242,.3)}
+  .vm-created .timer{font-family:var(--font-mono);font-size:11px;color:var(--txt-faint);margin-left:6px}
+  .vm-occ{display:flex;align-items:center;gap:8px;padding:6px 9px 6px 22px;
+    font-family:var(--font-mono);font-size:12px;color:var(--txt-dim)}
+  .vm-occ .ava{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#8f7fe0,#5865F2);
+    flex:0 0 20px;display:grid;place-items:center;font-size:10px;color:#fff;font-weight:700}
+  .vm-status{padding:5px 9px 5px 22px;font-family:var(--font-mono);font-size:11.5px;color:var(--txt-faint);
+    display:flex;align-items:center;gap:6px}
+  /* the flying joiner */
+  .vm-joiner{position:absolute;width:26px;height:26px;border-radius:50%;
+    background:linear-gradient(135deg,#8f7fe0,#5865F2);display:grid;place-items:center;
+    font-family:var(--font-mono);font-size:11px;color:#fff;font-weight:700;
+    box-shadow:0 6px 20px -4px rgba(143,127,224,.7);opacity:0;z-index:5;pointer-events:none}
+
+  .vm-deck{padding:18px 16px}
+  .vm-deck .vm-lbl{margin-bottom:14px}
+  .deck-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .deck-btn{aspect-ratio:1;border:1px solid var(--line);border-radius:11px;background:var(--surface-2);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+    color:var(--txt-faint);transition:.28s cubic-bezier(.2,.7,.2,1)}
+  .deck-btn svg{transition:.28s}
+  .deck-btn span{font-family:var(--font-mono);font-size:10px;letter-spacing:.02em}
+  .deck-btn.fire{background:var(--peri);border-color:var(--peri);color:#000;
+    transform:translateY(-3px);box-shadow:0 14px 30px -12px rgba(183,169,242,.7)}
+  .deck-btn.fire svg{color:#000}
+  .deck-btn.done{border-color:var(--line-2);color:var(--txt-dim)}
+
+  /* ── Moderation chat demo ── */
+  .mod{display:grid;grid-template-columns:.62fr 1.38fr;min-height:320px}
+  .mod-side{padding:18px 14px;border-right:1px solid var(--line)}
+  .mod-cat{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;
+    font-family:var(--font-mono);font-size:13px;color:var(--txt-faint);transition:.25s;margin-bottom:3px}
+  .mod-cat svg{flex:0 0 auto}
+  .mod-cat.on{background:rgba(183,169,242,.1);color:#fff}
+  .mod-cat.on svg{color:var(--peri)}
+  .mod-side .suite{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--txt-faint);margin:18px 0 10px;padding:0 11px}
+  .mod-side .suite-list{display:flex;flex-wrap:wrap;gap:6px;padding:0 11px}
+  .mod-side .scmd{font-family:var(--font-mono);font-size:11px;color:var(--txt-dim);
+    background:var(--surface-2);border:1px solid var(--line);padding:3px 8px;border-radius:6px;transition:.2s}
+  .mod-side .scmd.flash{color:#000;background:var(--peri);border-color:var(--peri)}
+  .mod-chat{padding:16px 18px;display:flex;flex-direction:column}
+  .mod-chead{font-family:var(--font-mono);font-size:12px;color:var(--txt-faint);
+    padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+  .mod-stream{display:flex;flex-direction:column;gap:14px;flex:1;justify-content:flex-end}
+  .msg{display:flex;gap:11px;animation:msgIn .35s cubic-bezier(.2,.7,.2,1)}
+  @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .msg .av{width:34px;height:34px;border-radius:50%;flex:0 0 34px}
+  .msg .av.user{background:linear-gradient(135deg,#5865F2,#404eed);display:grid;place-items:center;
+    font-family:var(--font-mono);font-size:13px;color:#fff;font-weight:700}
+  .msg .av.bot{background:#16161c;border:1px solid var(--line-2);display:grid;place-items:center;padding:5px}
+  .msg .av.bot img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 6px rgba(183,169,242,.5))}
+  .msg .body{min-width:0;flex:1}
+  .msg .who{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+  .msg .who b{font-family:var(--font-mono);font-size:13.5px;color:#fff}
+  .msg .who .app{font-family:var(--font-mono);font-size:9px;letter-spacing:.04em;background:var(--peri);
+    color:#000;padding:1px 5px;border-radius:4px;font-weight:700}
+  .msg .who time{font-family:var(--font-mono);font-size:10.5px;color:var(--txt-faint)}
+  .msg .txt{font-family:var(--font-mono);font-size:13.5px;color:var(--txt-dim);line-height:1.5}
+  .msg .txt .cmd{color:#fff}
+  .msg .txt .mention{background:rgba(183,169,242,.18);color:var(--peri-bright);padding:0 4px;border-radius:4px}
+  .msg .caret{display:inline-block;width:7px;height:15px;background:var(--peri);vertical-align:-3px;
+    margin-left:1px;animation:tw-blink 1s steps(1) infinite}
+  .msg .embed{border-left:3px solid var(--peri);background:rgba(183,169,242,.06);
+    border-radius:5px;padding:11px 14px;margin-top:2px;display:inline-flex;align-items:center;gap:9px;
+    font-family:var(--font-mono);font-size:13.5px;color:#e9e7f5}
+  .msg .embed .ico{font-size:15px}
+  .msg .embed b{color:#fff}
+  .msg .embed .mention{background:rgba(183,169,242,.2);color:var(--peri-bright);padding:0 4px;border-radius:4px}
+
+  /* ── Antinuke feed demo ── */
+  .an{padding:8px 4px;min-height:280px}
+  .an-feed{display:flex;flex-direction:column;gap:0;font-family:var(--font-mono);padding:6px 4px}
+  .an-row{display:grid;grid-template-columns:auto auto 1fr auto;gap:12px;align-items:center;
+    padding:13px 16px;border-bottom:1px solid var(--line);font-size:13px;
+    animation:rowIn .4s cubic-bezier(.2,.7,.2,1)}
+  @keyframes rowIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+  .an-row:last-child{border-bottom:none}
+  .an-row .t{color:var(--txt-faint);font-size:11.5px}
+  .an-row .ic{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:12px}
+  .an-row .ic.warn{background:rgba(226,184,92,.14);color:var(--amber)}
+  .an-row .ic.act{background:rgba(183,169,242,.14);color:var(--peri)}
+  .an-row .ic.ok{background:rgba(67,224,138,.14);color:var(--green)}
+  .an-row .ms{color:#d9d8e3}
+  .an-row .ms b{color:#fff}
+  .an-row .ms .u{color:var(--peri-bright)}
+  .an-row .tagx{font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px}
+  .an-row .tagx.threat{background:rgba(226,92,122,.12);color:var(--red);border:1px solid rgba(226,92,122,.25)}
+  .an-row .tagx.fixed{background:rgba(67,224,138,.1);color:var(--green);border:1px solid rgba(67,224,138,.22)}
+
+  /* ── scroll reveal ── */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}
 
   /* ── features section ── */
   .features{padding:30px 0 90px}
@@ -91,15 +260,32 @@
     letter-spacing:-.01em;margin-bottom:26px;line-height:1.15}
   .closing h2 .m{color:#6f6f7d;font-weight:500}
 
+  @media(max-width:980px){
+    .demo-block,.demo-block.flip{grid-template-columns:1fr;gap:26px}
+    .demo-block.flip .demo-copy{order:0}
+    .demo-copy p{max-width:none}
+  }
   @media(max-width:920px){
     .hero{grid-template-columns:1fr;gap:30px;padding:40px 0 20px;min-height:0}
     .palette{max-width:440px}
     .feat-grid{grid-template-columns:1fr}
   }
+  @media(max-width:560px){
+    .vm{grid-template-columns:1fr}
+    .vm-tree{border-right:none;border-bottom:1px solid var(--line)}
+    .mod{grid-template-columns:1fr}
+    .mod-side{border-right:none;border-bottom:1px solid var(--line)}
+    .deck-grid{grid-template-columns:repeat(5,1fr)}
+    .an-row{grid-template-columns:auto 1fr auto;gap:9px}
+    .an-row .t{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1!important;transform:none!important}
+  }
 </style></head><body>
 <div class="ambient"></div>
 <script src="/shared.js"></script>
-<main class="wrap">
+<main class="wrap" id="smooth-content">
   <section class="hero">
     <div class="hero-left">
       <div class="hero-eyebrow" id="eyebrow"></div>
@@ -140,6 +326,111 @@
 
   <div class="marquee loading" id="marquee"></div>
 
+  <!-- ════ LIVE SHOWCASE ════ -->
+  <section class="showcase">
+    <div class="show-head reveal">
+      <div class="eyebrow">Live</div>
+      <h2>Watch depend <span class="live">in action</span></h2>
+      <p>No screenshots. These are the bot's real features, running right here on the page.</p>
+    </div>
+
+    <!-- VoiceMaster -->
+    <div class="demo-block flip">
+      <div class="demo-copy reveal">
+        <div class="tag">VoiceMaster</div>
+        <h3>Join to create.<br><span class="m">Own your channel.</span></h3>
+        <p>Drop into one channel and depend spins up a private room you fully control — lock it, hide it, set a limit, rename it, all from one panel.</p>
+        <div class="chips">
+          <span class="chip">/voice setup</span><span class="chip">lock</span><span class="chip">limit</span><span class="chip">rename</span><span class="chip">claim</span>
+        </div>
+      </div>
+      <div class="win reveal d1" id="vm-win">
+        <div class="win-bar"><div class="dots"><i></i><i></i><i></i></div>
+          <div class="ttl"><span>depend · voicemaster</span></div></div>
+        <div class="vm" id="vm">
+          <div class="vm-tree" id="vm-tree">
+            <div class="vm-lbl"><span>Voice Channels</span><span class="plus">+</span></div>
+            <div class="vm-row hash"># panel</div>
+            <div class="vm-row vm-jtc" id="vm-jtc">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>
+              Join to Create</div>
+            <div class="vm-created" id="vm-created">
+              <div class="ch" id="vm-ch">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--peri)" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>
+                <span class="nm" id="vm-name">ripnote's channel</span>
+                <span class="timer" id="vm-timer">0:00</span>
+                <span class="badges">
+                  <span class="pill lock" id="vm-pill-lock">🔒 locked</span>
+                  <span class="pill lim" id="vm-pill-lim">2/5</span>
+                </span>
+              </div>
+              <div class="vm-status" id="vm-statusrow">set a channel status</div>
+              <div class="vm-occ"><span class="ava">R</span> ripnote</div>
+            </div>
+          </div>
+          <div class="vm-deck">
+            <div class="vm-lbl"><span>Channel Controls</span></div>
+            <div class="deck-grid" id="vm-deck"></div>
+          </div>
+          <div class="vm-joiner" id="vm-joiner">R</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Moderation -->
+    <div class="demo-block">
+      <div class="demo-copy reveal">
+        <div class="tag">Moderation</div>
+        <h3>Run staff commands<br><span class="m">that just work.</span></h3>
+        <p>Ban, mute, jail, purge — depend answers instantly with a clean confirmation, every time. Slash or prefix, your call.</p>
+        <div class="chips">
+          <span class="chip">,ban</span><span class="chip">,mute</span><span class="chip">,jail</span><span class="chip">,purge</span><span class="chip">,warn</span>
+        </div>
+      </div>
+      <div class="win reveal d1" id="mod-win">
+        <div class="win-bar"><div class="dots"><i></i><i></i><i></i></div>
+          <div class="ttl"><span>depend · moderation</span></div></div>
+        <div class="mod">
+          <div class="mod-side">
+            <div class="mod-cat on" data-cat="mod">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m14 7 3 3M5 19l9-9 3 3-9 9H5z"/></svg> Moderation</div>
+            <div class="mod-cat" data-cat="anti">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6c0 4.5-3 7.5-8 9-5-1.5-8-4.5-8-9V6z"/></svg> Antinuke</div>
+            <div class="mod-cat" data-cat="voice">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg> Voice</div>
+            <div class="suite">full moderation suite</div>
+            <div class="suite-list" id="mod-suite">
+              <span class="scmd">,ban</span><span class="scmd">,kick</span><span class="scmd">,mute</span>
+              <span class="scmd">,unmute</span><span class="scmd">,jail</span><span class="scmd">,purge</span>
+              <span class="scmd">,warn</span><span class="scmd">,slowmode</span><span class="scmd">,nick</span>
+            </div>
+          </div>
+          <div class="mod-chat">
+            <div class="mod-chead"># staff-chat</div>
+            <div class="mod-stream" id="mod-stream"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Antinuke -->
+    <div class="demo-block flip">
+      <div class="demo-copy reveal">
+        <div class="tag">Antinuke</div>
+        <h3>Threats reversed<br><span class="m">before you blink.</span></h3>
+        <p>Mass deletes, role grabs, raid bans — depend catches them, undoes the damage, and quarantines the source automatically.</p>
+        <div class="chips">
+          <span class="chip">auto-revert</span><span class="chip">quarantine</span><span class="chip">whitelist</span>
+        </div>
+      </div>
+      <div class="win reveal d1" id="an-win">
+        <div class="win-bar"><div class="dots"><i></i><i></i><i></i></div>
+          <div class="ttl"><span class="live-dot"></span><span>depend · antinuke · live</span></div></div>
+        <div class="an"><div class="an-feed" id="an-feed"></div></div>
+      </div>
+    </div>
+  </section>
+
   <section class="features">
     <div class="feat-eyebrow">Features</div>
     <div class="feat-h"><span class="b">Immerse</span><span class="slash">/</span><span class="m">into depend</span></div>
@@ -158,6 +449,8 @@
 
 <script>
 mountChrome('home');
+
+const RMOTION = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ── typewriter headline + eyebrow + subline ──
 (async()=>{
@@ -181,8 +474,7 @@ mountChrome('home');
     items[sel].scrollIntoView({block:'nearest'});}
   items.forEach((it,n)=>{
     it.addEventListener('mouseenter',()=>setSel(n));
-    it.addEventListener('click',()=>{const h=it.dataset.href;
-      if(h.startsWith('http'))location.href=h;else location.href=h;});
+    it.addEventListener('click',()=>{const h=it.dataset.href; if(h)location.href=h;});
   });
   document.addEventListener('keydown',e=>{
     if(e.key==='ArrowDown'){e.preventDefault();setSel(sel+1);}
@@ -190,6 +482,196 @@ mountChrome('home');
     else if(e.key==='Enter'&&document.querySelector('.palette')){
       const h=items[sel].dataset.href; if(h)location.href=h;}
   });
+})();
+
+// ── scroll reveal ──
+(function(){
+  const els=document.querySelectorAll('.reveal');
+  if(RMOTION){els.forEach(e=>e.classList.add('in'));return;}
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+  }),{threshold:.18,rootMargin:'0px 0px -8% 0px'});
+  els.forEach(e=>io.observe(e));
+})();
+
+/* small loop controller: runs a timeline of {at,do}, restarts, pauses offscreen */
+function makeLoop(rootEl, steps, period){
+  let timers=[], running=false;
+  function schedule(){
+    timers=steps.map(s=>setTimeout(s.do,s.at));
+    timers.push(setTimeout(()=>{ if(running){ clearAll(false); schedule(); } },period));
+  }
+  function clearAll(stop){ timers.forEach(clearTimeout); timers=[]; if(stop)running=false; }
+  function start(){ if(running)return; running=true; schedule(); }
+  function stop(){ clearAll(true); }
+  if(RMOTION){ steps.forEach(s=>s.do()); return; }
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    e.isIntersecting?start():stop();
+  }),{threshold:.35});
+  io.observe(rootEl);
+}
+
+// ════ VoiceMaster demo ════
+(function(){
+  const win=document.getElementById('vm-win');
+  const jtc=document.getElementById('vm-jtc');
+  const created=document.getElementById('vm-created');
+  const ch=document.getElementById('vm-ch');
+  const name=document.getElementById('vm-name');
+  const timerEl=document.getElementById('vm-timer');
+  const statusRow=document.getElementById('vm-statusrow');
+  const joiner=document.getElementById('vm-joiner');
+  const deck=document.getElementById('vm-deck');
+  const pillLock=document.getElementById('vm-pill-lock');
+  const pillLim=document.getElementById('vm-pill-lim');
+
+  const ICONS={
+    lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    hide:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><path d="M2 2l20 20" stroke-width="2"/>',
+    reveal:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    limit:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 11l2 2 4-4"/>',
+    rename:'<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+    claim:'<path d="M5 16 3 5l5.5 4L12 4l3.5 5L21 5l-2 11zM5 20h14"/>'
+  };
+  const BTNS=[
+    ['lock','Lock'],['hide','Hide'],['limit','Limit'],
+    ['rename','Rename'],['reveal','Reveal'],['claim','Claim']
+  ];
+  deck.innerHTML=BTNS.map(([k,l])=>`<div class="deck-btn" data-k="${k}">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">${ICONS[k]}</svg>
+    <span>${l}</span></div>`).join('');
+  const btn=k=>deck.querySelector(`[data-k="${k}"]`);
+
+  let timerInt=null,secs=0;
+  function startTimer(){ secs=0; timerEl.textContent='0:00';
+    timerInt=setInterval(()=>{secs++;timerEl.textContent='0:'+String(secs).padStart(2,'0');},1000); }
+  function stopTimer(){ clearInterval(timerInt); }
+
+  function fire(k){ const b=btn(k); if(!b)return; b.classList.add('fire');
+    setTimeout(()=>{b.classList.remove('fire');b.classList.add('done');},650); }
+
+  function reset(){
+    stopTimer();
+    created.classList.remove('on'); jtc.classList.remove('hot');
+    ch.classList.remove('dim');
+    pillLock.classList.remove('on'); pillLim.classList.remove('on');
+    name.textContent="ripnote's channel"; statusRow.textContent='set a channel status';
+    deck.querySelectorAll('.deck-btn').forEach(b=>b.classList.remove('fire','done'));
+    joiner.style.transition='none'; joiner.style.opacity='0';
+    joiner.style.left='18px'; joiner.style.top='248px';
+  }
+
+  function typeName(text){
+    name.textContent='▌'; let i=0;
+    const tk=()=>{ if(i<=text.length){name.textContent=text.slice(0,i)+'▌';i++;setTimeout(tk,55);}
+      else name.textContent=text; };
+    tk();
+  }
+
+  reset();
+  const steps=[
+    {at:300, do:()=>{ // joiner rises into JTC
+      joiner.style.opacity='1'; joiner.style.transition='all .9s cubic-bezier(.3,.8,.3,1)';
+      jtc.classList.add('hot');
+      requestAnimationFrame(()=>{ joiner.style.top='70px'; joiner.style.left='30px'; });
+    }},
+    {at:1250, do:()=>{ joiner.style.opacity='0'; created.classList.add('on'); startTimer(); }},
+    {at:2300, do:()=>{ fire('lock'); setTimeout(()=>pillLock.classList.add('on'),350); }},
+    {at:3400, do:()=>{ fire('limit'); setTimeout(()=>pillLim.classList.add('on'),350); }},
+    {at:4600, do:()=>{ fire('rename'); setTimeout(()=>typeName('late night vc'),300);
+      statusRow.textContent='🎧 vibing'; }},
+    {at:6100, do:()=>{ fire('hide'); setTimeout(()=>ch.classList.add('dim'),350); }},
+    {at:7400, do:()=>{ fire('reveal'); setTimeout(()=>ch.classList.remove('dim'),350); }},
+    {at:8700, do:()=>{ created.classList.remove('on'); jtc.classList.remove('hot'); stopTimer(); }}
+  ];
+  makeLoop(win, steps, 9800);
+})();
+
+// ════ Moderation chat demo ════
+(function(){
+  const win=document.getElementById('mod-win');
+  const stream=document.getElementById('mod-stream');
+  const LOGO='/logo.png?v=2';
+  const now=()=>{const d=new Date();let h=d.getHours(),m=String(d.getMinutes()).padStart(2,'0');
+    const ap=h>=12?'PM':'AM';h=h%12||12;return `${h}:${m} ${ap}`;};
+
+  const CMDS=[
+    {cmd:',ban @raider mass mention', ico:'🔨', embed:'<span class="mention">@raider</span> has been <b>banned</b> · mass mention'},
+    {cmd:',mute @spammer 10m', ico:'🔇', embed:'<span class="mention">@spammer</span> muted for <b>10m</b>'},
+    {cmd:',purge 50', ico:'🧹', embed:'Cleared <b>50 messages</b> in #general'},
+    {cmd:',jail @alt evading', ico:'🔒', embed:'<span class="mention">@alt</span> sent to <b>jail</b> · evading'}
+  ];
+  let idx=0;
+
+  function userMsg(){
+    const el=document.createElement('div'); el.className='msg';
+    el.innerHTML=`<div class="av user">R</div><div class="body">
+      <div class="who"><b>ripnote</b><time>${now()}</time></div>
+      <div class="txt"><span class="cmd" data-type="1"></span><span class="caret"></span></div></div>`;
+    stream.appendChild(el); trim(); return el;
+  }
+  function typeInto(el,text,done){
+    let i=0; const t=el.querySelector('[data-type]');
+    const tk=()=>{ if(i<=text.length){t.textContent=text.slice(0,i);i++;setTimeout(tk,42);}
+      else { const c=el.querySelector('.caret'); if(c)c.remove(); done&&done(); } };
+    tk();
+  }
+  function botMsg(c){
+    const el=document.createElement('div'); el.className='msg';
+    el.innerHTML=`<div class="av bot"><img src="${LOGO}" alt=""></div><div class="body">
+      <div class="who"><b>depend</b><span class="app">APP</span><time>${now()}</time></div>
+      <div class="embed"><span class="ico">${c.ico}</span><span>${c.embed}</span></div></div>`;
+    stream.appendChild(el); trim();
+  }
+  function trim(){ while(stream.children.length>4) stream.removeChild(stream.firstChild); }
+
+  function cycle(){
+    const c=CMDS[idx%CMDS.length]; idx++;
+    const u=userMsg();
+    typeInto(u,c.cmd,()=>{ setTimeout(()=>botMsg(c),500); });
+  }
+  if(RMOTION){ const c=CMDS[0]; const u=userMsg(); const cr=u.querySelector('.caret'); if(cr)cr.remove();
+    u.querySelector('[data-type]').textContent=c.cmd; botMsg(c); return; }
+
+  let int=null;
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){ if(!int){ cycle(); int=setInterval(cycle,3600); } }
+    else { clearInterval(int); int=null; }
+  }),{threshold:.35});
+  io.observe(win);
+})();
+
+// ════ Antinuke live feed ════
+(function(){
+  const win=document.getElementById('an-win');
+  const feed=document.getElementById('an-feed');
+  const ROWS=[
+    {k:'warn',ic:'⚠',t:'+0.0s',ms:'Mass channel delete detected · <span class="u">@compromised</span>',tag:['threat','threat']},
+    {k:'act', ic:'↺',t:'+0.3s',ms:'Reverting changes — restoring <b>6 channels</b>',tag:null},
+    {k:'ok',  ic:'✓',t:'+0.4s',ms:'All channels restored · structure intact',tag:['fixed','reverted']},
+    {k:'act', ic:'⛔',t:'+0.5s',ms:'<span class="u">@compromised</span> stripped of roles · quarantined',tag:null},
+    {k:'ok',  ic:'✓',t:'+0.6s',ms:'Server secured · owner notified',tag:['fixed','secured']}
+  ];
+  let i=0;
+  function addRow(){
+    const r=ROWS[i%ROWS.length];
+    const el=document.createElement('div'); el.className='an-row';
+    el.innerHTML=`<span class="t">${r.t}</span>
+      <span class="ic ${r.k}">${r.ic}</span>
+      <span class="ms">${r.ms}</span>
+      ${r.tag?`<span class="tagx ${r.tag[0]}">${r.tag[1]}</span>`:'<span></span>'}`;
+    feed.appendChild(el);
+    if(feed.children.length>5) feed.removeChild(feed.firstChild);
+    i++;
+    if(i%ROWS.length===0) setTimeout(()=>{ feed.innerHTML=''; },1400);
+  }
+  if(RMOTION){ ROWS.forEach(()=>addRow()); return; }
+  let int=null;
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){ if(!int){ addRow(); int=setInterval(addRow,1150); } }
+    else { clearInterval(int); int=null; }
+  }),{threshold:.35});
+  io.observe(win);
 })();
 
 // ── features grid ──
@@ -216,11 +698,10 @@ document.getElementById('featgrid').innerHTML=FEATURES.map(([t,d,ic],i)=>`
     <h3>${t}</h3><p>${d}</p>
     <a class="more" href="/commands">Learn more →</a>
   </div>`).join('');
-// reveal on scroll
-const io=new IntersectionObserver((es)=>es.forEach(e=>{
-  if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),(+e.target.dataset.i%3)*90);io.unobserve(e.target);}
+const fio=new IntersectionObserver((es)=>es.forEach(e=>{
+  if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),(+e.target.dataset.i%3)*90);fio.unobserve(e.target);}
 }),{threshold:.2});
-document.querySelectorAll('.feat-card').forEach(c=>io.observe(c));
+document.querySelectorAll('.feat-card').forEach(c=>fio.observe(c));
 
 // ── stats + marquee (kept) ──
 (async()=>{
@@ -246,6 +727,23 @@ document.querySelectorAll('.feat-card').forEach(c=>io.observe(c));
     const dur=Math.max(22,Math.round(list.length*2.4));
     m.querySelector('.marquee-track').style.animationDuration=dur+'s';
   }catch(e){ m.remove(); }
+})();
+
+// ── smooth (inertia) scrolling via Lenis — progressive enhancement ──
+(function(){
+  if(RMOTION) return;
+  const s=document.createElement('script');
+  s.src='https://unpkg.com/lenis@1.1.14/dist/lenis.min.js';
+  s.onload=()=>{
+    if(!window.Lenis) return;
+    const lenis=new Lenis({duration:1.05,easing:t=>1-Math.pow(1-t,3),smoothWheel:true,touchMultiplier:1.6});
+    function raf(t){lenis.raf(t);requestAnimationFrame(raf);} requestAnimationFrame(raf);
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+      const id=a.getAttribute('href'); if(id.length>1){e.preventDefault();lenis.scrollTo(id);}
+    }));
+  };
+  s.onerror=()=>{};
+  document.head.appendChild(s);
 })();
 </script>
 </body></html>
