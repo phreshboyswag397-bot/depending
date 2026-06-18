@@ -4,6 +4,31 @@ const LOGO_SM = `<img src="/logo.png?v=2" alt="depend" width="24" height="24">`;
 const INVITE = 'https://discord.gg/depend';
 const NAV = [['Commands','/commands'],['Embeds','/embeds'],['Status','/status'],['Docs','/docs'],['Changelogs','/changelogs'],['Dashboard','/dashboard']];
 
+// typewriter: types text into el, optional caret while typing, then stops.
+// respects reduced-motion (instant). Returns a promise that resolves when done.
+function typewriter(el, text, opts){
+  opts=opts||{};
+  const speed=opts.speed||38, start=opts.delay||0;
+  if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){
+    el.textContent=text; return Promise.resolve();
+  }
+  el.textContent=''; el.classList.add('tw-typing');
+  return new Promise(res=>{
+    setTimeout(()=>{
+      let i=0;
+      const tick=()=>{
+        if(i<=text.length){ el.textContent=text.slice(0,i); i++; setTimeout(tick,speed+(Math.random()*40-20)); }
+        else { el.classList.remove('tw-typing'); res(); }
+      };
+      tick();
+    },start);
+  });
+}
+// type a heading made of multiple coloured spans in sequence
+async function typeSequence(parts, opts){
+  for(const p of parts){ await typewriter(p.el, p.text, {speed:opts&&opts.speed, delay:p.delay||0}); }
+}
+
 function mountChrome(active){
   mountSparkles();
   mountLoader();

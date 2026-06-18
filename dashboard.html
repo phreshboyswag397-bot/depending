@@ -92,7 +92,7 @@ async function errorBanner(){
 async function signedOut(){
   const banner=await errorBanner();
   document.getElementById('main').innerHTML=`
-    <div class="dash-head"><span class="eyebrow">// dashboard</span>
+    <div class="dash-head"><span class="eyebrow">dashboard</span>
       <h1>Sign in to manage your servers</h1>
       <p>Connect your Discord account to configure depend across every server you manage.</p></div>
     ${banner}
@@ -115,7 +115,7 @@ function signedIn(me){
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
   const guilds=(me.guilds||[]).sort((a,b)=>(b.botIn-a.botIn)||a.name.localeCompare(b.name));
   document.getElementById('main').innerHTML=`
-    <div class="dash-head"><span class="eyebrow">// dashboard</span>
+    <div class="dash-head"><span class="eyebrow">dashboard</span>
       <h1>Your servers</h1>
       <p>Servers where you have Manage Server permission. Pick one to configure depend.</p></div>
     <div class="userbar">

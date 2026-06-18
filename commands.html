@@ -75,8 +75,8 @@
 <script src="/shared.js"></script>
 <main class="wrap">
   <div class="page-head">
-    <span class="eyebrow">// reference</span>
-    <h1>Commands</h1>
+    <span class="eyebrow">reference</span>
+    <h1 id="ph"></h1>
     <p>Every command depend ships, pulled straight from the bot. Search by name, or pick a category.</p>
   </div>
 
@@ -101,6 +101,7 @@
 
 <script>
 mountChrome('commands');
+typewriter(document.getElementById('ph'),'Commands',{speed:55});
 let DATA=[], active='all';
 
 // inferred permission per category (the bot strings don't carry perms)
