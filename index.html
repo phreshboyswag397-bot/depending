@@ -357,7 +357,7 @@
             <div class="vm-created" id="vm-created">
               <div class="ch" id="vm-ch">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--peri)" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>
-                <span class="nm" id="vm-name">ripnote's channel</span>
+                <span class="nm" id="vm-name">miskas's channel</span>
                 <span class="timer" id="vm-timer">0:00</span>
                 <span class="badges">
                   <span class="pill lock" id="vm-pill-lock">🔒 locked</span>
@@ -365,14 +365,14 @@
                 </span>
               </div>
               <div class="vm-status" id="vm-statusrow">set a channel status</div>
-              <div class="vm-occ"><span class="ava">R</span> ripnote</div>
+              <div class="vm-occ"><span class="ava">M</span> miskas</div>
             </div>
           </div>
           <div class="vm-deck">
             <div class="vm-lbl"><span>Channel Controls</span></div>
             <div class="deck-grid" id="vm-deck"></div>
           </div>
-          <div class="vm-joiner" id="vm-joiner">R</div>
+          <div class="vm-joiner" id="vm-joiner">M</div>
         </div>
       </div>
     </div>
@@ -555,7 +555,7 @@ function makeLoop(rootEl, steps, period){
     created.classList.remove('on'); jtc.classList.remove('hot');
     ch.classList.remove('dim');
     pillLock.classList.remove('on'); pillLim.classList.remove('on');
-    name.textContent="ripnote's channel"; statusRow.textContent='set a channel status';
+    name.textContent="miskas's channel"; statusRow.textContent='set a channel status';
     deck.querySelectorAll('.deck-btn').forEach(b=>b.classList.remove('fire','done'));
     joiner.style.transition='none'; joiner.style.opacity='0';
     joiner.style.left='18px'; joiner.style.top='248px';
@@ -605,8 +605,8 @@ function makeLoop(rootEl, steps, period){
 
   function userMsg(){
     const el=document.createElement('div'); el.className='msg';
-    el.innerHTML=`<div class="av user">R</div><div class="body">
-      <div class="who"><b>ripnote</b><time>${now()}</time></div>
+    el.innerHTML=`<div class="av user">M</div><div class="body">
+      <div class="who"><b>miskas</b><time>${now()}</time></div>
       <div class="txt"><span class="cmd" data-type="1"></span><span class="caret"></span></div></div>`;
     stream.appendChild(el); trim(); return el;
   }
@@ -727,23 +727,6 @@ document.querySelectorAll('.feat-card').forEach(c=>fio.observe(c));
     const dur=Math.max(22,Math.round(list.length*2.4));
     m.querySelector('.marquee-track').style.animationDuration=dur+'s';
   }catch(e){ m.remove(); }
-})();
-
-// ── smooth (inertia) scrolling via Lenis — progressive enhancement ──
-(function(){
-  if(RMOTION) return;
-  const s=document.createElement('script');
-  s.src='https://unpkg.com/lenis@1.1.14/dist/lenis.min.js';
-  s.onload=()=>{
-    if(!window.Lenis) return;
-    const lenis=new Lenis({duration:1.05,easing:t=>1-Math.pow(1-t,3),smoothWheel:true,touchMultiplier:1.6});
-    function raf(t){lenis.raf(t);requestAnimationFrame(raf);} requestAnimationFrame(raf);
-    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
-      const id=a.getAttribute('href'); if(id.length>1){e.preventDefault();lenis.scrollTo(id);}
-    }));
-  };
-  s.onerror=()=>{};
-  document.head.appendChild(s);
 })();
 </script>
 </body></html>
