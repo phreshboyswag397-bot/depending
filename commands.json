@@ -67,7 +67,9 @@
    "warnings @user — view a member's warnings",
    "modhistory @user — view moderation history for a member",
    "banlist — list every banned user",
-   "timeout @user <time> [reason] — time a member out (alias: untimeout to reverse)"
+   "timeout @user <time> [reason] — time a member out (alias: untimeout to reverse)",
+   "namehistory @user — view a member’s past usernames/nicknames (alias: nh)",
+   "clearnames @user — clear a member’s stored name history"
   ]
  },
  {
@@ -387,7 +389,9 @@
    "bumpreminder channel #ch / message / thankyou / disable — DISBOARD bump reminders",
    "prefix self <symbol> — set YOUR personal prefix (works in every server)",
    "wordstats track <word> / <word> / list / leaderboard <word> — word tracking",
-   "-# Booster Message, Badge, and Vanity Gate are in the **Embeds & Messages** category."
+   "-# Booster Message, Badge, and Vanity Gate are in the **Embeds & Messages** category.",
+   "tag <name> [content] — create or view a saved tag",
+   "gallery [#channel] — make a channel image-only"
   ]
  },
  {
@@ -552,7 +556,8 @@
    "— Member Movement —",
    "d @user — disconnect a member from their voice channel",
    "drag @user(s) #vc — move members between channels",
-   "massmove #vc — move everyone from your VC to another"
+   "massmove #vc — move everyone from your VC to another",
+   "vcrecap on | off — toggle voice channel recap summaries (alias: recap)"
   ]
  },
  {
@@ -583,7 +588,8 @@
    "remove <position> — remove a track from the queue",
    "previous / prev / back — go back to the previous track",
    "unpause — resume playback (alias: resume)",
-   "disconnect — disconnect from voice"
+   "disconnect — disconnect from voice",
+   "repeat <track | queue | off> — set loop mode (alias: loop)"
   ]
  },
  {
@@ -638,7 +644,9 @@
    "tiktok <user> — look up a TikTok profile (alias: tt)",
    "twitter <user> — look up a Twitter profile (alias: tw)",
    "youtube <query> — search YouTube (alias: yt)",
-   "roblox <user> — look up a Roblox profile (alias: rbx)"
+   "roblox <user> — look up a Roblox profile (alias: rbx)",
+   "media caption <text> — add a caption to an image or media (alias: caption)",
+   "aesthetic <text> — convert text to vaporwave / full-width (alias: vapor)"
   ]
  }
 ]
