@@ -4,6 +4,17 @@ const LOGO_SM = `<img src="/logo.png?v=2" alt="depend" width="24" height="24">`;
 const INVITE = 'https://discord.gg/depend';
 const NAV = [['Commands','/commands'],['Embeds','/embeds'],['Status','/status'],['Docs','/docs'],['Changelogs','/changelogs'],['Dashboard','/dashboard']];
 
+// small inline icons shown beside each nav label
+const NAV_ICONS = {
+  Commands:'<path d="m4 7 5 5-5 5M12 17h8"/>',
+  Embeds:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/>',
+  Status:'<path d="M3 12h4l3 8 4-16 3 8h4"/>',
+  Docs:'<path d="M4 4h7v16H6a2 2 0 0 1-2-2zM20 4h-7v16h5a2 2 0 0 0 2-2z"/>',
+  Changelogs:'<path d="M3 6h13M3 12h13M3 18h9M19 8v6M19 17v.01"/>',
+  Dashboard:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'
+};
+function navIcon(t){return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${NAV_ICONS[t]||''}</svg>`;}
+
 // typewriter: types text into el, optional caret while typing, then stops.
 // respects reduced-motion (instant). Returns a promise that resolves when done.
 function typewriter(el, text, opts){
@@ -30,11 +41,11 @@ async function typeSequence(parts, opts){
 }
 
 function mountChrome(active){
-  mountSparkles();
+  mountWaves();
   mountLoader();
   const links = NAV.map(([t,h])=>{
     const on = t.toLowerCase()===active;
-    return `<a href="${h}"${on?' class="active"':''}>${t}</a>`;
+    return `<a href="${h}"${on?' class="active"':''}>${navIcon(t)}${t}</a>`;
   }).join('');
   document.body.insertAdjacentHTML('afterbegin',`
     <header class="nav"><div class="nav-bar">
@@ -58,6 +69,28 @@ function mountChrome(active){
     </div></footer>`);
 }
 function fmt(n){return (n??0).toLocaleString('en-US');}
+
+// animate a number rolling up to its target, fast and smooth.
+// format(value) -> string  (defaults to fmt). Respects reduced-motion.
+function countUp(el, target, opts){
+  if(!el) return;
+  opts=opts||{};
+  const format = opts.format || fmt;
+  const dur = opts.dur || 900;
+  target = +target || 0;
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce || target<=0){ el.textContent = format(target); return; }
+  const start = performance.now();
+  const ease = t => 1 - Math.pow(1 - t, 3); // easeOutCubic — quick then settles
+  function step(now){
+    const p = Math.min(1, (now - start) / dur);
+    const val = Math.round(ease(p) * target);
+    el.textContent = format(val);
+    if(p < 1) requestAnimationFrame(step);
+    else el.textContent = format(target);
+  }
+  requestAnimationFrame(step);
+}
 
 // full-screen logo loader — flashes, rises, shrinks away on load,
 // and reappears when navigating to another page on the site.
@@ -117,53 +150,50 @@ function mountLoader(){
   window.addEventListener('pageshow',ev=>{ if(ev.persisted){ el.classList.add('out','hide');el.style.display='none'; }});
 }
 
-// site-wide ambient sparkles — soft white dots that drift and twinkle
-function mountSparkles(){
-  if(document.getElementById('sparkles')) return;
-  document.body.insertAdjacentHTML('afterbegin','<canvas id="sparkles" aria-hidden="true"></canvas>');
-  const c=document.getElementById('sparkles');
+// site-wide background — soft, slow grayscale waves drifting on black
+function mountWaves(){
+  if(document.getElementById('waves')) return;
+  document.body.insertAdjacentHTML('afterbegin','<canvas id="waves" aria-hidden="true"></canvas>');
+  const c=document.getElementById('waves');
   Object.assign(c.style,{position:'fixed',inset:'0',width:'100%',height:'100%',
     zIndex:'-1',pointerEvents:'none'});
   const x=c.getContext('2d');
-  let w,h,stars,raf;
   const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function init(){
-    w=c.width=innerWidth*devicePixelRatio; h=c.height=innerHeight*devicePixelRatio;
-    x.scale(devicePixelRatio,devicePixelRatio);
-    const count=Math.min(140,Math.round(innerWidth*innerHeight/12000));
-    stars=Array.from({length:count},()=>({
-      x:Math.random()*innerWidth, y:Math.random()*innerHeight,
-      r:Math.random()*1.3+.35,
-      base:Math.random()*.5+.25,            // base brightness
-      tw:Math.random()*Math.PI*2,           // twinkle phase
-      tws:Math.random()*.025+.008,          // twinkle speed
-      vy:Math.random()*.06+.015,            // slow upward drift
-      vx:(Math.random()-.5)*.04,
-      // ~30% of stars are periwinkle, the rest white
-      purple:Math.random()<.3
-    }));
+  let dpr,t=0,raf;
+  // each layer: amplitude, wavelength, drift speed, vertical position, fill opacities (white)
+  const layers=[
+    {amp:.085,len:1.75,inc:.0052,yoff:.66,top:.16,mid:.05},
+    {amp:.060,len:1.10,inc:.0085,yoff:.73,top:.11,mid:.035},
+    {amp:.120,len:2.35,inc:.0036,yoff:.58,top:.085,mid:.028}
+  ];
+  function resize(){ dpr=Math.min(devicePixelRatio||1,2);
+    c.width=innerWidth*dpr; c.height=innerHeight*dpr; x.setTransform(dpr,0,0,dpr,0,0); }
+  function wave(L,phase){
+    const W=innerWidth,H=innerHeight,baseY=H*L.yoff,amp=H*L.amp,len=W*L.len;
+    x.beginPath(); x.moveTo(0,H); x.lineTo(0,baseY);
+    for(let px=0;px<=W;px+=10){
+      const y=baseY
+        + Math.sin(px/len*6.2832 + phase)*amp
+        + Math.sin(px/(len*.5)*6.2832 + phase*1.35)*amp*.38;
+      x.lineTo(px,y);
+    }
+    x.lineTo(W,H); x.closePath();
+    const g=x.createLinearGradient(0,baseY-amp,0,H);
+    g.addColorStop(0,`rgba(255,255,255,${L.top})`);
+    g.addColorStop(.5,`rgba(255,255,255,${L.mid})`);
+    g.addColorStop(1,'rgba(255,255,255,0)');
+    x.fillStyle=g; x.fill();
   }
   function frame(){
     x.clearRect(0,0,innerWidth,innerHeight);
-    for(const s of stars){
-      s.tw+=s.tws;
-      const a=Math.max(0,s.base+Math.sin(s.tw)*.35);
-      x.beginPath();x.arc(s.x,s.y,s.r,0,7);
-      if(s.purple){ x.fillStyle='rgba(183,169,242,'+a+')'; x.shadowColor='rgba(183,169,242,.85)'; }
-      else { x.fillStyle='rgba(255,255,255,'+a+')'; x.shadowColor='rgba(255,255,255,.8)'; }
-      x.shadowBlur=s.r*2.2;
-      x.fill();
-      s.y-=s.vy;s.x+=s.vx;
-      if(s.y<-3){s.y=innerHeight+3;s.x=Math.random()*innerWidth;}
-      if(s.x<-3)s.x=innerWidth+3; if(s.x>innerWidth+3)s.x=-3;
-    }
-    x.shadowBlur=0;
+    t+=1;
+    for(const L of layers) wave(L, t*L.inc);
     raf=requestAnimationFrame(frame);
   }
-  init();
-  if(reduce){ // draw once, no animation
-    for(const s of stars){x.beginPath();x.arc(s.x,s.y,s.r,0,7);
-      x.fillStyle=(s.purple?'rgba(183,169,242,':'rgba(255,255,255,')+s.base+')';x.fill();}
-  } else frame();
-  let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>{cancelAnimationFrame(raf);init();if(!reduce)frame();},200);});
+  resize();
+  if(reduce){ layers.forEach(L=>wave(L, 1.2)); }
+  else frame();
+  let to; addEventListener('resize',()=>{clearTimeout(to);to=setTimeout(()=>{
+    cancelAnimationFrame(raf); resize(); reduce?layers.forEach(L=>wave(L,1.2)):frame();
+  },150);});
 }

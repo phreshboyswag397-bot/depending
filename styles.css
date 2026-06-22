@@ -1,7 +1,8 @@
 /* ============================================================
-   depend — design system (black + periwinkle, liar.lol-flavored)
-   Display: Poppins  ·  Body: Inter  ·  Mono: JetBrains Mono
+   depend — design system (black + periwinkle)
+   Display: Fredoka (rounded)  ·  Body: Nunito  ·  Mono: JetBrains Mono
    ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 :root{
   --bg:#000000;
   --surface:#0b0b0e;
@@ -22,23 +23,24 @@
   --r:14px;
   --r-lg:18px;
   --maxw:1180px;
-  --font-display:'Poppins',sans-serif;
-  --font-body:'Inter',sans-serif;
+  --font-display:'Fredoka',sans-serif;
+  --font-body:'Nunito',sans-serif;
   --font-mono:'JetBrains Mono',ui-monospace,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--txt);font-family:var(--font-body);font-size:16px;
+body{background:var(--bg);color:var(--txt);font-family:var(--font-body);font-size:16px;font-weight:600;
   line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
 a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:-.01em;line-height:1.15}
 ::selection{background:var(--peri);color:#000}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
 
-/* ambient backdrop — faint periwinkle specks + glow */
+/* ambient backdrop — faint neutral glow behind the waves */
 .ambient{position:fixed;inset:0;z-index:-2;pointer-events:none;
   background:
-    radial-gradient(680px 460px at 50% -6%, rgba(143,127,224,.14), transparent 72%),
-    radial-gradient(500px 380px at 85% 8%, rgba(183,169,242,.07), transparent 70%);}
+    radial-gradient(720px 480px at 50% -8%, rgba(255,255,255,.06), transparent 72%),
+    radial-gradient(560px 420px at 50% 108%, rgba(255,255,255,.05), transparent 70%);}
 
 /* ── floating nav ── */
 header.nav{position:sticky;top:0;z-index:50;padding:14px 0}
@@ -48,12 +50,14 @@ header.nav{position:sticky;top:0;z-index:50;padding:14px 0}
 .brand{display:flex;align-items:center;gap:9px;color:#fff;flex:0 0 auto}
 .brand .logo{display:grid;place-items:center}
 .brand .logo img{display:block}
-.brand .word{font-family:var(--font-display);font-weight:600;font-size:18px;letter-spacing:-.01em}
+.brand .word{font-family:var(--font-display);font-weight:700;font-size:19px;letter-spacing:-.01em}
 .nav-pill{margin:0 auto;display:flex;gap:2px}
-.nav-pill a{font-size:14.5px;color:var(--txt-dim);padding:8px 16px;border-radius:999px;
-  transition:.16s;font-weight:450;white-space:nowrap}
+.nav-pill a{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;color:var(--txt-dim);
+  padding:8px 15px;border-radius:999px;transition:.16s;font-weight:600;white-space:nowrap}
+.nav-pill a svg{flex:0 0 auto;opacity:.85}
 .nav-pill a:hover{color:#fff;background:rgba(255,255,255,.05)}
-.nav-pill a.active{color:#fff;background:rgba(255,255,255,.08)}
+.nav-pill a.active{color:#0a0a0c;background:#fff;font-weight:700}
+.nav-pill a.active svg{opacity:1}
 .nav-support{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;
   background:linear-gradient(135deg,#5865F2,#8b5cf2);color:#fff;font-weight:600;font-size:14px;
   padding:10px 18px;border-radius:999px;transition:.16s;box-shadow:0 6px 18px -8px rgba(88,101,242,.7)}
@@ -65,19 +69,22 @@ header.nav{position:sticky;top:0;z-index:50;padding:14px 0}
 .eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--txt-faint);font-weight:500;display:inline-flex;align-items:center;gap:10px}
 .eyebrow::before{content:'';width:22px;height:1px;background:var(--peri-deep)}
 .eyebrow.dim{color:var(--txt-faint)}
-.page-head{padding:54px 0 34px}
-.page-head h1{font-family:var(--font-mono);font-size:clamp(34px,5vw,58px);font-weight:700;
-  letter-spacing:-.02em;line-height:1.04;margin:16px 0 12px}
-.page-head p{color:var(--txt-dim);max-width:560px;font-size:15.5px;font-family:var(--font-mono);line-height:1.6}
+.page-head{padding:54px 0 34px;text-align:center}
+.page-head .eyebrow{justify-content:center}
+.page-head h1{font-family:var(--font-display);font-size:clamp(36px,5.4vw,62px);font-weight:700;
+  letter-spacing:-.02em;line-height:1.02;margin:16px 0 12px}
+.page-head p{color:var(--txt-dim);max-width:560px;font-size:16px;font-weight:600;
+  font-family:var(--font-body);line-height:1.6;margin:0 auto}
 
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg)}
-.btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;
-  padding:13px 22px;border-radius:999px;cursor:pointer;border:1px solid transparent;transition:.18s}
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:600;
+  font-size:15px;padding:14px 24px;border-radius:999px;cursor:pointer;border:1px solid transparent;transition:.18s}
 .btn-dark{background:rgba(255,255,255,.04);border-color:var(--line-2);color:#fff}
 .btn-dark:hover{background:rgba(255,255,255,.08);transform:translateY(-1px)}
-.btn-primary{background:var(--peri);color:#000}
-.btn-primary:hover{background:var(--peri-bright);transform:translateY(-1px);
-  box-shadow:0 10px 26px -12px rgba(183,169,242,.6)}
+.btn-primary{background:#fff;color:#0a0a0c}
+.btn-primary:hover{background:#ece9f8;transform:translateY(-1px);
+  box-shadow:0 12px 30px -12px rgba(255,255,255,.35)}
+.btn-primary .di{color:var(--blurple)}
 .btn .di{color:var(--peri)}
 .btn-dark:hover .di{color:var(--peri-bright)}
 

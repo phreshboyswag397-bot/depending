@@ -6,43 +6,30 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <meta name="description" content="A Discord bot for moderation, automation, and social tools.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <style>
-  /* ── hero split: headline left, command palette right ── */
-  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;
-    padding:70px 0 40px;min-height:62vh}
-  .hero-eyebrow{font-family:var(--font-mono);font-size:12.5px;letter-spacing:.22em;
-    text-transform:uppercase;color:var(--txt-faint);display:flex;align-items:center;gap:10px;margin-bottom:26px}
-  .hero-eyebrow::before{content:'';width:26px;height:1px;background:var(--peri-deep)}
-  .hero h1{font-family:var(--font-mono);font-weight:700;font-size:clamp(40px,5.6vw,68px);
-    line-height:1.04;letter-spacing:-.02em;color:#f6f5fb;min-height:2.1em}
-  .hero h1 .l2{display:block}
-  .hero h1 .soft{color:#6f6f7d}
-  .hero h1 .dot{color:var(--peri)}
-  .hero .sub{font-family:var(--font-mono);color:var(--txt-faint);font-size:14.5px;line-height:1.7;
-    max-width:430px;margin:24px 0 30px}
-  .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
-  .hero-cta .btn{font-family:var(--font-mono);font-size:14px}
-
-  /* command palette */
-  .palette{background:linear-gradient(180deg,rgba(18,18,24,.5),rgba(8,8,11,.3));
-    border:1px solid var(--line);border-radius:18px;padding:10px;backdrop-filter:blur(6px);
-    box-shadow:0 30px 80px -40px rgba(0,0,0,.9);opacity:0;transform:translateY(14px);
-    animation:rise .7s .2s cubic-bezier(.2,.7,.2,1) forwards}
-  @keyframes rise{to{opacity:1;transform:none}}
-  .pal-item{display:flex;align-items:center;gap:14px;padding:15px 16px;border-radius:12px;
-    cursor:pointer;transition:.15s;border:1px solid transparent;position:relative}
-  .pal-item .pi{width:34px;height:34px;border-radius:9px;flex:0 0 34px;display:grid;place-items:center;
-    background:var(--surface-3);border:1px solid var(--line);color:var(--txt-dim);transition:.15s}
-  .pal-item .pt{font-family:var(--font-mono);font-size:15px;font-weight:600;color:var(--txt-dim);transition:.15s}
-  .pal-item .pa{margin-left:auto;color:var(--txt-faint);opacity:0;transform:translateX(-6px);transition:.15s}
-  .pal-item.sel,.pal-item:hover{background:var(--surface);border-color:var(--line-2)}
-  .pal-item.sel .pi,.pal-item:hover .pi{background:var(--peri);color:#000;border-color:var(--peri)}
-  .pal-item.sel .pt,.pal-item:hover .pt{color:#fff}
-  .pal-item.sel .pa,.pal-item:hover .pa{opacity:1;transform:none;color:var(--peri)}
-  .pal-hint{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;color:var(--txt-faint);
-    text-transform:uppercase;padding:14px 16px 6px;border-top:1px solid var(--line);margin-top:6px}
+  /* ── centered hero (stain-style) ── */
+  .hero{text-align:center;max-width:900px;margin:0 auto;padding:84px 0 26px}
+  .hero-title{font-family:var(--font-display);font-weight:700;
+    font-size:clamp(46px,7.4vw,88px);line-height:1.0;letter-spacing:-.025em;color:#fff;
+    opacity:0;transform:translateY(20px);animation:heroUp .7s .05s cubic-bezier(.2,.7,.2,1) forwards}
+  .hero-title .grad{background:linear-gradient(180deg,#e9e6f7 0%,#9286c9 96%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+  .hero-title .dot{color:var(--peri);-webkit-text-fill-color:var(--peri)}
+  .hero-sub{font-family:var(--font-body);font-weight:600;color:var(--txt-dim);
+    font-size:clamp(15px,1.55vw,18.5px);line-height:1.62;max-width:620px;margin:26px auto 34px;
+    opacity:0;transform:translateY(18px);animation:heroUp .7s .16s cubic-bezier(.2,.7,.2,1) forwards}
+  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+    opacity:0;transform:translateY(16px);animation:heroUp .7s .26s cubic-bezier(.2,.7,.2,1) forwards}
+  .hero-cta .btn{font-size:15.5px;padding:15px 26px;font-weight:600}
+  .hero-stats{font-family:var(--font-body);font-weight:600;color:var(--txt-dim);font-size:14.5px;
+    margin-top:30px;opacity:0;animation:heroUp .7s .36s cubic-bezier(.2,.7,.2,1) forwards}
+  .hero-stats b{color:#fff;font-weight:800}
+  @keyframes heroUp{to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){
+    .hero-title,.hero-sub,.hero-cta,.hero-stats{opacity:1;transform:none;animation:none}
+  }
 
   /* marquee (kept) */
   .marquee{margin:10px auto 30px;max-width:1000px;overflow:hidden;padding:6px 0;
@@ -65,12 +52,12 @@
   .showcase{padding:46px 0 30px}
   .show-head{max-width:680px;margin:0 auto 44px;text-align:center}
   .show-head .eyebrow{justify-content:center}
-  .show-head h2{font-family:var(--font-mono);font-size:clamp(28px,3.8vw,44px);font-weight:700;
+  .show-head h2{font-family:var(--font-display);font-size:clamp(28px,3.8vw,44px);font-weight:700;
     letter-spacing:-.02em;line-height:1.06;margin:16px 0 14px}
   .show-head h2 .live{position:relative;color:var(--peri)}
   .show-head h2 .live::after{content:'';position:absolute;left:0;right:0;bottom:6px;height:9px;
     background:linear-gradient(90deg,rgba(183,169,242,.28),transparent);z-index:-1;border-radius:4px}
-  .show-head p{font-family:var(--font-mono);color:var(--txt-faint);font-size:14px;line-height:1.7;max-width:520px;margin:0 auto}
+  .show-head p{font-family:var(--font-body);font-weight:600;color:var(--txt-faint);font-size:14px;line-height:1.7;max-width:520px;margin:0 auto}
 
   /* a "demo block": copy on one side, live window on the other */
   .demo-block{display:grid;grid-template-columns:.78fr 1.22fr;gap:40px;align-items:center;
@@ -80,7 +67,7 @@
   .demo-copy .tag{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
     color:var(--peri);display:flex;align-items:center;gap:9px;margin-bottom:16px}
   .demo-copy .tag::before{content:'';width:18px;height:1px;background:var(--peri-deep)}
-  .demo-copy h3{font-family:var(--font-mono);font-size:clamp(23px,2.7vw,30px);font-weight:700;
+  .demo-copy h3{font-family:var(--font-display);font-size:clamp(23px,2.7vw,30px);font-weight:700;
     letter-spacing:-.01em;line-height:1.12;margin-bottom:14px}
   .demo-copy h3 .m{color:#6f6f7d;font-weight:500}
   .demo-copy p{color:var(--txt-dim);font-size:14.5px;line-height:1.7;margin-bottom:22px;max-width:380px}
@@ -233,7 +220,7 @@
   .feat-eyebrow{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;
     color:var(--txt-faint);display:flex;align-items:center;gap:10px;margin-bottom:16px}
   .feat-eyebrow::before{content:'';width:22px;height:1px;background:var(--peri-deep)}
-  .feat-h{font-family:var(--font-mono);font-size:clamp(28px,3.6vw,40px);font-weight:700;
+  .feat-h{font-family:var(--font-display);font-size:clamp(28px,3.6vw,40px);font-weight:700;
     letter-spacing:-.01em;margin-bottom:34px}
   .feat-h .slash{color:var(--peri);font-weight:400;margin:0 6px}
   .feat-h .b{color:#f6f5fb}.feat-h .m{color:#6f6f7d;font-weight:500}
@@ -246,7 +233,7 @@
   .feat-card .fi{width:42px;height:42px;border-radius:11px;background:var(--surface-3);border:1px solid var(--line);
     display:grid;place-items:center;color:var(--peri);margin-bottom:18px;transition:.2s}
   .feat-card:hover .fi{background:var(--peri);color:#000;border-color:var(--peri);transform:translateY(-2px)}
-  .feat-card h3{font-family:var(--font-mono);font-size:17px;font-weight:600;margin-bottom:9px}
+  .feat-card h3{font-family:var(--font-display);font-size:17px;font-weight:600;margin-bottom:9px}
   .feat-card p{color:var(--txt-dim);font-size:14px;line-height:1.6;margin-bottom:16px}
   .feat-card .more{font-family:var(--font-mono);font-size:12.5px;color:var(--txt-faint);
     display:inline-flex;align-items:center;gap:6px;transition:.15s}
@@ -256,7 +243,7 @@
   .closing{text-align:center;padding:30px 0 100px}
   .closing .ce{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
     color:var(--peri);margin-bottom:14px}
-  .closing h2{font-family:var(--font-mono);font-size:clamp(26px,3.4vw,38px);font-weight:700;
+  .closing h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,38px);font-weight:700;
     letter-spacing:-.01em;margin-bottom:26px;line-height:1.15}
   .closing h2 .m{color:#6f6f7d;font-weight:500}
 
@@ -266,8 +253,6 @@
     .demo-copy p{max-width:none}
   }
   @media(max-width:920px){
-    .hero{grid-template-columns:1fr;gap:30px;padding:40px 0 20px;min-height:0}
-    .palette{max-width:440px}
     .feat-grid{grid-template-columns:1fr}
   }
   @media(max-width:560px){
@@ -287,41 +272,15 @@
 <script src="/shared.js"></script>
 <main class="wrap" id="smooth-content">
   <section class="hero">
-    <div class="hero-left">
-      <div class="hero-eyebrow" id="eyebrow"></div>
-      <h1><span class="l1" id="h1a"></span><span class="l2" id="h1b"></span><span class="l2"><span id="h1c"></span><span class="dot">.</span></span></h1>
-      <p class="sub" id="subline"></p>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="https://discord.gg/depend">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09-.01-.02-.04-.03-.07-.03-1.5.26-2.93.71-4.27 1.33-.01 0-.02.01-.03.02-2.72 4.07-3.47 8.03-3.1 11.95 0 .02.01.04.03.05 1.8 1.32 3.53 2.12 5.24 2.65.03.01.06 0 .07-.02.4-.55.76-1.13 1.07-1.74.02-.04 0-.08-.04-.09-.57-.22-1.11-.48-1.64-.78-.04-.02-.04-.08-.01-.11.11-.08.22-.17.33-.25.02-.02.05-.02.07-.01 3.44 1.57 7.15 1.57 10.55 0 .02-.01.05-.01.07.01.11.09.22.17.33.26.04.03.04.09-.01.11-.52.31-1.07.56-1.64.78-.04.01-.05.06-.04.09.32.61.68 1.19 1.07 1.74.03.02.06.03.09.02 1.72-.53 3.45-1.33 5.25-2.65.02-.01.03-.03.03-.05.44-4.53-.73-8.46-3.1-11.95-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.83 2.12-1.89 2.12z"/></svg>
-          Add to Discord</a>
-        <a class="btn btn-dark" href="/commands">Explore →</a>
-      </div>
-      <p class="powering" style="font-family:var(--font-mono);color:var(--txt-faint);font-size:12.5px;margin-top:26px">
-        powering <b id="p-users" style="color:#fff">4,243</b> users · <b id="p-guilds" style="color:#fff">90</b> servers</p>
+    <h1 class="hero-title">Everything your<br><span class="grad">server needs</span><span class="dot">.</span></h1>
+    <p class="hero-sub">The all-in-one Discord bot for moderation, antinuke security, voice channels, and automation — depend keeps your server running smoothly with powerful tools and fully customizable features for communities of any size.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://discord.gg/depend">
+        <svg class="di" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09-.01-.02-.04-.03-.07-.03-1.5.26-2.93.71-4.27 1.33-.01 0-.02.01-.03.02-2.72 4.07-3.47 8.03-3.1 11.95 0 .02.01.04.03.05 1.8 1.32 3.53 2.12 5.24 2.65.03.01.06 0 .07-.02.4-.55.76-1.13 1.07-1.74.02-.04 0-.08-.04-.09-.57-.22-1.11-.48-1.64-.78-.04-.02-.04-.08-.01-.11.11-.08.22-.17.33-.25.02-.02.05-.02.07-.01 3.44 1.57 7.15 1.57 10.55 0 .02-.01.05-.01.07.01.11.09.22.17.33.26.04.03.04.09-.01.11-.52.31-1.07.56-1.64.78-.04.01-.05.06-.04.09.32.61.68 1.19 1.07 1.74.03.02.06.03.09.02 1.72-.53 3.45-1.33 5.25-2.65.02-.01.03-.03.03-.05.44-4.53-.73-8.46-3.1-11.95-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.83 2.12-1.89 2.12z"/></svg>
+        Add depend to your server</a>
+      <a class="btn btn-dark" href="/commands">Explore features →</a>
     </div>
-
-    <div class="palette" id="palette">
-      <div class="pal-item sel" data-href="/commands">
-        <span class="pi"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 7 5 5-5 5M12 17h8"/></svg></span>
-        <span class="pt">Commands</span><span class="pa">→</span></div>
-      <div class="pal-item" data-href="/embeds">
-        <span class="pi"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg></span>
-        <span class="pt">Embed Studio</span><span class="pa">→</span></div>
-      <div class="pal-item" data-href="/dashboard">
-        <span class="pi"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
-        <span class="pt">Dashboard</span><span class="pa">→</span></div>
-      <div class="pal-item" data-href="/status">
-        <span class="pi"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></span>
-        <span class="pt">Status</span><span class="pa">→</span></div>
-      <div class="pal-item" data-href="/docs">
-        <span class="pi"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h7v16H6a2 2 0 0 1-2-2zM20 4h-7v16h5a2 2 0 0 0 2-2z"/></svg></span>
-        <span class="pt">Docs</span><span class="pa">→</span></div>
-      <div class="pal-item" data-href="https://discord.gg/depend">
-        <span class="pi"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09-.01-.02-.04-.03-.07-.03-1.5.26-2.93.71-4.27 1.33-.01 0-.02.01-.03.02-2.72 4.07-3.47 8.03-3.1 11.95 0 .02.01.04.03.05 1.8 1.32 3.53 2.12 5.24 2.65.03.01.06 0 .07-.02.4-.55.76-1.13 1.07-1.74.02-.04 0-.08-.04-.09-.57-.22-1.11-.48-1.64-.78-.04-.02-.04-.08-.01-.11.11-.08.22-.17.33-.25.02-.02.05-.02.07-.01 3.44 1.57 7.15 1.57 10.55 0 .02-.01.05-.01.07.01.11.09.22.17.33.26.04.03.04.09-.01.11-.52.31-1.07.56-1.64.78-.04.01-.05.06-.04.09.32.61.68 1.19 1.07 1.74.03.02.06.03.09.02 1.72-.53 3.45-1.33 5.25-2.65.02-.01.03-.03.03-.05.44-4.53-.73-8.46-3.1-11.95-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.83 2.12-1.89 2.12z"/></svg></span>
-        <span class="pt">Support</span><span class="pa">→</span></div>
-      <div class="pal-hint">↑↓ to navigate · enter to open</div>
-    </div>
+    <p class="hero-stats">Powering <b id="s-users">…</b> users across <b id="s-guilds">…</b> communities with <b id="s-cmds">…</b> total commands</p>
   </section>
 
   <div class="marquee loading" id="marquee"></div>
@@ -441,8 +400,8 @@
     <div class="ce">get started</div>
     <h2>check out the commands<br><span class="m">and add depend to your server</span></h2>
     <div class="hero-cta" style="justify-content:center">
-      <a class="btn btn-primary" href="https://discord.gg/depend" style="font-family:var(--font-mono)">Add to Discord</a>
-      <a class="btn btn-dark" href="/commands" style="font-family:var(--font-mono)">View Commands →</a>
+      <a class="btn btn-primary" href="https://discord.gg/depend" style="font-family:var(--font-display)">Add depend to your server</a>
+      <a class="btn btn-dark" href="/commands" style="font-family:var(--font-display)">View Commands →</a>
     </div>
   </section>
 </main>
@@ -452,37 +411,11 @@ mountChrome('home');
 
 const RMOTION = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ── typewriter headline + eyebrow + subline ──
-(async()=>{
-  await typewriter(document.getElementById('eyebrow'),'multipurpose discord bot',{speed:26});
-  typeSequence([
-    {el:document.getElementById('h1a'),text:'Everything'},
-    {el:document.getElementById('h1b'),text:'your server'},
-    {el:document.getElementById('h1c'),text:'needs'}
-  ],{speed:46});
-  setTimeout(()=>typewriter(document.getElementById('subline'),
-    'Moderation, antinuke, voice channels, embed builder, and more — depend handles it all so your server runs smoothly.',
-    {speed:14}),300);
-})();
-
-// ── command palette: keyboard navigation, no text caret ──
-(function(){
-  const items=[...document.querySelectorAll('.pal-item')];
-  let sel=0;
-  function setSel(i){sel=(i+items.length)%items.length;
-    items.forEach((it,n)=>it.classList.toggle('sel',n===sel));
-    items[sel].scrollIntoView({block:'nearest'});}
-  items.forEach((it,n)=>{
-    it.addEventListener('mouseenter',()=>setSel(n));
-    it.addEventListener('click',()=>{const h=it.dataset.href; if(h)location.href=h;});
-  });
-  document.addEventListener('keydown',e=>{
-    if(e.key==='ArrowDown'){e.preventDefault();setSel(sel+1);}
-    else if(e.key==='ArrowUp'){e.preventDefault();setSel(sel-1);}
-    else if(e.key==='Enter'&&document.querySelector('.palette')){
-      const h=items[sel].dataset.href; if(h)location.href=h;}
-  });
-})();
+// compact number formatter for the stats line (e.g. 14.4K, 1.2M)
+function fmtK(n){ n=+n||0;
+  if(n>=1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'')+'M';
+  if(n>=1e3) return (n/1e3).toFixed(1).replace(/\.0$/,'')+'K';
+  return String(n); }
 
 // ── scroll reveal ──
 (function(){
@@ -703,19 +636,35 @@ const fio=new IntersectionObserver((es)=>es.forEach(e=>{
 }),{threshold:.2});
 document.querySelectorAll('.feat-card').forEach(c=>fio.observe(c));
 
-// ── stats + marquee (kept) ──
+// ── hero stats line + server marquee ──
 (async()=>{
-  try{ const s=await (await fetch('/api/status')).json();const sh=s.shards&&s.shards[0];
-    if(sh){document.getElementById('p-users').textContent=fmt(sh.users);
-      document.getElementById('p-guilds').textContent=fmt(sh.servers);}}catch{}
+  // users + communities (servers API preferred, status as fallback)
+  let users=null, guilds=null;
+  try{ const d=await (await fetch('/api/servers')).json();
+    if(d.totalUsers)users=d.totalUsers; if(d.totalGuilds)guilds=d.totalGuilds; }catch{}
+  if(users==null||guilds==null){
+    try{ const s=await (await fetch('/api/status')).json(); const sh=s.shards&&s.shards[0];
+      if(sh){ if(users==null)users=sh.users; if(guilds==null)guilds=sh.servers; } }catch{}
+  }
+  if(users!=null) countUp(document.getElementById('s-users'), users, {format:fmtK});
+  if(guilds!=null) countUp(document.getElementById('s-guilds'), guilds, {format:fmt});
 })();
+
+(async()=>{
+  // total command count
+  try{
+    const cats=await (await fetch('/api/commands')).json();
+    const isCmd=l=>/^[a-z]/.test(l)&&!l.startsWith('-#')&&!l.startsWith('—');
+    const total=cats.reduce((n,c)=>n+(c.cmds||[]).filter(isCmd).length,0);
+    if(total) countUp(document.getElementById('s-cmds'), total, {format:n=>fmt(n)+'+'});
+  }catch{}
+})();
+
 (async()=>{
   const m=document.getElementById('marquee');
   try{
     const d=await (await fetch('/api/servers')).json();
     const list=d.servers||[];
-    if(d.totalUsers)document.getElementById('p-users').textContent=fmt(d.totalUsers);
-    if(d.totalGuilds)document.getElementById('p-guilds').textContent=fmt(d.totalGuilds);
     if(!list.length){m.remove();return;}
     const card=s=>`<div class="srv">
       ${s.icon?`<img class="ava" src="${s.icon}" alt="" loading="lazy">`
