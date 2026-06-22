@@ -76,20 +76,24 @@ function countUp(el, target, opts){
   if(!el) return;
   opts=opts||{};
   const format = opts.format || fmt;
-  const dur = opts.dur || 900;
+  const dur = opts.dur || 1300;
+  const delay = opts.delay || 0;
   target = +target || 0;
   const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce || target<=0){ el.textContent = format(target); return; }
-  const start = performance.now();
+  el.textContent = format(0); // show a starting value right away
   const ease = t => 1 - Math.pow(1 - t, 3); // easeOutCubic — quick then settles
-  function step(now){
-    const p = Math.min(1, (now - start) / dur);
-    const val = Math.round(ease(p) * target);
-    el.textContent = format(val);
-    if(p < 1) requestAnimationFrame(step);
-    else el.textContent = format(target);
+  function run(){
+    const start = performance.now();
+    function step(now){
+      const p = Math.min(1, (now - start) / dur);
+      el.textContent = format(Math.round(ease(p) * target));
+      if(p < 1) requestAnimationFrame(step);
+      else el.textContent = format(target);
+    }
+    requestAnimationFrame(step);
   }
-  requestAnimationFrame(step);
+  if(delay) setTimeout(run, delay); else run();
 }
 
 // full-screen logo loader — flashes, rises, shrinks away on load,
@@ -165,14 +169,15 @@ function mountFluid(){
   let W,H,raf,start=performance.now();
   // blobs live in 0..1 space; they drift on slow sine paths
   const darks=[
-    {bx:.28,by:.30,ax:.17,ay:.12,sx:.052,sy:.040,px:0.0,r:.64},
-    {bx:.74,by:.32,ax:.14,ay:.15,sx:.045,sy:.058,px:1.7,r:.72},
-    {bx:.54,by:.76,ax:.18,ay:.13,sx:.037,sy:.050,px:3.1,r:.68},
-    {bx:.13,by:.64,ax:.12,ay:.16,sx:.060,sy:.034,px:4.6,r:.56}
+    {bx:.50,by:.20,ax:.10,ay:.08,sx:.07,sy:.06,px:1.0,r:.74},
+    {bx:.16,by:.58,ax:.16,ay:.15,sx:.12,sy:.08,px:3.2,r:.56},
+    {bx:.84,by:.30,ax:.14,ay:.16,sx:.10,sy:.13,px:5.1,r:.60},
+    {bx:.58,by:.82,ax:.18,ay:.14,sx:.08,sy:.11,px:6.0,r:.58}
   ];
   const lights=[
-    {bx:.62,by:.58,ax:.20,ay:.16,sx:.041,sy:.049,px:2.2,r:.50,a:.20},
-    {bx:.26,by:.44,ax:.16,ay:.14,sx:.050,sy:.038,px:5.0,r:.44,a:.16}
+    {bx:.28,by:.30,ax:.18,ay:.13,sx:.14,sy:.10,px:0.4,r:.52,a:.26},
+    {bx:.76,by:.62,ax:.20,ay:.16,sx:.11,sy:.15,px:2.1,r:.58,a:.36},
+    {bx:.40,by:.80,ax:.22,ay:.14,sx:.09,sy:.13,px:4.0,r:.58,a:.34}
   ];
   function resize(){ W=c.width=Math.max(2,Math.round(innerWidth*SCALE));
     H=c.height=Math.max(2,Math.round(innerHeight*SCALE)); }
@@ -180,14 +185,14 @@ function mountFluid(){
     const t=(now-start)/1000, maxd=Math.max(W,H);
     // grey base
     const bg=x.createLinearGradient(0,0,0,H);
-    bg.addColorStop(0,'#2a2a30'); bg.addColorStop(1,'#141417');
+    bg.addColorStop(0,'#2f2f36'); bg.addColorStop(1,'#141417');
     x.fillStyle=bg; x.fillRect(0,0,W,H);
     // lighter swirls
     x.globalCompositeOperation='lighter';
     for(const b of lights){
       const cx=(b.bx+Math.sin(t*b.sx+b.px)*b.ax)*W, cy=(b.by+Math.cos(t*b.sy+b.px)*b.ay)*H, R=b.r*maxd;
       const g=x.createRadialGradient(cx,cy,0,cx,cy,R);
-      g.addColorStop(0,'rgba(124,124,134,'+b.a+')'); g.addColorStop(1,'rgba(124,124,134,0)');
+      g.addColorStop(0,'rgba(158,158,170,'+b.a+')'); g.addColorStop(1,'rgba(158,158,170,0)');
       x.fillStyle=g; x.fillRect(0,0,W,H);
     }
     // soft black shapes

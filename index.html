@@ -646,8 +646,8 @@ document.querySelectorAll('.feat-card').forEach(c=>fio.observe(c));
     try{ const s=await (await fetch('/api/status')).json(); const sh=s.shards&&s.shards[0];
       if(sh){ if(users==null)users=sh.users; if(guilds==null)guilds=sh.servers; } }catch{}
   }
-  if(users!=null) countUp(document.getElementById('s-users'), users, {format:fmtK});
-  if(guilds!=null) countUp(document.getElementById('s-guilds'), guilds, {format:fmt});
+  if(users!=null) countUp(document.getElementById('s-users'), users, {format:fmtK, delay:750});
+  if(guilds!=null) countUp(document.getElementById('s-guilds'), guilds, {format:fmt, delay:750});
 })();
 
 (async()=>{
@@ -656,7 +656,7 @@ document.querySelectorAll('.feat-card').forEach(c=>fio.observe(c));
     const cats=await (await fetch('/api/commands')).json();
     const isCmd=l=>/^[a-z]/.test(l)&&!l.startsWith('-#')&&!l.startsWith('—');
     const total=cats.reduce((n,c)=>n+(c.cmds||[]).filter(isCmd).length,0);
-    if(total) countUp(document.getElementById('s-cmds'), total, {format:n=>fmt(n)+'+'});
+    if(total) countUp(document.getElementById('s-cmds'), total, {format:n=>fmt(n)+'+', delay:750});
   }catch{}
 })();
 

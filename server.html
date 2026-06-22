@@ -4,7 +4,7 @@
 <title>Server · depend</title>
 <link rel="icon" type="image/png" href="/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <style>
   .top{display:flex;align-items:center;gap:16px;padding-top:46px}
@@ -41,8 +41,13 @@
   .ev{display:flex;align-items:center;gap:13px;padding:13px 16px;border:1px solid var(--line);
     border-radius:var(--r);background:var(--surface);animation:slidein .35s ease}
   @keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-  .ev .ic{width:34px;height:34px;border-radius:10px;flex:0 0 34px;display:grid;place-items:center;font-size:16px;
-    background:var(--surface-3);border:1px solid var(--line)}
+  .ev .ic{width:34px;height:34px;border-radius:10px;flex:0 0 34px;display:grid;place-items:center;
+    background:var(--surface-3);border:1px solid var(--line);color:var(--txt-dim)}
+  .ev .ic svg{width:18px;height:18px}
+  .ev .ic.red{color:var(--red);border-color:rgba(226,92,122,.35);background:rgba(226,92,122,.08)}
+  .ev .ic.green{color:var(--green);border-color:rgba(67,224,138,.35);background:rgba(67,224,138,.08)}
+  .ev .ic.amber{color:var(--amber);border-color:rgba(226,184,92,.32);background:rgba(226,184,92,.08)}
+  .ev .ic.dim{color:var(--txt-dim)}
   .ev .tx{flex:1;font-size:14px;color:var(--txt)}
   .ev .tx b{font-weight:600;color:#fff}
   .ev .ty{font-family:var(--font-mono);font-size:10.5px;color:var(--txt-faint);text-transform:uppercase;letter-spacing:.05em}
@@ -82,13 +87,37 @@ function bucket(ty){ if(ty==='all')return null;
   if(ty==='mute')return new Set(['mute','unmute']); if(ty==='ban')return new Set(['ban','unban']);
   return new Set([ty]); }
 
+// action icons (matching the uploaded set): gavel, trash, plus, minus, x, check, wrench
+const ICO={
+  gavel:'<path d="m14.5 12.5-8 8a2.12 2.12 0 1 1-3-3l8-8"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/><path d="m21 11-8-8"/>',
+  trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6M14 11v6"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  minus:'<path d="M5 12h14"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  wrench:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.9 6.91a2.12 2.12 0 0 1-3-3l6.91-6.9a6 6 0 0 1 7.94-7.95l-3.76 3.77z"/>'
+};
+function svgIco(n){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICO[n]||ICO.wrench}</svg>`;}
+// map each event type to an icon + colour
+const EVT={
+  ban:['gavel','red'], unban:['check','green'], kick:['x','red'], jail:['gavel','red'], unjail:['check','green'],
+  mute:['minus','amber'], unmute:['plus','green'], timeout:['minus','amber'], warn:['gavel','amber'],
+  join:['plus','green'], leave:['minus','red'],
+  voice_join:['plus','green'], voice_leave:['minus','dim'], voice_move:['wrench','dim'],
+  msg_delete:['trash','red'], purge:['trash','red'], message_delete:['trash','red'],
+  role_add:['plus','green'], role_del:['trash','red'], role_remove:['trash','red'],
+  channel_add:['plus','green'], channel_del:['trash','red'], channel_create:['plus','green'], channel_delete:['trash','red'],
+  boost:['check','green'], nickname:['wrench','dim']
+};
+function evIcon(type){const m=EVT[type]||['wrench','dim'];return `<div class="ic ${m[1]}">${svgIco(m[0])}</div>`;}
+
 function renderFeed(){
   const set=bucket(filter);
   const list=events.filter(e=>!set||set.has(e.type));
   const feed=document.getElementById('feed');if(!feed)return;
   feed.innerHTML=list.length?list.map(e=>`
     <div class="ev ${esc(e.type)}">
-      <div class="ic">${e.icon||'•'}</div>
+      ${evIcon(e.type)}
       <div class="tx">${md(e.text)}<div class="ty">${esc(e.type)}</div></div>
       <div class="tm">${ago(e.t)}</div></div>`).join('')
     : '<div class="empty">No matching activity yet. Live events will appear here as they happen.</div>';
