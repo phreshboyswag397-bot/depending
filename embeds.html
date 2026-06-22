@@ -69,7 +69,7 @@
   .e-footer img{width:20px;height:20px;border-radius:50%}
   .note-bar{background:var(--surface);border:1px solid var(--line);border-radius:12px;
     padding:13px 16px;margin-bottom:18px;font-size:13.5px;color:var(--txt-dim)}
-  .note-bar code{font-family:var(--font-mono);color:var(--peri);background:rgba(183,169,242,.1);
+  .note-bar code{font-family:var(--font-mono);color:var(--peri);background:rgba(255,255,255,.1);
     padding:2px 6px;border-radius:5px;font-size:12.5px}
   @media(max-width:920px){.eb{grid-template-columns:1fr}.preview-wrap{position:static}}
 </style></head><body>
@@ -97,8 +97,8 @@
       <div class="panel" data-p style="margin-top:14px">
         <div class="panel-h"><span class="ic">◍</span>Appearance<span class="chev">▾</span></div>
         <div class="panel-b">
-          <div class="colorrow"><input type="color" id="f-color" value="#b7a9f2">
-            <input class="inp" id="f-colorhex" value="#b7a9f2" style="font-family:var(--font-mono)"></div>
+          <div class="colorrow"><input type="color" id="f-color" value="#ffffff">
+            <input class="inp" id="f-colorhex" value="#ffffff" style="font-family:var(--font-mono)"></div>
           <div class="swatches" id="swatches"></div>
         </div>
       </div>
@@ -163,7 +163,7 @@
 
 <script>
 mountChrome('embeds');
-const SW=['#b7a9f2','#f2a9c4','#f0a07c','#7ce2b0','#a9b4f2','#7c6fd4','#ffffff','#f2c4d8','#5865F2','#e25c7a'];
+const SW=['#ffffff','#f2a9c4','#f0a07c','#7ce2b0','#a9b4f2','#7c6fd4','#ffffff','#f2c4d8','#5865F2','#e25c7a'];
 document.getElementById('swatches').innerHTML=SW.map(c=>`<div class="sw" style="background:${c}" data-c="${c}"></div>`).join('');
 const $=id=>document.getElementById(id);
 let fields=[];
@@ -255,8 +255,8 @@ $('export').onclick=()=>{
   navigator.clipboard?.writeText(script);
   const b=$('export');const o=b.textContent;b.textContent='Copied ✓';setTimeout(()=>b.textContent=o,1400);
 };
-$('reset').onclick=()=>{document.querySelectorAll('.inp').forEach(el=>el.value=el.id==='f-colorhex'?'#b7a9f2':'');
-  $('f-color').value='#b7a9f2';fields=[];renderFields();update();};
+$('reset').onclick=()=>{document.querySelectorAll('.inp').forEach(el=>el.value=el.id==='f-colorhex'?'#ffffff':'');
+  $('f-color').value='#ffffff';fields=[];renderFields();update();};
 
 renderFields();update();
 </script>

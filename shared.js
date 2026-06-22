@@ -41,7 +41,7 @@ async function typeSequence(parts, opts){
 }
 
 function mountChrome(active){
-  mountWaves();
+  mountFluid();
   mountLoader();
   const links = NAV.map(([t,h])=>{
     const on = t.toLowerCase()===active;
@@ -98,22 +98,22 @@ function mountLoader(){
   if(document.getElementById('loader')) return;
   const css=`
     #loader{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
-      background:radial-gradient(circle at 50% 45%,#0b0a14 0%,#000 70%);
+      background:radial-gradient(circle at 50% 45%,#0a0a0a 0%,#000 70%);
       transition:opacity .5s ease;}
     #loader.hide{opacity:0;pointer-events:none}
     #loader .ldr-wrap{position:relative;display:grid;place-items:center}
     #loader .halo{position:absolute;width:240px;height:240px;border-radius:50%;
-      background:radial-gradient(circle,rgba(183,169,242,.35),rgba(183,169,242,0) 65%);
+      background:radial-gradient(circle,rgba(255,255,255,.35),rgba(255,255,255,0) 65%);
       filter:blur(6px);animation:ldr-halo 1.8s ease-in-out infinite}
     #loader .ring{position:absolute;width:140px;height:140px;border-radius:50%;
-      border:2px solid transparent;border-top-color:rgba(183,169,242,.8);
-      border-right-color:rgba(183,169,242,.25);animation:ldr-spin 1.1s linear infinite}
+      border:2px solid transparent;border-top-color:rgba(255,255,255,.8);
+      border-right-color:rgba(255,255,255,.25);animation:ldr-spin 1.1s linear infinite}
     #loader img{width:104px;height:104px;position:relative;
-      filter:drop-shadow(0 0 14px rgba(183,169,242,.65)) drop-shadow(0 0 34px rgba(143,127,224,.45));
+      filter:drop-shadow(0 0 14px rgba(255,255,255,.65)) drop-shadow(0 0 34px rgba(255,255,255,.45));
       animation:ldr-pulse 1.4s ease-in-out infinite}
     #loader.out .ldr-wrap{animation:ldr-out .62s cubic-bezier(.55,0,.25,1) forwards}
     @keyframes ldr-pulse{0%,100%{opacity:.82;transform:scale(1)}
-      50%{opacity:1;transform:scale(1.07);filter:drop-shadow(0 0 22px rgba(183,169,242,.85)) drop-shadow(0 0 48px rgba(143,127,224,.6))}}
+      50%{opacity:1;transform:scale(1.07);filter:drop-shadow(0 0 22px rgba(255,255,255,.85)) drop-shadow(0 0 48px rgba(255,255,255,.6))}}
     @keyframes ldr-halo{0%,100%{opacity:.5;transform:scale(.92)}50%{opacity:1;transform:scale(1.08)}}
     @keyframes ldr-spin{to{transform:rotate(360deg)}}
     @keyframes ldr-out{0%{opacity:1;transform:translateY(0) scale(1)}
@@ -150,50 +150,60 @@ function mountLoader(){
   window.addEventListener('pageshow',ev=>{ if(ev.persisted){ el.classList.add('out','hide');el.style.display='none'; }});
 }
 
-// site-wide background — soft, slow grayscale waves drifting on black
-function mountWaves(){
-  if(document.getElementById('waves')) return;
-  document.body.insertAdjacentHTML('afterbegin','<canvas id="waves" aria-hidden="true"></canvas>');
-  const c=document.getElementById('waves');
+// site-wide background — smooth flowing grayscale fluid: soft black shapes
+// drift slowly over a grey base. Rendered at low res and upscaled by the
+// browser, which keeps it buttery-smooth and cheap on the GPU.
+function mountFluid(){
+  if(document.getElementById('fluid')) return;
+  document.body.insertAdjacentHTML('afterbegin','<canvas id="fluid" aria-hidden="true"></canvas>');
+  const c=document.getElementById('fluid');
   Object.assign(c.style,{position:'fixed',inset:'0',width:'100%',height:'100%',
     zIndex:'-1',pointerEvents:'none'});
   const x=c.getContext('2d');
   const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let dpr,t=0,raf;
-  // each layer: amplitude, wavelength, drift speed, vertical position, fill opacities (white)
-  const layers=[
-    {amp:.085,len:1.75,inc:.0052,yoff:.66,top:.16,mid:.05},
-    {amp:.060,len:1.10,inc:.0085,yoff:.73,top:.11,mid:.035},
-    {amp:.120,len:2.35,inc:.0036,yoff:.58,top:.085,mid:.028}
+  const SCALE=0.42;                     // low-res backing store → smooth upscale + speed
+  let W,H,raf,start=performance.now();
+  // blobs live in 0..1 space; they drift on slow sine paths
+  const darks=[
+    {bx:.28,by:.30,ax:.17,ay:.12,sx:.052,sy:.040,px:0.0,r:.64},
+    {bx:.74,by:.32,ax:.14,ay:.15,sx:.045,sy:.058,px:1.7,r:.72},
+    {bx:.54,by:.76,ax:.18,ay:.13,sx:.037,sy:.050,px:3.1,r:.68},
+    {bx:.13,by:.64,ax:.12,ay:.16,sx:.060,sy:.034,px:4.6,r:.56}
   ];
-  function resize(){ dpr=Math.min(devicePixelRatio||1,2);
-    c.width=innerWidth*dpr; c.height=innerHeight*dpr; x.setTransform(dpr,0,0,dpr,0,0); }
-  function wave(L,phase){
-    const W=innerWidth,H=innerHeight,baseY=H*L.yoff,amp=H*L.amp,len=W*L.len;
-    x.beginPath(); x.moveTo(0,H); x.lineTo(0,baseY);
-    for(let px=0;px<=W;px+=10){
-      const y=baseY
-        + Math.sin(px/len*6.2832 + phase)*amp
-        + Math.sin(px/(len*.5)*6.2832 + phase*1.35)*amp*.38;
-      x.lineTo(px,y);
+  const lights=[
+    {bx:.62,by:.58,ax:.20,ay:.16,sx:.041,sy:.049,px:2.2,r:.50,a:.20},
+    {bx:.26,by:.44,ax:.16,ay:.14,sx:.050,sy:.038,px:5.0,r:.44,a:.16}
+  ];
+  function resize(){ W=c.width=Math.max(2,Math.round(innerWidth*SCALE));
+    H=c.height=Math.max(2,Math.round(innerHeight*SCALE)); }
+  function draw(now){
+    const t=(now-start)/1000, maxd=Math.max(W,H);
+    // grey base
+    const bg=x.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,'#2a2a30'); bg.addColorStop(1,'#141417');
+    x.fillStyle=bg; x.fillRect(0,0,W,H);
+    // lighter swirls
+    x.globalCompositeOperation='lighter';
+    for(const b of lights){
+      const cx=(b.bx+Math.sin(t*b.sx+b.px)*b.ax)*W, cy=(b.by+Math.cos(t*b.sy+b.px)*b.ay)*H, R=b.r*maxd;
+      const g=x.createRadialGradient(cx,cy,0,cx,cy,R);
+      g.addColorStop(0,'rgba(124,124,134,'+b.a+')'); g.addColorStop(1,'rgba(124,124,134,0)');
+      x.fillStyle=g; x.fillRect(0,0,W,H);
     }
-    x.lineTo(W,H); x.closePath();
-    const g=x.createLinearGradient(0,baseY-amp,0,H);
-    g.addColorStop(0,`rgba(255,255,255,${L.top})`);
-    g.addColorStop(.5,`rgba(255,255,255,${L.mid})`);
-    g.addColorStop(1,'rgba(255,255,255,0)');
-    x.fillStyle=g; x.fill();
-  }
-  function frame(){
-    x.clearRect(0,0,innerWidth,innerHeight);
-    t+=1;
-    for(const L of layers) wave(L, t*L.inc);
-    raf=requestAnimationFrame(frame);
+    // soft black shapes
+    x.globalCompositeOperation='source-over';
+    for(const b of darks){
+      const cx=(b.bx+Math.sin(t*b.sx+b.px)*b.ax)*W, cy=(b.by+Math.cos(t*b.sy+b.px)*b.ay)*H, R=b.r*maxd;
+      const g=x.createRadialGradient(cx,cy,0,cx,cy,R);
+      g.addColorStop(0,'rgba(0,0,0,.88)'); g.addColorStop(.6,'rgba(0,0,0,.34)'); g.addColorStop(1,'rgba(0,0,0,0)');
+      x.fillStyle=g; x.fillRect(0,0,W,H);
+    }
+    raf=requestAnimationFrame(draw);
   }
   resize();
-  if(reduce){ layers.forEach(L=>wave(L, 1.2)); }
-  else frame();
+  if(reduce){ draw(performance.now()); cancelAnimationFrame(raf); }
+  else raf=requestAnimationFrame(draw);
   let to; addEventListener('resize',()=>{clearTimeout(to);to=setTimeout(()=>{
-    cancelAnimationFrame(raf); resize(); reduce?layers.forEach(L=>wave(L,1.2)):frame();
+    cancelAnimationFrame(raf); resize(); reduce?draw(performance.now()):(raf=requestAnimationFrame(draw));
   },150);});
 }

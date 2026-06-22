@@ -13,9 +13,9 @@
   --txt:#f4f4f6;
   --txt-dim:#9b9ba6;
   --txt-faint:#5c5c66;
-  --peri:#b7a9f2;
-  --peri-bright:#cdc2f8;
-  --peri-deep:#8f7fe0;
+  --peri:#ffffff;
+  --peri-bright:#ffffff;
+  --peri-deep:#8a8a93;
   --blurple:#5865F2;
   --green:#43e08a;
   --amber:#e2b85c;
@@ -59,9 +59,9 @@ header.nav{position:sticky;top:0;z-index:50;padding:14px 0}
 .nav-pill a.active{color:#0a0a0c;background:#fff;font-weight:700}
 .nav-pill a.active svg{opacity:1}
 .nav-support{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;
-  background:linear-gradient(135deg,#5865F2,#8b5cf2);color:#fff;font-weight:600;font-size:14px;
-  padding:10px 18px;border-radius:999px;transition:.16s;box-shadow:0 6px 18px -8px rgba(88,101,242,.7)}
-.nav-support:hover{transform:translateY(-1px);box-shadow:0 9px 24px -8px rgba(88,101,242,.85)}
+  background:rgba(255,255,255,.06);border:1px solid var(--line-2);color:#fff;font-weight:700;font-size:14px;
+  padding:10px 18px;border-radius:999px;transition:.16s}
+.nav-support:hover{transform:translateY(-1px);background:rgba(255,255,255,.1)}
 .nav-toggle{display:none;background:none;border:1px solid var(--line);color:#fff;
   width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:17px;flex:0 0 auto}
 
@@ -84,7 +84,7 @@ header.nav{position:sticky;top:0;z-index:50;padding:14px 0}
 .btn-primary{background:#fff;color:#0a0a0c}
 .btn-primary:hover{background:#ece9f8;transform:translateY(-1px);
   box-shadow:0 12px 30px -12px rgba(255,255,255,.35)}
-.btn-primary .di{color:var(--blurple)}
+.btn-primary .di{color:#18181c}
 .btn .di{color:var(--peri)}
 .btn-dark:hover .di{color:var(--peri-bright)}
 
