@@ -59,15 +59,16 @@
   .card-cmd .usage .u-req{color:var(--peri)}
   .card-cmd .usage .u-opt{color:var(--txt-faint)}
   .card-cmd .cdesc{color:var(--txt-dim);font-size:13.5px;line-height:1.5;margin-top:9px}
-  .metas{margin-top:14px;display:flex;flex-direction:column;gap:8px}
-  .meta{display:flex;align-items:baseline;gap:10px}
-  .meta-l{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--txt-faint);flex:0 0 38px;padding-top:1px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+  .metas{margin-top:16px;display:flex;flex-direction:column;gap:14px}
+  .meta{display:block}
+  .meta-l{display:block;font-family:var(--font-body);font-size:12.5px;font-weight:600;
+    color:var(--txt-faint);margin-bottom:9px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
   .chip{display:inline-flex;align-items:center;font-family:var(--font-mono);font-size:11.5px;line-height:1.4;
-    padding:3px 9px;border-radius:7px;background:#000;border:1px solid var(--line-2);color:var(--txt-dim);white-space:nowrap}
-  .chip.opt{color:var(--peri);border-color:rgba(255,255,255,.28)}
+    padding:4px 10px;border-radius:8px;background:#000;border:1px solid var(--line-2);color:var(--txt-dim);white-space:nowrap}
+  .chip.opt{color:#fff;border-color:rgba(255,255,255,.28)}
   .chip.perm{color:#cfcae6;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2)}
+  .chip.none{color:var(--txt-faint);background:rgba(255,255,255,.03)}
   .copy{position:absolute;top:16px;right:16px;background:none;border:1px solid var(--line);
     width:30px;height:30px;border-radius:8px;color:var(--txt-faint);cursor:pointer;transition:.14s;
     display:grid;place-items:center;opacity:0}
@@ -123,7 +124,7 @@ const PERMS={
 };
 function permsFor(title){const k=shortTitle(title);return PERMS[k]||[];}
 
-function realCount(cat){return cat.cmds.filter(l=>/^[a-z]/.test(l)&&!l.startsWith('-#')&&!l.startsWith('—')).length;}
+function realCount(cat){return cat.cmds.filter(l=>/^[a-z0-9]/.test(l)&&!l.startsWith('-#')&&!l.startsWith('—')).length;}
 function shortTitle(t){return t.replace(/ Commands$/,'');}
 function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
@@ -139,7 +140,7 @@ function parse(line){
   if(dm.length>1){work=dm[0].trim();desc=dm.slice(1).join(' — ').trim();}
   const tokens=work.split(/\s+/);
   const first=tokens[0];
-  const looksCmd=/^[a-z][a-z0-9_]*(\/[a-z0-9_]+)?$/i.test(first)&&/^[a-z]/.test(line)&&!line.startsWith('-#');
+  const looksCmd=/^[a-z0-9][a-z0-9_]*(\/[a-z0-9_]+)?$/i.test(first)&&/^[a-z0-9]/.test(line)&&!line.startsWith('-#');
   if(!looksCmd) return {kind:'note',text:line.replace(/^-#\s*/,'')};
   // command name = leading lowercase words until we hit an arg token (<...>, [...], @, #)
   let i=1, nameParts=[first];
@@ -160,52 +161,56 @@ function parse(line){
   return {kind:'cmd',name:nameParts.join(' '),args,desc,alias};
 }
 
-function renderCard(r,catTitle){
-  const perms=permsFor(catTitle);
+function renderCard(r,perms){
   const argChips = r.args.length
     ? r.args.map(a=>`<span class="chip ${a.optional?'opt':''}">${esc(a.label)}</span>`).join('')
-    : '';
+    : '<span class="chip none">None</span>';
   const permChips = perms.length
     ? perms.map(p=>`<span class="chip perm">${esc(p)}</span>`).join('')
-    : '';
+    : '<span class="chip none">None</span>';
   const full=',' + r.name + (r.args.length?' '+r.args.map(a=>a.optional?'['+a.label+']':'<'+a.label+'>').join(' '):'');
   const usage = r.args.length
     ? r.args.map(a=>a.optional?`<span class="u-opt">[${esc(a.label)}]</span>`:`<span class="u-req">&lt;${esc(a.label)}&gt;</span>`).join(' ')
     : '';
-  // meta row: only render sections that have real content
-  let meta='';
-  if(argChips) meta+=`<div class="meta"><span class="meta-l">args</span><div class="chips">${argChips}</div></div>`;
-  if(permChips) meta+=`<div class="meta"><span class="meta-l">perms</span><div class="chips">${permChips}</div></div>`;
-  if(r.alias) meta+=`<div class="meta"><span class="meta-l">alias</span><div class="chips"><span class="chip">${esc(r.alias)}</span></div></div>`;
+  let meta=`<div class="meta"><span class="meta-l">arguments</span><div class="chips">${argChips}</div></div>`;
+  meta+=`<div class="meta"><span class="meta-l">permissions</span><div class="chips">${permChips}</div></div>`;
+  if(r.alias) meta+=`<div class="meta"><span class="meta-l">aliases</span><div class="chips">${r.alias.split(/,\s*/).map(a=>`<span class="chip">${esc(a)}</span>`).join('')}</div></div>`;
   return `<div class="card-cmd">
     <button class="copy" data-cp="${esc(full).replace(/"/g,'&quot;')}" title="Copy"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
-    <div class="catlabel"><span class="dot"></span>${esc(shortTitle(catTitle).toLowerCase())}</div>
     <div class="cmd-line"><span class="pfx">,</span><span class="nm">${esc(r.name)}</span>${usage?` <span class="usage">${usage}</span>`:''}</div>
     ${r.desc?`<div class="cdesc">${esc(r.desc)}</div>`:''}
-    ${meta?`<div class="metas">${meta}</div>`:''}
+    <div class="metas">${meta}</div>
   </div>`;
+}
+
+let PARSED=[];
+function buildParsed(){
+  PARSED=DATA.map(cat=>({
+    title:cat.title, short:shortTitle(cat.title), perms:permsFor(cat.title),
+    rows:cat.cmds.map(raw=>({low:String(raw).toLowerCase(), r:parse(raw)}))
+  }));
 }
 
 function render(){
   const q=document.getElementById('q').value.trim().toLowerCase();
   const out=document.getElementById('out');
   let html='', shown=0;
-  for(const cat of DATA){
+  for(const cat of PARSED){
     if(active!=='all' && cat.title!==active) continue;
     let cards='', cnt=0;
-    cat.cmds.map(parse).forEach((r,i)=>{
-      const raw=cat.cmds[i];
-      if(q && !raw.toLowerCase().includes(q)) return;
-      if(r.kind==='spacer'||r.kind==='subhead') return;
+    for(const row of cat.rows){
+      if(q && !row.low.includes(q)) continue;
+      const r=row.r;
+      if(r.kind==='spacer'||r.kind==='subhead') continue;
       if(r.kind==='note'){
-        cards+=`<div class="card-cmd note-card"><div class="cdesc">${esc(r.text)}</div></div>`;cnt++;return;
+        cards+=`<div class="card-cmd note-card"><div class="cdesc">${esc(r.text)}</div></div>`;cnt++;continue;
       }
-      cnt++; cards+=renderCard(r,cat.title);
-    });
+      cnt++; cards+=renderCard(r,cat.perms);
+    }
     if(!cnt) continue;
     shown++;
     html+=`<section class="group" id="cat-${slug(cat.title)}">
-      <div class="group-h"><h2>${esc(shortTitle(cat.title))}</h2><span class="ct">${cnt}</span><span class="rule"></span></div>
+      <div class="group-h"><h2>${esc(cat.short)}</h2><span class="ct">${cnt}</span><span class="rule"></span></div>
       <div class="cmd-grid">${cards}</div></section>`;
   }
   out.innerHTML=shown?html:'<div class="none">No commands match “'+esc(q)+'”.</div>';
@@ -237,6 +242,7 @@ function setActive(val,label,count){
           <span class="cn">${esc(shortTitle(c.title))}</span><span class="cc">${n}</span></div>`;}));
     document.getElementById('catmenu').innerHTML=items.join('');
     document.querySelectorAll('.cat-item').forEach(it=>it.onclick=()=>setActive(it.dataset.c,it.dataset.label,it.dataset.count));
+    buildParsed();
     render();
   }catch(e){document.getElementById('out').innerHTML='<div class="none">Couldn’t load commands.</div>';}
 })();
@@ -244,6 +250,6 @@ function setActive(val,label,count){
 const box=document.getElementById('catbox');
 document.getElementById('catbtn').onclick=e=>{e.stopPropagation();box.classList.toggle('open');};
 document.addEventListener('click',e=>{if(!box.contains(e.target))box.classList.remove('open');});
-document.getElementById('q').addEventListener('input',render);
+let _searchT; document.getElementById('q').addEventListener('input',()=>{clearTimeout(_searchT);_searchT=setTimeout(render,130);});
 </script>
 </body></html>

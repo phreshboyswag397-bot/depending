@@ -654,7 +654,7 @@ document.querySelectorAll('.feat-card').forEach(c=>fio.observe(c));
   // total command count
   try{
     const cats=await (await fetch('/api/commands')).json();
-    const isCmd=l=>/^[a-z]/.test(l)&&!l.startsWith('-#')&&!l.startsWith('—');
+    const isCmd=l=>/^[a-z0-9]/.test(l)&&!l.startsWith('-#')&&!l.startsWith('—');
     const total=cats.reduce((n,c)=>n+(c.cmds||[]).filter(isCmd).length,0);
     if(total) countUp(document.getElementById('s-cmds'), total, {format:n=>fmt(n)+'+', delay:750});
   }catch{}
